@@ -1,24 +1,23 @@
+import { BookOpen, User2 } from "lucide-react";
+
 export default function NavigationMenu() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-24">
-      <h1 className="text-4xl font-bold">Menu de Navegação</h1>
-      <ul className="mt-4 space-y-2">
-        <li>
-          <a href="/home" className="text-blue-500 hover:underline">
-            Home
-          </a>
-        </li>
-        <li>
-          <a href="/about" className="text-blue-500 hover:underline">
-            Sobre
-          </a>
-        </li>
-        <li>
-          <a href="/contact" className="text-blue-500 hover:underline">
-            Contato
-          </a>
-        </li>
-      </ul>
-    </div>
+    <header className="flex justify-between *:flex *:items-center px-6 py-4">
+      <div className="flex items-center gap-2">
+        <BookOpen className=" bg-primary p-2 text-card rounded-full size-10" />
+        <h1 className="font-semibold">Restaurante do Portugues</h1>
+      </div>
+      <div className="*:flex *:items-center text-text-secondary ">
+        <ul className="gap-4">
+          <li>Pedidos</li>
+          <li>Relatorios</li>
+          <li>Sair</li>
+        </ul>
+        <div>
+          <h3>Bem vindo, Otavio</h3>
+          <User2 className="bg-primary/50 text-primary p-1 rounded-full size-10"/>
+        </div>
+      </div>
+    </header>
   );
 }

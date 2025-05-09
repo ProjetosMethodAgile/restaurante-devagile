@@ -15,7 +15,7 @@
   --color-text-secondary: #6b7280;
   --color-bg-light: #f3f4f6;
 
-  --font-sans: "Poppins", sans-serif;
+  --font-sans: "Poppins", sans-serif, "Roboto";
   --border-radius-card: 0.75rem;
   --box-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
 }

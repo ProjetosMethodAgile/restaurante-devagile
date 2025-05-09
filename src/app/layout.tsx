@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins-sans",
-  subsets: ["latin"],
-});
 
 const roboto = Roboto({
   variable: "--font-roboto-mono",
   subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  variable: "--font-roboto-mono",
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {

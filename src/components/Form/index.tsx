@@ -1,7 +1,10 @@
-import FormInput from "./FormInput";
+
+import FormInputAll from "./FormInputAll";
+import FormInputIcon from "./FormInputIcon";
 import FormRoot from "./FormRoot";
 
 export const Form = {
  Root: FormRoot,
- InputAll:FormInput,
+ InputWithIcon:FormInputIcon,
+ InputALL:FormInputAll,
 }

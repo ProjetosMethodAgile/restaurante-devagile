@@ -19,3 +19,19 @@
   --border-radius-card: 0.75rem;
   --box-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
+:root {
+  /* espaçamento lateral padrão */
+  --container-padding: 1.5rem;
+  /* largura máxima do container */
+  --container-max-width: 1200px;
+}
+
+/* Utilitário para centralizar e espaçar */
+.container-global {
+  max-width: var(--container-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}

@@ -25,9 +25,9 @@ export default function ReportsPage() {
   ];
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="container-global flex-1 flex flex-col overflow-auto">
       <main className="p-6 space-y-8 flex-1">
-        {/* Dashboards: ambos os gráficos via wrapper */}
+        {/* Dashboards */}
         <ChartsWrapper
           pedidosData={pedidosData}
           financeiroData={financeiroData}

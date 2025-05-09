@@ -7,7 +7,7 @@ export default async function ProtectedEmpresaLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="">
+    <div className="bg-card">
       <NavigationMenu />
       <div className="h-[100vh] w-[100vw] overflow-auto">{children}</div>
     </div>

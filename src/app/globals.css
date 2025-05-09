@@ -3,7 +3,7 @@
 
 /* ================== Variáveis de Tema ================== */
 
-:root {
+@theme {
   --color-primary: #e63946;
   --color-secondary: #3b82f6;
   --color-success: #38b000;

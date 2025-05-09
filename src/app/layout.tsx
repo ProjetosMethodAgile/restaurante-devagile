@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 
-
 const roboto = Roboto({
   variable: "--font-roboto-mono",
   subsets: ["latin"],
@@ -25,10 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="pt-BR">
+      <body className={`${poppins.variable} ${roboto.variable} antialiased`}>
         {children}
       </body>
     </html>

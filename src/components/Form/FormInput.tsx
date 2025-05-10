@@ -1,14 +1,13 @@
 import iconsMap from "./../../utils/iconsMap";
 import { InputProps } from "./FormsType/FormType";
-
-export default function FormInput({...props }: InputProps) {
+type InputPropsIcone = React.ComponentProps<"input"> &{
+  icone:string
+}
+export default function FormInput({ ...props }: InputPropsIcone) {
   const Icone = iconsMap[props.icone];
   return (
     <div>
-        <div>
-            {Icone?<Icone/>:""}
-          
-        </div>
+      <div>{Icone ? <Icone /> : ""}</div>
       <input {...props} />
     </div>
   );

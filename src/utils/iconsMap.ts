@@ -13,13 +13,17 @@ import {
   CircleX,
   Paperclip,
   UserRoundPlus,
-  Check
+  Check,
+  Eye,
+  EyeOff 
 } from "lucide-react";
 
 // Mapeia o slug da tela com o ícone correspondente.
 const iconsMap: { [key: string]: React.ElementType } = {
   home: House,
   Check,
+  Eye,
+  EyeOff,
   "gerenciar-sistema": Settings,
   settings: Settings,
   CircleX: CircleX,

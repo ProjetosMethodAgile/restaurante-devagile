@@ -5,7 +5,7 @@ export default function FormInputAll({ className, ...props }: InputProps) {
   return (
     <input
       className={twMerge(
-        `bg-card border-text-secondary border border-1 rounded-[15px]`,
+        `w-full active  :border-primary text-text-secondary py-2 px-4 rounded-lg active:scale-102 ease-out duration-75 cursor-pointer hover:border-primary/70 transition duration-300 mt-4`,
         className
       )}
       {...props}

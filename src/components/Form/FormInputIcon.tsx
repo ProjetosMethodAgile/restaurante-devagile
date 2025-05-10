@@ -1,17 +1,27 @@
+import React from "react";
 import { twMerge } from "tailwind-merge";
-import iconsMap from "./../../utils/iconsMap";
-import { InputProps } from "./FormsType/FormType";
-type FormInputPropsIcons= React.ComponentProps<"input"> &{
-  icone:string
-}
-export default function FormInputIcon({className,...props  }: FormInputPropsIcons) {
-  const Icone = iconsMap[props.icone];
+
+type FormInputIconProps = React.PropsWithChildren<
+  React.InputHTMLAttributes<HTMLInputElement>
+>;
+
+export default function FormInputIcon({
+  className,
+  children,
+  ...props
+}: FormInputIconProps) {
   return (
-    <div className={twMerge(`bg-card`, className)} >
-        <div className="size-10">
-            {Icone?<Icone/>:""}
-        </div>
-      <input {...props} />
+    <div
+      className={twMerge(
+        " flex  flex-row-reverse",
+        className
+      )}
+    >
+      <div className="size-5 absolute">{children}</div>
+      <input
+        {...props}
+          className={` text-text-secondary relative w-full px-4 py-2 rounded-lg focus:outline-none `}
+        />
     </div>
   );
 }

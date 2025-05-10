@@ -12,7 +12,7 @@ export default function FormRoot({
   ...props
 }: FormRootProps) {
   return (
-    <form className={twMerge(`bg-card`, className)} {...props}>
+    <form className={twMerge(`bg-card bg-white p-8 rounded-xl shadow-lg max-w-md w-full`, className)} {...props}>
       {children}
     </form>
   );

@@ -6,6 +6,5 @@ export type FormRootProps = React.ComponentProps<"form"> & {
 export type InputProps = React.ComponentProps<"input"> 
 
 export type ButtonProps = React.ComponentProps<"button"> & {
-  text: string;
   children: ReactNode;
 };

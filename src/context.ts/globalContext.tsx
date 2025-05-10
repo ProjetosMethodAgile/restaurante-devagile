@@ -21,6 +21,8 @@ export interface IGlobalContext {
   setSenha: SetState<string>;
   nomeEmpresa: string;
   setNomeEmpresa: SetState<string>;
+ openGlobalModal: (content: React.ReactNode) => void;
+  closeGlobalModal: () => void;
 }
 
 const GlobalContext = createContext<IGlobalContext | undefined>(undefined);
@@ -42,13 +44,25 @@ export const GlobalContextProvider = ({
   const [nomeEmpresa, setNomeEmpresa] = useState("Restaurante do Português");
   const [usuario, setUsuario] = useState<string>(""); 
   const [senha, setSenha]       = useState<string>("");
+
+  const [globalModalContent, setGlobalModalContent] =
+    useState<React.ReactNode | null>(null);
+  const openGlobalModal = (content: React.ReactNode) => {
+    setGlobalModalContent(content);
+  };
+  const closeGlobalModal = () => {
+    setGlobalModalContent(null);
+  };
+
   const contextValue: IGlobalContext = {
     usuario,
     setUsuario,
     senha,
     setSenha,
     nomeEmpresa,
-    setNomeEmpresa
+    setNomeEmpresa,
+    openGlobalModal,
+    closeGlobalModal
   };
 
   return (

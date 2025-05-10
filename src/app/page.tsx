@@ -7,6 +7,7 @@ import iconsMap from "../utils/iconsMap";
 import { verifyInputLogin } from "./../utils/genericFunction/validaInput";
 import { toast } from "react-toastify";
 import { useGlobalContext } from "../context.ts/globalContext";
+import HandleOpenREsetPassword from "./ResetPassword/ResetPassword";
 
 type ValidationState = {
   validaUsuario: boolean;
@@ -14,9 +15,9 @@ type ValidationState = {
 };
 
 export default function Logi() {
-  const { usuario, setUsuario, senha, setSenha, nomeEmpresa } =
-    useGlobalContext();
+  const { usuario, setUsuario, senha, setSenha, nomeEmpresa,openGlobalModal,closeGlobalModal} = useGlobalContext();
   const [typeSenha, setTypeSenha] = useState(true);
+  const [resetSenha, setResetSenha] = useState<boolean>(false);
 
 
   const [returnValidate, setReturnValidate] = useState<ValidationState>({
@@ -38,7 +39,8 @@ export default function Logi() {
       toast.error(validate.message);
       animacaoborderRed(field);
     }
-    // lógica de envio aqui
+    toast.success("Login realizado");
+
   }
 
   function animacaoborderRed(field: string) {
@@ -54,6 +56,9 @@ export default function Logi() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-light w-full">
+
+      {
+        resetSenha ? <HandleOpenREsetPassword setResetSenha={setResetSenha}/>:
       <Form.Root
         className="bg-white flex flex-col p-15 rounded-xl shadow-lg max-w-md"
         onSubmit={handleSendLoginUSer}
@@ -77,9 +82,10 @@ export default function Logi() {
           Usuário
         </label>
         <Form.InputALL
+        required
           id="usuario"
           className={`
-            w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary
+             px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary
             ${returnValidate.validaUsuario ? "blink-border" : ""}
           `}
           placeholder="Digite seu usuário"
@@ -94,20 +100,20 @@ export default function Logi() {
           id="senha"
           type={typeSenha ? "password" : "text"}
           className={`
-            w-full  border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary hover:border-primary/70
+            w-full  border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary active:border-primary hover:border-primary/70
             ${returnValidate.validasenha ? "blink-border" : ""}
           `}
           placeholder="Digite sua senha"
           value={senha}
-          
+          required
           onChange={(e) => setSenha(e.target.value)}
         >
           {typeSenha ? (
-            <div onClick={() => setTypeSenha(false)} className=" z-999 absolute right-2 top-2 cursor-pointer  text-text-secondary">
+            <div onClick={() => setTypeSenha(false)} className=" z-999 absolute right-2 top-2 cursor-pointer  text-text-secondary/50">
               <IconSenhaNotVisible />
             </div>
           ) : (
-            <div onClick={() => setTypeSenha(true)} className="z-999 absolute right-2 top-2 cursor-pointer text-text-secondary">
+            <div onClick={() => setTypeSenha(true)} className="z-999 absolute right-2 top-2 cursor-pointer text-text-secondary/50">
               <IconSenhaVisible />
             </div>
           )}
@@ -117,7 +123,7 @@ export default function Logi() {
           type="submit"
           disabled={!isFormFilled}
           className={`
-            w-full py-2 px-4 rounded-lg active:scale-102 ease-out duration-75 mt-6
+            w-full active:border-primary py-2 px-4 rounded-lg active:scale-102 ease-out duration-75 mt-6  focus:outline-primary
             ${!isFormFilled
               ? "bg-primary/10 text-card  cursor-not-allowed"
               : "bg-primary hover:bg-primary/70 text-white"}
@@ -126,10 +132,13 @@ export default function Logi() {
           Entrar
         </Form.ButtonChange>
 
-        <p className="text-text-secondary text-sm mt-4 cursor-pointer hover:underline">
+        <p className="text-text-secondary text-sm mt-4 cursor-pointer hover:underline" onClick={()=>{setResetSenha(true)}}>
           Esqueci a senha
         </p>
       </Form.Root>
+      }
     </div>
   );
 }
+
+

@@ -20,7 +20,7 @@ export default function FormInputIcon({
       <div className="size-5 absolute">{children}</div>
       <input
         {...props}
-          className={` text-text-secondary relative w-full px-4 py-2 rounded-lg focus:outline-none `}
+          className={` text-text-secondary relative w-full px-4 py-2 rounded-lg focus:outline-primary `}
         />
     </div>
   );

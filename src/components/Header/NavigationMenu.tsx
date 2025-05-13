@@ -2,7 +2,7 @@ import { BookOpen, User2 } from "lucide-react";
 
 export default function NavigationMenu() {
   return (
-    <header className="flex justify-between *:flex *:items-center px-6 py-4 shadow-bottom shadow-md ">
+    <header className="flex justify-between *:flex *:items-center bg-white px-6 py-4 shadow-bottom shadow-xl">
       <div className="flex items-center gap-2">
         <BookOpen className=" bg-primary p-2 text-card rounded-full size-10" />
         <h1 className="font-semibold text-2xl text-slate-900">Restaurante do Portugues</h1>

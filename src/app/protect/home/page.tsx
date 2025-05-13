@@ -1,8 +1,9 @@
-import { Main } from "next/document";
+import Main from "@/src/components/Main/Main";
+
 
 export default async function Home() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-24">
+    <div className="flex flex-col my-12  min-h-screen">
       <Main />
     </div>
   );

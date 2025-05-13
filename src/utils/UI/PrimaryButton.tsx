@@ -1,15 +1,21 @@
+type primaryButtonProps = React.ComponentProps<"button"> & {
+  text: string;
+  icon?: React.ElementType;
+};
+
 export default function PrimaryButton({
-  children,
-  className,
+  icon: Icon,
+  text,
   ...props
-}: React.ComponentPropsWithoutRef<"button">) {
+}: primaryButtonProps) {
   return (
     <button
-      className={`class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md font-medium 
-              hover:bg-red-700 active:scale-95 transition-all duration-150"`}
+      className={`flex items-center cursor-pointer justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md font-medium 
+              hover:bg-red-700 active:scale-95 transition-all duration-150`}
       {...props}
     >
-      {children}
+      {Icon && <Icon />}
+      {text}
     </button>
   );
 }

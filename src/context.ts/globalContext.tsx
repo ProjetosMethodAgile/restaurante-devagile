@@ -53,6 +53,8 @@ export const GlobalContextProvider = ({
   const closeGlobalModal = () => {
     setGlobalModalContent(null);
   };
+  console.log(globalModalContent);
+  
 
   const contextValue: IGlobalContext = {
     usuario,

@@ -1,4 +1,5 @@
 import { BookOpen, User2 } from "lucide-react";
+import Link from "next/link";
 
 export default function NavigationMenu() {
   return (
@@ -10,7 +11,7 @@ export default function NavigationMenu() {
       <div className="*:flex *:items-center text-text-secondary flex gap-10 ">
         <ul className="gap-6 *:cursor-pointer *:hover:text-primary *:font-semibold">
           <li>Pedidos</li>
-          <li>Clientes</li>
+          <Link href="/protect/cliente">Clientes</Link>
           <li>Relatorios</li>
           <li>Sair</li>
         </ul>

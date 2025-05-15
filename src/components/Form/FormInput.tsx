@@ -1,5 +1,4 @@
 import iconsMap from "./../../utils/iconsMap";
-import { InputProps } from "./FormsType/FormType";
 type InputPropsIcone = React.ComponentProps<"input"> &{
   icone:string
 }

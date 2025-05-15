@@ -16,6 +16,8 @@ type ValidationState = {
 
 export default function Logi() {
   const { usuario, setUsuario, senha, setSenha, nomeEmpresa,openGlobalModal,closeGlobalModal} = useGlobalContext();
+  console.log(openGlobalModal,closeGlobalModal);
+  
   const [typeSenha, setTypeSenha] = useState(true);
   const [resetSenha, setResetSenha] = useState<boolean>(false);
 

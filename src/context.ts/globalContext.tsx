@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, {
   createContext,
@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from "../utils/modal/Modal";
 
 // Alias genérico para qualquer setter de useState
 type SetState<T> = Dispatch<SetStateAction<T>>;
@@ -21,7 +22,7 @@ export interface IGlobalContext {
   setSenha: SetState<string>;
   nomeEmpresa: string;
   setNomeEmpresa: SetState<string>;
- openGlobalModal: (content: React.ReactNode) => void;
+  openGlobalModal: (content: React.ReactNode) => void;
   closeGlobalModal: () => void;
 }
 
@@ -42,8 +43,8 @@ export const GlobalContextProvider = ({
   children: ReactNode;
 }) => {
   const [nomeEmpresa, setNomeEmpresa] = useState("Restaurante do Português");
-  const [usuario, setUsuario] = useState<string>(""); 
-  const [senha, setSenha]       = useState<string>("");
+  const [usuario, setUsuario] = useState<string>("");
+  const [senha, setSenha] = useState<string>("");
 
   const [globalModalContent, setGlobalModalContent] =
     useState<React.ReactNode | null>(null);
@@ -54,7 +55,6 @@ export const GlobalContextProvider = ({
     setGlobalModalContent(null);
   };
   console.log(globalModalContent);
-  
 
   const contextValue: IGlobalContext = {
     usuario,
@@ -64,12 +64,17 @@ export const GlobalContextProvider = ({
     nomeEmpresa,
     setNomeEmpresa,
     openGlobalModal,
-    closeGlobalModal
+    closeGlobalModal,
   };
 
   return (
     <GlobalContext.Provider value={contextValue}>
       {children}
+      {globalModalContent && (
+        <Modal className="bg-opacity-70 fixed inset-0 z-100 flex items-center justify-center bg-black/40">
+          {globalModalContent}
+        </Modal>
+      )}
       <ToastContainer
         position="top-right"
         autoClose={5000}

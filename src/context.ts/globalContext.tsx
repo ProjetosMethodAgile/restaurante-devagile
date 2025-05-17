@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from "../utils/modal/Modal";
 
 // Alias genérico para qualquer setter de useState
 type SetState<T> = Dispatch<SetStateAction<T>>;
@@ -54,7 +55,6 @@ export const GlobalContextProvider = ({
     setGlobalModalContent(null);
   };
   console.log(globalModalContent);
-  
 
   const contextValue: IGlobalContext = {
     usuario,
@@ -70,6 +70,11 @@ export const GlobalContextProvider = ({
   return (
     <GlobalContext.Provider value={contextValue}>
       {children}
+      {globalModalContent && (
+        <Modal className="bg-opacity-70 fixed inset-0 z-100 flex items-center justify-center bg-black/40">
+          {globalModalContent}
+        </Modal>
+      )}
       <ToastContainer
         position="top-right"
         autoClose={5000}

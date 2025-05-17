@@ -1,16 +1,22 @@
 "use client";
+
 import GenericInput from "@/src/utils/UI/GenericInput";
 import GenericSelectInput from "@/src/utils/UI/GenericSelectInput";
 import PrimaryButton from "@/src/utils/UI/PrimaryButton";
 import PrimaryTitle from "@/src/utils/UI/PrimaryTitle";
 import { LayoutGrid, LayoutList, List, Plus } from "lucide-react";
 import OrdersSummary from "./OrderResume/OdersSummary";
-import OrdersGrid from "./Orders/Grid/OrdersGrid";
+import OrdersGrid from "./OrderList/OrdersGrid";
+import { useGlobalContext } from "@/src/context.ts/globalContext";
 import OrdersList from "./Orders/List/OrdersList";
+import OrdersGrid from "./Orders/Grid/OrdersGrid";
+import { useEffect } from "react";
+import NewOrder from "./NewOrder/NewOrder";
 import { useState } from "react";
-
 export default function Main() {
-  const [isGrid, setIsGrid] = useState(true);
+    
+const {openGlobalModal} = useGlobalContext()
+ const [isGrid, setIsGrid] = useState(true);
 
   return (
     <main className="container-global w-full">
@@ -21,7 +27,7 @@ export default function Main() {
         <div className="flex items-center justify-end gap-6">
           <GenericInput />
           <GenericSelectInput />
-          <PrimaryButton icon={Plus} text="Novo Pedido" />
+          <PrimaryButton onClick={()=> openGlobalModal(<NewOrder />)} icon={Plus} text="Novo Pedido" />
         </div>
       </header>
       <section className="bg-white mt-10 shadow-md rounded-xl p-8">

@@ -19,7 +19,7 @@ export default function OrderStatusBadge({
   };
 
   return (
-    <span className={`${statusBadge[status]?.color} py-1 px-2 rounded-lg `}>
+    <span className={`${statusBadge[status]?.color} py-1 px-2 text-center rounded-lg `}>
       {statusBadge[status]?.text}
     </span>
   );

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, {
   createContext,
@@ -21,7 +21,7 @@ export interface IGlobalContext {
   setSenha: SetState<string>;
   nomeEmpresa: string;
   setNomeEmpresa: SetState<string>;
- openGlobalModal: (content: React.ReactNode) => void;
+  openGlobalModal: (content: React.ReactNode) => void;
   closeGlobalModal: () => void;
 }
 
@@ -42,8 +42,8 @@ export const GlobalContextProvider = ({
   children: ReactNode;
 }) => {
   const [nomeEmpresa, setNomeEmpresa] = useState("Restaurante do Português");
-  const [usuario, setUsuario] = useState<string>(""); 
-  const [senha, setSenha]       = useState<string>("");
+  const [usuario, setUsuario] = useState<string>("");
+  const [senha, setSenha] = useState<string>("");
 
   const [globalModalContent, setGlobalModalContent] =
     useState<React.ReactNode | null>(null);
@@ -64,7 +64,7 @@ export const GlobalContextProvider = ({
     nomeEmpresa,
     setNomeEmpresa,
     openGlobalModal,
-    closeGlobalModal
+    closeGlobalModal,
   };
 
   return (

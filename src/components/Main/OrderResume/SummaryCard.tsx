@@ -19,7 +19,7 @@ export default function SummaryCard({
 }: SummaryCardProps) {
   return (
     <div
-      className={`flex items-center cursor-pointer gap-4 rounded-md p-4 w-full transition-all ${bgColor} hover:shadow-sm hover:-translate-y-1`}
+      className={`flex items-center cursor-pointer gap-4 rounded-md p-4 w-full transition-all ${bgColor} hover:shadow-sm hover:-translate-y-1 active:translate-none active:shadow-none`}
     >
       <div className={`p-2 rounded-full ${iconBgColor}`}>{icon}</div>
       <div>

@@ -8,7 +8,7 @@ export default function GenericInput() {
 
   return (
     <div
-      className={`flex items-center border rounded-md px-3 py-2 transition-all duration-200 ${
+      className={`flex items-center border-2 rounded-md px-3 py-2 transition-all duration-200 ${
         inputFocus ? "border-red-500" : "border-gray-300"
       }`}
     >

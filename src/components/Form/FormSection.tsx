@@ -14,12 +14,12 @@ export default function FormSection({
   return (
     <div
       className={twMerge(
-        "border-primary-300/20 text-sm font-semibold text-text-secondary  gap-3 mb-2",
+        "border-primary-300/20 text-sm font-semibold flex flex-col text-text-secondary  gap-2 ",
         className
       )}
       {...props}
     >
-      {title && <h3>{title}</h3>}
+      {title && <h3 className="mb-2 text-lg">{title}</h3>}
       {children}
     </div>
   );

@@ -34,6 +34,42 @@ const orders = [
     amount: 299.9,
     status: "cancelado",
   },
+    {
+    orderId: "004",
+    clientName: "Maria Oliveira",
+    emissionDate: "2025/05/11",
+    emissionTime: "09:15",
+    items: [
+      { name: "Tênis Esportivo", quantity: 1, price: 199.9 },
+      { name: "Meias", quantity: 3, price: 15.0 },
+    ],
+    amount: 244.9,
+    status: "concluido",
+  },
+    {
+    orderId: "005",
+    clientName: "Maria Oliveira",
+    emissionDate: "2025/05/11",
+    emissionTime: "09:15",
+    items: [
+      { name: "Tênis Esportivo", quantity: 1, price: 199.9 },
+      { name: "Meias", quantity: 3, price: 15.0 },
+    ],
+    amount: 244.9,
+    status: "concluido",
+  },
+    {
+    orderId: "006",
+    clientName: "Maria Oliveira",
+    emissionDate: "2025/05/11",
+    emissionTime: "09:15",
+    items: [
+      { name: "Tênis Esportivo", quantity: 1, price: 199.9 },
+      { name: "Meias", quantity: 3, price: 15.0 },
+    ],
+    amount: 244.9,
+    status: "concluido",
+  },
 ];
 
 export default function OrdersGrid() {

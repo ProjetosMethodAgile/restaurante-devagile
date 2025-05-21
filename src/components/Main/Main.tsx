@@ -10,7 +10,7 @@ import { useGlobalContext } from "@/src/context.ts/globalContext";
 import OrdersList from "./Orders/List/OrdersList";
 import OrdersGrid from "./Orders/Grid/OrdersGrid";
 import { useEffect } from "react";
-import NewOrder from "./NewOrder/NewOrder";
+import NewOrder from "./NewOrder/NewOrderForm";
 import { useState } from "react";
 export default function Main() {
   const { openGlobalModal } = useGlobalContext();

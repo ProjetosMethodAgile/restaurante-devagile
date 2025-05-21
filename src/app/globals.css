@@ -36,13 +36,39 @@
   padding-right: var(--container-padding);
 }
 
-
 /* Animação tela login */
 @keyframes blink-border {
-  0%, 100% { border-color: #e5e7eb;}
-  50%      { border-color: #e63946; }
+  0%,
+  100% {
+    border-color: #e5e7eb;
+  }
+  50% {
+    border-color: #e63946;
+  }
 }
 
 .blink-border {
   animation: blink-border 0.3s ease-in-out 3;
 }
+
+@layer utilities{
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+}
+

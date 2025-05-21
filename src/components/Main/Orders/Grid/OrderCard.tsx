@@ -23,7 +23,7 @@ export default function OrderCard({
   return (
     <div
       id="card"
-      className="shadow-md bg-white rounded-xl p-8 flex gap-4 flex-col"
+      className="shadow-md bg-white rounded-xl p-8 flex gap-4 flex-col hover:-translate-y-0.5 hover:shadow-lg transition-all cursor-pointer"
     >
       <div className="flex items-center justify-between ">
         <div>

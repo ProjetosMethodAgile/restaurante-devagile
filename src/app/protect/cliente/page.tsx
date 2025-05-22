@@ -129,19 +129,20 @@ export default function Cliente() {
 
       {/* Formulário de Cadastro */}
       <section className="w-full lg:w-1/3 bg-white rounded-lg shadow p-4 lg:p-6 overflow-auto">
-        {/* Botão para ativar/desativar busca automática de CEP */}
+      
+
+        <Form.Root className="space-y-4 w-150 place-self-center flex flex-col">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#1F2D5C] mb-4">Cadastrar Cliente</h2>
+            {/* Botão para ativar/desativar busca automática de CEP */}
         <div className="mb-4 flex justify-end">
           <button
             type="button"
             onClick={() => setAutoCepEnabled(prev => !prev)}
-            className={`px-4 py-2 bg-gray-200 rounded hover:cursor-pointer transition text-sm ${autoCepEnabled? 'bg-primary text-white' : 'bg-green-500'}`}
+            className={`px-4 py-2  bg-gray-200 rounded hover:cursor-pointer transition text-sm ${autoCepEnabled? 'bg-primary text-white' : 'bg-green-500'}`}
           >
             {autoCepEnabled ? 'Desativar busca automática CEP' : 'Ativar busca automática CEP'}
           </button>
         </div>
-
-        <Form.Root className="space-y-4 w-full flex flex-col">
-          <h2 className="text-xl sm:text-2xl font-semibold text-[#1F2D5C] mb-4">Cadastrar Cliente</h2>
           <Form.InputALL
             id="contato"
             type="text"

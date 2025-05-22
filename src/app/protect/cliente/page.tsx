@@ -5,12 +5,12 @@ import { Form } from '@/src/components/Form'
 export default function Cliente() {
   // Lista e busca de clientes (exibição)
   const [clientes, setClientes] = useState([
-    { nome: 'Maria Silva', endereco: 'Rua Benedito Batalha, 353 Centro', CEP: '05050-050', telefone: '11 9 8557-1544', frete: '1,50' },
-    { nome: 'Roberto Santos', endereco: 'Av. Teste, 456 Centro', CEP: '05123-456', telefone: '11 9 9123-45678', frete: '2,00' },
+    { nome: 'Maria Silva', logradouro: 'Rua Benedito Batalha', numero: '353', bairro: 'Centro', CEP: '05050-050', telefone: '11 9 8557-1544', frete: '1,50' },
+    { nome: 'Roberto Santos', logradouro: 'Av. Teste', numero: '456', bairro: 'Centro', CEP: '05123-456', telefone: '11 9 9123-45678', frete: '2,00' },
     // … mais clientes
   ])
-  console.log(setClientes);
-  
+
+  // Estado de busca
   const [search, setSearch] = useState('')
 
   // Dados do formulário de cadastro
@@ -18,19 +18,24 @@ export default function Cliente() {
     contato: '',
     nome: '',
     cep: '',
-    endereco: '',
+    logradouro: '',
     numero: '',
     complemento: '',
+    bairro: '',
     frete: ''
   })
+
+  // Desabilita edição de logradouro quando preenchido via CEP
   const [addressDisabled, setAddressDisabled] = useState(false)
+  // Controla se a busca automática de CEP está ativa
+  const [autoCepEnabled, setAutoCepEnabled] = useState(true)
 
   // Filtra clientes conforme termo (texto ou dígitos)
   const term = search.toLowerCase().trim()
   const digits = search.replace(/\D/g, '')
   const filteredClientes = clientes.filter(item => {
     const name = item.nome.toLowerCase()
-    const address = item.endereco.toLowerCase()
+    const address = `${item.logradouro} ${item.numero}`.toLowerCase()
     const cepDigits = item.CEP.replace(/\D/g, '')
     const phoneDigits = item.telefone.replace(/\D/g, '')
 
@@ -42,29 +47,34 @@ export default function Cliente() {
   })
 
   // Controle de inputs do formulário
-  const handleChange =( e: React.ChangeEvent<HTMLInputElement> )=> {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
-    if (id === 'endereco' && addressDisabled) {
-      alert('Para editar o endereço, por favor apague o CEP primeiro.')
+    if (id === 'logradouro' && addressDisabled) {
+      alert('Para editar o logradouro, por favor apague o CEP primeiro.')
       return
     }
     setForm(prev => ({ ...prev, [id]: value }))
     if (id === 'cep') {
+      // ao mudar CEP, resetar logradouro e permitir edição
       setAddressDisabled(false)
-      setForm(prev => ({ ...prev, endereco: '' }))
+      setForm(prev => ({ ...prev, logradouro: '', bairro: '' }))
     }
   }
 
-  // Ao perder foco no CEP, busca endereço na API ViaCEP
+  // Ao perder foco no CEP, busca endereço na API apenas se automático estiver habilitado
   const handleCepBlur = async () => {
+    if (!autoCepEnabled) return
     const cepDigits = form.cep.replace(/\D/g, '')
     if (cepDigits.length === 8) {
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cepDigits}/json/`)
         const data = await res.json()
         if (!data.erro) {
-          const fullAddress = `${data.logradouro}, ${data.bairro}, ${data.localidade}-${data.uf}`
-          setForm(prev => ({ ...prev, endereco: fullAddress }))
+          setForm(prev => ({
+            ...prev,
+            logradouro: data.logradouro,
+            bairro: data.bairro,
+          }))
           setAddressDisabled(true)
         } else {
           setAddressDisabled(false)
@@ -80,15 +90,16 @@ export default function Cliente() {
       {/* Lista de Clientes */}
       <section className="w-full lg:w-2/3 bg-white rounded-lg shadow p-4 lg:p-6 overflow-auto">
         <h2 className="text-xl sm:text-2xl font-semibold text-[#1F2D5C] mb-4">Lista de clientes</h2>
+        <p className='text-text-primary'> Clientes cadastrados: {filteredClientes.length}</p>
         <Form.InputALL
           type="text"
           placeholder="Buscar cliente por nome, rua, CEP ou telefone"
           id="search"
-          className="w-full px-3 py-2 mb-4 sm:mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D72626]"
+          className="p-3 w-full  border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D72626]"
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
-        <ul className="space-y-4">
+        <ul className="space-y-4 mt-4">
           {filteredClientes.map((item, idx) => (
             <li key={idx} className="bg-white rounded border border-gray-200">
               {/* Header do card */}
@@ -104,7 +115,7 @@ export default function Cliente() {
               </div>
               {/* Corpo do card */}
               <div className="px-4 py-2 space-y-1">
-                <p className="text-sm text-gray-700">{item.endereco}</p>
+                <p className="text-sm text-gray-700">{`${item.logradouro}, ${item.numero} - ${item.bairro}`}</p>
                 <p className="text-sm text-gray-700">CEP: {item.CEP}</p>
                 <p className="text-sm text-gray-700">Frete: R$ {item.frete}</p>
               </div>
@@ -118,8 +129,19 @@ export default function Cliente() {
 
       {/* Formulário de Cadastro */}
       <section className="w-full lg:w-1/3 bg-white rounded-lg shadow p-4 lg:p-6 overflow-auto">
-        <h2 className="text-xl sm:text-2xl font-semibold text-[#1F2D5C] mb-4">Cadastrar Cliente</h2>
-        <Form.Root className="space-y-4">
+        {/* Botão para ativar/desativar busca automática de CEP */}
+        <div className="mb-4 flex justify-end">
+          <button
+            type="button"
+            onClick={() => setAutoCepEnabled(prev => !prev)}
+            className={`px-4 py-2 bg-gray-200 rounded hover:cursor-pointer transition text-sm ${autoCepEnabled? 'bg-primary text-white' : 'bg-green-500'}`}
+          >
+            {autoCepEnabled ? 'Desativar busca automática CEP' : 'Ativar busca automática CEP'}
+          </button>
+        </div>
+
+        <Form.Root className="space-y-4 w-full flex flex-col">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#1F2D5C] mb-4">Cadastrar Cliente</h2>
           <Form.InputALL
             id="contato"
             type="text"
@@ -146,21 +168,20 @@ export default function Cliente() {
             value={form.cep}
             onChange={handleChange}
             onBlur={handleCepBlur}
-          
           />
           <Form.InputALL
-            id="endereco"
+            id="logradouro"
             type="text"
-            placeholder="Endereço"
+            placeholder="Logradouro"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D72626] text-sm sm:text-base"
-            value={form.endereco}
+            value={form.logradouro}
             onChange={handleChange}
             disabled={addressDisabled}
           />
           <Form.InputALL
             id="numero"
             type="text"
-            placeholder="Número da casa"
+            placeholder="Número"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D72626] text-sm sm:text-base"
             value={form.numero}
             onChange={handleChange}

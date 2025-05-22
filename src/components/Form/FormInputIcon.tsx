@@ -13,7 +13,7 @@ export default function FormInputIcon({
   return (
     <div
       className={twMerge(
-        " flex  flex-row-reverse",
+        " flex  flex-row-reverse border border-gray-300",
         className
       )}
     >

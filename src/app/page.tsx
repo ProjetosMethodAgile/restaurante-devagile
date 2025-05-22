@@ -87,7 +87,7 @@ export default function Logi() {
         required
           id="usuario"
           className={`
-             px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary
+           size-full   px-4 py-2  border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-primary
             ${returnValidate.validaUsuario ? "blink-border" : ""}
           `}
           placeholder="Digite seu usuário"
@@ -102,7 +102,7 @@ export default function Logi() {
           id="senha"
           type={typeSenha ? "password" : "text"}
           className={`
-            w-full  border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary active:border-primary hover:border-primary/70
+            w-full   border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary active:border-primary hover:border-primary/70
             ${returnValidate.validasenha ? "blink-border" : ""}
           `}
           placeholder="Digite sua senha"

@@ -9,6 +9,7 @@ export type InputProps = React.ComponentProps<"input"> & {
   error?: string;
   icon?: React.ElementType;
   iconPosition?: "left" | "right";
+  classDiv?: string;
 }
 
 export type ButtonProps = React.ComponentProps<"button"> & {

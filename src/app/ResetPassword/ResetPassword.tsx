@@ -10,11 +10,12 @@ interface HandleOpenResetPasswordProps {
 export default function HandleOpenResetPassword({
   setResetSenha,
 }: HandleOpenResetPasswordProps) {
+
   const Voltar = iconsMap["voltar"];
   const Check = iconsMap["Check"];
 
   return (
-    <Form.Root>
+    <Form.Root className="flex flex-col  w-full max-w-md p-4 bg-white rounded-lg shadow-md">
 
         <div className="flex justify-between ">
 
@@ -53,13 +54,14 @@ export default function HandleOpenResetPassword({
         id="email"
         type="email"
         placeholder="Digite seu Email de recuperação"
-        className="border text-text-secondary border-text-primary/20 focus:outline-none" required
+        className="w-full px-3 py-2 border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D72626] text-sm sm:text-base" required
       />
 
       <Form.InputALL
+    
         type="submit"
         value="Enviar"
-        className="bg-primary text-white"
+        className="size-full  px-3 py-2 rounded-lg text-fuchsia-50 bg-primary  focus:outline-none focus:ring-2 focus:ring-[#D72626] text-sm sm:text-base"
       />
     </Form.Root>
   );

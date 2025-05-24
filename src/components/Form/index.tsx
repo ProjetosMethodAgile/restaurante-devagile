@@ -7,7 +7,7 @@ import FormSection from "./FormSection";
 
 export const Form = {
   Root: FormRoot,
-  Input: FormInput,
+  InputText: FormInput,
   InputWithIcon: FormInputIcon,
   InputALL: FormInputAll,
   ButtonChange: FormButton,

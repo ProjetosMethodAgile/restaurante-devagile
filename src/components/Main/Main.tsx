@@ -10,11 +10,16 @@ import { useGlobalContext } from "@/src/context.ts/globalContext";
 import OrdersList from "./Orders/List/OrdersList";
 import OrdersGrid from "./Orders/Grid/OrdersGrid";
 import { useEffect } from "react";
-import NewOrder from "./NewOrder/NewOrderForm";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 export default function Main() {
   const { openGlobalModal } = useGlobalContext();
   const [isGrid, setIsGrid] = useState(true);
+  const router = useRouter();
+
+  const handleNovoPedido = () => {
+    router.push("/protect/pedido");
+  };
 
   return (
     <main className="container-global w-full">
@@ -26,7 +31,7 @@ export default function Main() {
           <GenericInput />
           <GenericSelectInput />
           <PrimaryButton
-            onClick={() => openGlobalModal(<NewOrder />)}
+            onClick={handleNovoPedido}
             icon={Plus}
             text="Novo Pedido"
           />

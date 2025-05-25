@@ -3,12 +3,12 @@ import { Form } from "../../../Form";
 
 export default function ClientInfo() {
   return (
-    <Form.Root className="w-full">
+    <Form.Root className="w-full bg-white rounded-xl p-4 flex flex-col gap-4">
       <Form.Section
         className="w-full flex flex-col gap-2"
         title="Informações do Cliente"
       >
-        <Form.InputALL
+        <Form.InputText
           id="cliente"
           label="Cliente"
           type="text"
@@ -16,35 +16,35 @@ export default function ClientInfo() {
           icon={Search}
           className="span-full"
         />
-        <Form.InputALL
+        <Form.InputText
           id="telefone"
           label="Telefone"
           type="text"
           placeholder="(11) 9 9999-9999"
           disabled
         />
-        <Form.InputALL
+        <Form.InputText
           id="endereco"
           label="Endereço"
           type="text"
           placeholder="Rua, Número"
           disabled
         />
-        <Form.InputALL
+        <Form.InputText
           id="bairro"
           label="Bairro"
           type="text"
           placeholder="Bairro"
           disabled
         />
-        <Form.InputALL
+        <Form.InputText
           id="cidade"
           label="Cidade"
           type="text"
           placeholder="Cidade, Estado"
           disabled
         />
-        <Form.InputALL
+        <Form.InputText
           id="complemento"
           label="Complemento"
           type="text"

@@ -9,6 +9,7 @@ export default function AddItensList() {
       <ItemOrder />
       <ItemOrder />
       <ItemOrder />
+      <ItemOrder />
     </div>
   );
 }

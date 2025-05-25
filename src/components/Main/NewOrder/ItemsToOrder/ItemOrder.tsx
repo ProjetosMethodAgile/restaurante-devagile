@@ -1,5 +1,6 @@
 import Counter from "@/src/utils/UI/Counter";
-import { Pen, Trash } from "lucide-react";
+import { ListOrdered, Pen, Trash, Trash2 } from "lucide-react";
+import OrderCard from "../../Orders/Grid/OrderCard";
 
 export default function ItemOrder() {
   return (
@@ -8,7 +9,7 @@ export default function ItemOrder() {
       <div className="flex items-start gap-4 flex-1">
         {/* Ícones */}
         <div className="flex items-center gap-2 justify-center">
-          <Trash
+          <Trash2
             className="text-red-500 hover:text-red-700 self-center cursor-pointer"
             size={18}
           />

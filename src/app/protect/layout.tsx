@@ -9,7 +9,7 @@ export default async function ProtectedEmpresaLayout({
   return (
     <div className="bg-card">
       <NavigationMenu />
-      <div className="h-[100vh]  w-[100vw] overflow-auto bg-card">{children}</div>
+      <div className="overflow-auto bg-stone-100">{children}</div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import FormButton from "./FormButton";
 import FormInput from "./FormInput";
 import FormInputAll from "./FormInputAll";
 import FormInputIcon from "./FormInputIcon";
+import FormInputOptions from "./FormInputOptions";
 import FormRoot from "./FormRoot";
 import FormSection from "./FormSection";
 
@@ -12,4 +13,5 @@ export const Form = {
   InputALL: FormInputAll,
   ButtonChange: FormButton,
   Section: FormSection,
+  InputOptions: FormInputOptions,
 };

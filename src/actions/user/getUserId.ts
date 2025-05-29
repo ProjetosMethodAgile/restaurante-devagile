@@ -9,20 +9,25 @@ export default async function getUserId() {
 
   if (token) {
     const userdata = jwt.decode(token) as tokenUserAuth;
-    const res = await fetch(`${process.env.URL_API}/usuario/${userdata.id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token} `,
-      },
-      next: {
-        revalidate: 60,
-        tags: ["auth"],
-      },
-    });
-    const user: UsuarioData = await res.json();
-    console.log(user);
+    const url = process.env.URL_API;
+    if (url) {
+      const res = await fetch(`${url}/usuario/${userdata.id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token} `,
+        },
+        next: {
+          revalidate: 60,
+          tags: ["auth"],
+        },
+      });
+      const user: UsuarioData = await res.json();
+      console.log(user);
 
-    return { data: user };
+      return { data: user };
+    } else {
+      return { data: null };
+    }
   } else {
     return { data: null };
   }

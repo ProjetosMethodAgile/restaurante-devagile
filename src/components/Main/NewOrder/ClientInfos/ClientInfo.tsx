@@ -1,5 +1,5 @@
+import { Form } from "@/src/components/UI/Form";
 import { Search } from "lucide-react";
-import { Form } from "../../../Form";
 
 export default function ClientInfo() {
   return (

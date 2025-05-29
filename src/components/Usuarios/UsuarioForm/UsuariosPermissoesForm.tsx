@@ -1,14 +1,12 @@
 import SecondaryTitle from "@/src/utils/UI/SecondaryTitle";
 import { div } from "framer-motion/client";
-import { Form } from "../../../Form/index";
+import { Form } from "../../Form/index";
 
 export default function UsuariosPemissoesForm() {
   return (
     <div>
-      {" "}
       <div>
         <SecondaryTitle title="Permissões" />
-
         <Form.InputOptions label="Perfil de acesso" type="text" />
       </div>
       <div className="">

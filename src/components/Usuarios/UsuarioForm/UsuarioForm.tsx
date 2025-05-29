@@ -1,8 +1,9 @@
-import SecondaryTitle from "@/src/utils/UI/SecondaryTitle";
-import { Form } from "../..";
+"use client";
+import { Form } from "../../Form";
 import { useActionState } from "react";
 import { postUser } from "@/src/actions/usuarios-actions/postUser";
 import UsuariosInfosForm from "./UsuariosInfosForm";
+import UsuariosPemissoesForm from "./UsuariosPermissoesForm";
 
 export default function UsuarioForm() {
   const [state, formAction] = useActionState(postUser, {
@@ -13,8 +14,7 @@ export default function UsuarioForm() {
   return (
     <Form.Root action={formAction} className="grid grid-cols-2 gap-4">
       <UsuariosInfosForm />
-      <UsuariosInfosForm />
-      <Form.ButtonChange className="bg-secondary">Cadastrar</Form.ButtonChange>
+      <UsuariosPemissoesForm />
     </Form.Root>
   );
 }

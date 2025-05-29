@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
+import { UserContextProvider } from "../context/userContext";
+import getUserId from "../actions/user/getUserId";
 
 const roboto = Roboto({
   variable: "--font-roboto-mono",
@@ -18,16 +20,22 @@ export const metadata: Metadata = {
   description: "Sistema em desenvolvimento",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { data: user } = await getUserId();
+
   return (
-    <html lang="pt-BR">
-      <body className={`${poppins.variable} ${roboto.variable}  antialiased `}>
-        {children}
-      </body>
-    </html>
+    <UserContextProvider user={user}>
+      <html lang="pt-BR">
+        <body
+          className={`${poppins.variable} ${roboto.variable}  antialiased `}
+        >
+          {children}
+        </body>
+      </html>
+    </UserContextProvider>
   );
 }

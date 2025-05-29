@@ -1,3 +1,5 @@
+"use client";
+import logoff from "@/src/actions/auth/logoff";
 import { BookOpen, User2 } from "lucide-react";
 import Link from "next/link";
 
@@ -13,11 +15,11 @@ export default function NavigationMenu() {
           <li>Pedidos</li>
           <Link href="/protect/cliente">Clientes</Link>
           <li>Relatorios</li>
-          <li>Sair</li>
+          <li onClick={() => logoff()}>Sair</li>
         </ul>
         <div className="gap-4">
           <h3>Otavio</h3>
-          <User2 className="bg-primary/50 text-primary p-1 rounded-full size-10"/>
+          <User2 className="bg-primary/50 text-primary p-1 rounded-full size-10" />
         </div>
       </div>
     </header>

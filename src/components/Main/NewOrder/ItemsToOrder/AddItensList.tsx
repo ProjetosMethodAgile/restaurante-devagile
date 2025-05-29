@@ -1,4 +1,4 @@
-import Counter from "@/src/utils/UI/Counter";
+import Counter from "@/src/components/UI/Counter";
 import { Pen, Trash } from "lucide-react";
 import ItemOrder from "./ItemOrder";
 

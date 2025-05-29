@@ -1,5 +1,5 @@
 import { Form } from "@/src/components/Form";
-import PrimaryTitle from "@/src/utils/UI/PrimaryTitle";
+import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import { Search } from "lucide-react";
 import ProductCard from "./ProductCard";
 import CategoriesList from "./CategoriesList";

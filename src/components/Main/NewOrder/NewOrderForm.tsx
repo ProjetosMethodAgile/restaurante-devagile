@@ -6,7 +6,7 @@ import ClientInfo from "./ClientInfos/ClientInfo";
 import ItemsToOrder from "./ItemsToOrder/ItemsToOrder";
 import ItemsSearch from "./ItemsSearch/ItemSearch";
 import { motion, AnimatePresence } from "framer-motion";
-import SecondaryButton from "@/src/utils/UI/SecondaryButton";
+import SecondaryButton from "@/src/components/UI/SecondaryButton";
 import OrderSummary from "./ItemsToOrder/OrderSummary";
 
 export default function NewOrderForm() {

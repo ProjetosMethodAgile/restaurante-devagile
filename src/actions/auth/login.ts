@@ -17,27 +17,35 @@ export async function login(
   if (!email || !senha) {
     return { success: false, message: "E-mail e senha são obrigatórios" };
   }
+  const url = process.env.URL_API;
 
-  const res = await fetch(`${process.env.URL_API}/usuario/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, senha }),
-  });
+  if (url) {
+    const res = await fetch(`${url}/usuario/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, senha }),
+    });
 
-  if (!res.ok) {
+    if (!res.ok) {
+      return {
+        success: false,
+        message: "Credenciais inválidas, tente novamente",
+      };
+    }
+
+    const { token } = await res.json();
+
+    (await cookies()).set("token", token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 dias
+    });
+
+    redirect("/protect/home");
+  } else {
     return {
       success: false,
-      message: "Credenciais inválidas, tente novamente",
+      message: "Erro interno no sistema",
     };
   }
-
-  const { token } = await res.json();
-
-  (await cookies()).set("token", token, {
-    httpOnly: true,
-    secure: true,
-    maxAge: 60 * 60 * 24 * 7, // 7 dias
-  });
-
-  redirect("/protect/home");
 }

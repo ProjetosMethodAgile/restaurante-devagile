@@ -1,6 +1,6 @@
-import { Form } from "@/src/components/Form";
-import SecondaryButton from "@/src/components/UI/SecondaryButton";
-import { Search, ShoppingBasket } from "lucide-react";
+import { Form } from "@/src/components/UI/Form";
+
+import { Search } from "lucide-react";
 
 export default function HeaderItensToOrder() {
   return (

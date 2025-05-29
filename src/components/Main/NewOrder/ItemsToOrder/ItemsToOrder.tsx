@@ -1,4 +1,4 @@
-import { Form } from "../../../Form";
+import { Form } from "@/src/components/UI/Form";
 import AddItensList from "./AddItensList";
 import HeaderItensToOrder from "./HeaderItensToOrder";
 import OrderSummary from "./OrderSummary";

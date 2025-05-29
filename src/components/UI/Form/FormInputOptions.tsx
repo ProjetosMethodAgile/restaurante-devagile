@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { InputProps } from "./FormsType/FormType";
+import { FormInputOptionsProps, InputProps } from "./FormsType/FormType";
 
 export default function FormInputOptions({
   label,
@@ -7,8 +7,9 @@ export default function FormInputOptions({
   iconPosition = "right",
   className,
   disabled,
+  options,
   ...props
-}: InputProps) {
+}: FormInputOptionsProps) {
   const containerClass = twMerge(
     `flex mt-1 py-2 px-4 items-center transition justify-between 
     border rounded-lg text-sm sm:text-base text-text-secondary 
@@ -26,8 +27,7 @@ export default function FormInputOptions({
         <label className="text-text-secondary mb-2 text-sm">{label}</label>
       )}
       <select className={containerClass}>
-        <option value="1">MOBILI COMERCIO DE PEÇAS E ACESSORIO</option>
-        <option value="2">A MAIS CICLO COMERCIO</option>
+        {options.map(option =><option value={option.value}>{option.label}</option>)}
       </select>
     </div>
   );

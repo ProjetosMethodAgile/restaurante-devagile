@@ -1,13 +1,16 @@
-import SecondaryTitle from "@/src/utils/UI/SecondaryTitle";
+import SecondaryTitle from "../../UI/SecondaryTitle";
 import { div } from "framer-motion/client";
-import { Form } from "../../Form/index";
+import { Form } from "../../UI/Form/index";
 
 export default function UsuariosPemissoesForm() {
   return (
-    <div>
+    <div className="flex flex-col gap-6">
       <div>
         <SecondaryTitle title="Permissões" />
-        <Form.InputOptions label="Perfil de acesso" type="text" />
+        <Form.InputOptions
+          label="Perfil de acesso"
+          options={[{ label: "Administrador", value: "001" }]}
+        />
       </div>
       <div className="">
         <SecondaryTitle title="Acessos" />

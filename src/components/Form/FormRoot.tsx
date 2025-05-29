@@ -12,7 +12,7 @@ export default function FormRoot({
   ...props
 }: FormRootProps) {
   return (
-    <form className={twMerge(`rounded-xl w-full`, className)} {...props}>
+    <form className={twMerge(``, className)} {...props}>
       {children}
     </form>
   );

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ArrowLeft, BadgeCheck, ShoppingBasket, X } from "lucide-react";
-import { useGlobalContext } from "@/src/context.ts/globalContext";
 import ClientInfo from "./ClientInfos/ClientInfo";
 import ItemsToOrder from "./ItemsToOrder/ItemsToOrder";
 import ItemsSearch from "./ItemsSearch/ItemSearch";
@@ -11,7 +10,6 @@ import SecondaryButton from "@/src/utils/UI/SecondaryButton";
 import OrderSummary from "./ItemsToOrder/OrderSummary";
 
 export default function NewOrderForm() {
-  const { closeGlobalModal } = useGlobalContext();
   const [showSearch, setShowSearch] = useState(false);
 
   const toggleView = () => setShowSearch((prev) => !prev);

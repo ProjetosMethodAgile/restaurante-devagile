@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Roboto } from "next/font/google";
 import "./globals.css";
-import { GlobalContextProvider } from "../context.ts/globalContext";
 
 const roboto = Roboto({
   variable: "--font-roboto-mono",
@@ -27,9 +26,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${poppins.variable} ${roboto.variable} antialiased `}>
-      <GlobalContextProvider>
         {children}
-      </GlobalContextProvider>
       </body>
     </html>
   );

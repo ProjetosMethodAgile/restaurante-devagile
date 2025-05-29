@@ -1,4 +1,4 @@
-import SecondaryButton from "@/src/utils/UI/SecondaryButton";
+import SecondaryButton from "@/src/components/UI/SecondaryButton";
 import { Hash } from "lucide-react";
 import Image from "next/image";
 const parmesiana = require("@/public/image/foods/parmesiana-1.jpg");

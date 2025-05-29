@@ -1,6 +1,6 @@
-import SecondaryTitle from "@/src/utils/UI/SecondaryTitle";
+import SecondaryTitle from "@/src/components/UI/SecondaryTitle";
 import { div } from "framer-motion/client";
-import { Form } from "../../../Form/index";
+import { Form } from "../../index";
 
 export default function UsuariosPemissoesForm() {
   return (

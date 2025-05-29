@@ -1,19 +1,16 @@
 "use client";
 
-import GenericInput from "@/src/utils/UI/GenericInput";
-import GenericSelectInput from "@/src/utils/UI/GenericSelectInput";
-import PrimaryButton from "@/src/utils/UI/PrimaryButton";
-import PrimaryTitle from "@/src/utils/UI/PrimaryTitle";
+import GenericInput from "@/src/components/UI/GenericInput";
+import GenericSelectInput from "@/src/components/UI/GenericSelectInput";
+import PrimaryButton from "@/src/components/UI/PrimaryButton";
+import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import { LayoutGrid, LayoutList, List, Plus } from "lucide-react";
 import OrdersSummary from "./OrderResume/OdersSummary";
-import { useGlobalContext } from "@/src/context.ts/globalContext";
 import OrdersList from "./Orders/List/OrdersList";
 import OrdersGrid from "./Orders/Grid/OrdersGrid";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 export default function Main() {
-  const { openGlobalModal } = useGlobalContext();
   const [isGrid, setIsGrid] = useState(true);
   const router = useRouter();
 

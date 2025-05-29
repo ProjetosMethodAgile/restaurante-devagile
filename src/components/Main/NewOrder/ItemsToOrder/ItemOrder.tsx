@@ -1,4 +1,4 @@
-import Counter from "@/src/utils/UI/Counter";
+import Counter from "@/src/components/UI/Counter";
 import { ListOrdered, Pen, Trash, Trash2 } from "lucide-react";
 import OrderCard from "../../Orders/Grid/OrderCard";
 

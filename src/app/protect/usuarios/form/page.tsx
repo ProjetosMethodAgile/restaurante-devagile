@@ -1,8 +1,8 @@
 import { postUser } from "@/src/actions/usuarios-actions/postUser";
 import { Form } from "@/src/components/Form";
-import PrimaryButton from "@/src/utils/UI/PrimaryButton";
-import PrimaryTitle from "@/src/utils/UI/PrimaryTitle";
-import SecondaryTitle from "@/src/utils/UI/SecondaryTitle";
+import PrimaryButton from "@/src/components/UI/PrimaryButton";
+import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
+import SecondaryTitle from "@/src/components/UI/SecondaryTitle";
 import { Check } from "lucide-react";
 import { useActionState } from "react";
 

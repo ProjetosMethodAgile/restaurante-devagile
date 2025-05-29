@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
-import SecondaryButton from "@/src/utils/UI/SecondaryButton";
+import SecondaryButton from "@/src/components/UI/SecondaryButton";
 
 export default function OrderSummary() {
   const [open, setOpen] = useState(false);

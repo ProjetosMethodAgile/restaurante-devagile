@@ -1,4 +1,4 @@
-import PrimaryTitle from "@/src/utils/UI/PrimaryTitle";
+import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 
 export default function CategoriesList() {
   return (

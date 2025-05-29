@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Form } from "../Form";
+
 import { Check, Eye } from "lucide-react";
-import PrimaryTitle from "@/src/utils/UI/PrimaryTitle";
+import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import React from "react";
-import PrimaryButton from "@/src/utils/UI/PrimaryButton";
+import PrimaryButton from "@/src/components/UI/PrimaryButton";
+import { Form } from "@/src/components/UI/Form";
 
 export default function FormLogin() {
   const [usuario, setUsuario] = React.useState("");
@@ -13,7 +14,7 @@ export default function FormLogin() {
   const [resetSenha, setResetSenha] = React.useState(false);
   return (
     <Form.Root
-      className=" rounded-xl w-full bg-white flex flex-col p-15 shadow-lg max-w-md"
+      className="flex gap-2 rounded-xl w-full bg-white flex-col p-15 shadow-lg max-w-md"
       action=""
     >
       <div className="relative bg-primary rounded-full flex items-center size-20 justify-center self-center mb-6">
@@ -38,7 +39,6 @@ export default function FormLogin() {
         value={usuario}
         onChange={(e) => setUsuario(e.target.value)}
       />
-
       <Form.InputText
         id="senha"
         label="senha"
@@ -49,10 +49,8 @@ export default function FormLogin() {
         value={senha}
         required
         onChange={(e) => setSenha(e.target.value)}
-      ></Form.InputText>
-
-      <PrimaryButton text="Entrar" />
-
+      />
+      <PrimaryButton text="Entrar" className="" />
       <p
         className="text-text-secondary text-sm mt-4 cursor-pointer hover:underline"
         onClick={() => {

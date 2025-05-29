@@ -1,4 +1,4 @@
-import SecondaryButton from "@/src/utils/UI/SecondaryButton";
+import SecondaryButton from "@/src/components/UI/SecondaryButton";
 import { Check, Info } from "lucide-react";
 
 export default function OrderActions() {

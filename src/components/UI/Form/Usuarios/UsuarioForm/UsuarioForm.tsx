@@ -1,4 +1,4 @@
-import SecondaryTitle from "@/src/utils/UI/SecondaryTitle";
+import SecondaryTitle from "@/src/components/UI/SecondaryTitle";
 import { Form } from "../..";
 import { useActionState } from "react";
 import { postUser } from "@/src/actions/usuarios-actions/postUser";

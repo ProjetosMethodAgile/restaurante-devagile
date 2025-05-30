@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import { UsuarioData } from "@/src/types/user/userType";
+import { UsuarioTelas } from "@/src/types/user/userType";
 import { tokenUserAuth } from "./type/authType";
 export default async function getUserId() {
   const token = (await cookies()).get("token")?.value;
@@ -21,8 +21,7 @@ export default async function getUserId() {
           tags: ["auth"],
         },
       });
-      const user: UsuarioData = await res.json();
-      console.log(user);
+      const user: UsuarioTelas = await res.json();
 
       return { data: user };
     } else {

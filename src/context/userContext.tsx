@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { UsuarioData } from "@/src/types/user/userType";
+import { UsuarioTelas } from "@/src/types/user/userType";
 
 type IUserContext = {
-  user: UsuarioData | null;
-  setUser: React.Dispatch<React.SetStateAction<UsuarioData | null>>;
+  user: UsuarioTelas | null;
+  setUser: React.Dispatch<React.SetStateAction<UsuarioTelas | null>>;
 };
 
 const UserContext = React.createContext<IUserContext | null>(null);
@@ -23,9 +23,9 @@ export function UserContextProvider({
   user,
 }: {
   children: React.ReactNode;
-  user: UsuarioData | null;
+  user: UsuarioTelas | null;
 }) {
-  const [userState, setUser] = React.useState<UsuarioData | null>(user);
+  const [userState, setUser] = React.useState<UsuarioTelas | null>(user);
 
   return (
     <UserContext.Provider

@@ -34,7 +34,7 @@ const orders = [
     amount: 299.9,
     status: "cancelado",
   },
-    {
+  {
     orderId: "004",
     clientName: "Maria Oliveira",
     emissionDate: "2025/05/11",
@@ -46,7 +46,7 @@ const orders = [
     amount: 244.9,
     status: "concluido",
   },
-    {
+  {
     orderId: "005",
     clientName: "Maria Oliveira",
     emissionDate: "2025/05/11",
@@ -58,7 +58,7 @@ const orders = [
     amount: 244.9,
     status: "concluido",
   },
-    {
+  {
     orderId: "006",
     clientName: "Maria Oliveira",
     emissionDate: "2025/05/11",
@@ -74,7 +74,7 @@ const orders = [
 
 export default function OrdersGrid() {
   return (
-    <section className="grid-cols-3 grid gap-4">
+    <section className=" grid-cols-3 grid gap-4">
       {orders.map((order) => (
         <OrderCard
           key={order.orderId}

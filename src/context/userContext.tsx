@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UsuarioData } from "@/src/types/user/userType";
+import { UsuarioData } from "@/src/actions/user/type/userType";
 
 type IUserContext = {
   user: UsuarioData | null;

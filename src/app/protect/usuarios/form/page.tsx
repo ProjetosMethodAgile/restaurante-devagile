@@ -1,9 +1,9 @@
-"use client";
+"use server";
+import getEmpresaById from "@/src/actions/empresa/getEmpresaById";
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
-import SecondaryTitle from "@/src/components/UI/SecondaryTitle";
 import UsuarioForm from "@/src/components/Usuarios/UsuarioForm/UsuarioForm";
-import { Check } from "lucide-react";
-import { useActionState } from "react";
+
+
 
 export default async function UsuarioFormPage() {
   return (

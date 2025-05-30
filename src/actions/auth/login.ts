@@ -17,7 +17,7 @@ export async function login(
   if (!email || !senha) {
     return { success: false, message: "E-mail e senha são obrigatórios" };
   }
-  const url = process.env.URL_API;
+  const url = "http://localhost:3001";
 
   if (url) {
     const res = await fetch(`${url}/usuario/login`, {

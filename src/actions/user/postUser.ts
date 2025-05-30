@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { UsuarioData } from "@/src/actions/user/type/userType";
 import { tokenUserAuth } from "./type/authType";
-export default async function getUserId() {
+export default async function postUser() {
   const token = (await cookies()).get("token")?.value;
 
   if (token) {
@@ -22,7 +22,6 @@ export default async function getUserId() {
         },
       });
       const user: UsuarioData = await res.json();
-    
 
       return { data: user };
     } else {

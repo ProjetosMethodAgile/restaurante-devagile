@@ -3,12 +3,13 @@
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { UsuarioData } from "@/src/actions/user/type/userType";
-import { tokenUserAuth } from "./type/authType";
-export default async function getUserId() {
+import { tokenUserAuth } from "../user/type/authType";
+export default async function getEmpresaById() {
   const token = (await cookies()).get("token")?.value;
 
   if (token) {
     const userdata = jwt.decode(token) as tokenUserAuth;
+    
     const url = "http://localhost:3001";
     if (url) {
       const res = await fetch(`${url}/usuario/${userdata.id}`, {

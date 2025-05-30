@@ -57,8 +57,8 @@ export default function FormLogin() {
         onChange={(e) => setSenha(e.target.value)}
       />
       <PrimaryButton
-        text={pending ? "entrando..." : "Entrar"}
-        className=""
+        text={pending ? "Entrando..." : "Entrar"}
+        className="mt-2"
         disabled={pending ? true : false}
       />
       {!result.success && (

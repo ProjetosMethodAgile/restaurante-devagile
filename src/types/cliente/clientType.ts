@@ -1,11 +1,16 @@
 export type FormClienteData = {
-  contato: string;
-  nome: string;
-  cep: string;
+  nome:       string;
   logradouro: string;
-  numero: string;
-  complemento: string;
-  bairro: string;
-  frete: string;
-  observacao:string;
+  numeroInt:     string;
+  bairro:     string;
+  CEP:        string;
+  telefone:   string;
+  frete:      string;
+  observacao?:  string;
+  contato?   :  string;
+  cidade?    :  string;
+  Estado?    :  string;
+  complemento?: string;
+  email?      : string;
+  cpf?        : string;
 };

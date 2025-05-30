@@ -27,7 +27,11 @@ export default function FormInputOptions({
         <label className="text-text-secondary mb-2 text-sm">{label}</label>
       )}
       <select className={containerClass}>
-        {options.map(option =><option value={option.value}>{option.label}</option>)}
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </div>
   );

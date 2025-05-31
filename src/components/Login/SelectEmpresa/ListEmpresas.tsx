@@ -1,51 +1,93 @@
 "use client";
 
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { CurrentEmpresaProps, useUser } from "@/src/context/userContext";
 import PrimaryTitle from "../../UI/PrimaryTitle";
 import { CheckCircle } from "lucide-react";
 import PrimaryButton from "../../UI/PrimaryButton";
-import { redirect } from "next/navigation";
+import logoff from "@/src/actions/auth/logoff";
 
 export type ListEmpresasProps = React.ComponentProps<"div"> & {};
 
 export default function ListEmpresas({ ...props }: ListEmpresasProps) {
-  const { user, setCurrentEmpresa } = useUser();
+  const { user, empresa, setCurrentEmpresa } = useUser();
+  const router = useRouter();
 
-  async function handleClick(emp: CurrentEmpresaProps) {
-    setCurrentEmpresa(emp);
-    redirect("protect/home");
+  // Enquanto user estiver undefined, não renderiza nada
+  if (user === undefined) {
+    return null;
   }
-  if (user)
-    return (
-      <main className="min-h-screen " {...props}>
-        <section className="container-global mt-10 ">
-          <PrimaryTitle title="Selecione a empresa desejada" className="mb-3" />
-          {user.empresas.map((e) => (
-            <div
-              className="bg-white shadow-md rounded-xl p-8 flex flex-wrap items-center justify-between"
-              key={e.empresa.codigo}
-            >
-              <div className="flex flex-wrap items-center">
-                <h3 className="font-semibold min-w-35">
-                  {e.empresa.razao_social}
-                </h3>
-                <div className="text-text-secondary text-sm  flex flex-col flex-wrap justify-between">
-                  <p>Cnpj: {e.empresa.cnpj}</p>
-                  <p>Tipo da empresa: {e.empresa.tipoEmpresa.nome}</p>
-                  <p>Situação: {e.empresa.status}</p>
+
+  // Se usuário não autenticado, redireciona para login/protect
+  useEffect(() => {
+    if (!user) {
+      router.replace("/login");
+    }
+  }, [user, router]);
+
+  // Assim que detectar empresa já no contexto ou no localStorage, redireciona para /protect/home
+  useEffect(() => {
+    if (!user) return;
+
+    // Se existir empresa salva no localStorage e for válida, seta contexto e redireciona
+    const empresaId = window.localStorage.getItem("empresaStorage");
+    if (empresaId) {
+      const encontrada = user.empresas.find(
+        (emp) => emp.empresa.id === empresaId
+      );
+      if (encontrada) {
+        setCurrentEmpresa(encontrada.empresa);
+      } else {
+        logoff();
+      }
+    }
+  }, [user, empresa, setCurrentEmpresa, router]);
+
+  // Se não há user (usuário não está autenticado), não mostra nada
+  if (!user) return null;
+
+  return (
+    <main className="min-h-screen" {...props}>
+      <section className="container-global mt-10">
+        <PrimaryTitle title="Selecione a empresa desejada" className="mb-3" />
+
+        <div className="flex flex-col gap-6">
+          {user.empresas.map((e) => {
+            const empObj: CurrentEmpresaProps = e.empresa;
+            return (
+              <div
+                key={e.empresa.codigo}
+                className="bg-white shadow-md rounded-xl p-8 flex flex-wrap items-center justify-between"
+              >
+                <div className="flex flex-wrap items-center">
+                  <h3 className="font-semibold min-w-35">
+                    {empObj.razao_social}
+                  </h3>
+                  <div className="ml-4 text-text-secondary text-sm flex flex-col">
+                    <p>CNPJ: {empObj.cnpj}</p>
+                    <p>Tipo da empresa: {empObj.tipoEmpresa.nome}</p>
+                    <p>Situação: {empObj.status}</p>
+                  </div>
+                </div>
+                <div>
+                  <PrimaryButton
+                    className="bg-red-300 border border-red-400/50 hover:bg-red-400 text-red-900"
+                    icon={CheckCircle}
+                    text="Entrar"
+                    onClick={() => {
+                      // Salva no localStorage, atualiza contexto e redireciona
+                      window.localStorage.setItem("empresaStorage", empObj.id);
+                      setCurrentEmpresa(empObj);
+                      router.replace("/protect/home");
+                    }}
+                  />
                 </div>
               </div>
-              <div className="">
-                <PrimaryButton
-                  className="bg-red-300 border-1 border-red-400/50 hover:bg-red-400 text-red-900"
-                  icon={CheckCircle}
-                  text="Entrar"
-                  onClick={() => handleClick(e.empresa)}
-                />
-              </div>
-            </div>
-          ))}
-        </section>
-      </main>
-    );
+            );
+          })}
+        </div>
+      </section>
+    </main>
+  );
 }

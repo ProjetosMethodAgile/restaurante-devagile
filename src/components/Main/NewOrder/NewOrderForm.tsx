@@ -15,7 +15,7 @@ export default function NewOrderForm() {
   const toggleView = () => setShowSearch((prev) => !prev);
 
   return (
-    <section className=" overflow-y-auto rounded-xl p-8">
+    <section className=" overflow-y-auto rounded-xl p-8 container-global">
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-bold text-2xl text-secondary">Novo Pedido</h2>
         <div className="flex items-center gap-4">

@@ -10,7 +10,7 @@ export default function OrderSummary() {
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white shadow-[0_-1px_10px_rgba(0,0,0,0.05)] border-t z-50 p-3 sm:p-4">
       {/* Topo: Total e botão de expandir/recolher */}
-      <div className="flex justify-between items-center text-sm font-semibold text-black">
+      <div className="flex justify-between items-center text-sm font-semibold text-black container-global">
         <span>Total</span>
         <div className="flex items-center gap-2">
           <span className="text-base font-bold">R$ 33,90</span>

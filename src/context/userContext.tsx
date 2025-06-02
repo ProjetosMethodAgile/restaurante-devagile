@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { UsuarioData } from "@/src/actions/user/type/userType";
 import { UsuarioTelas } from "@/src/types/user/userType";
 
 export type CurrentEmpresaProps = {

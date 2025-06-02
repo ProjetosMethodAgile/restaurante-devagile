@@ -1,22 +1,21 @@
 "use client";
 import { Form } from "../../UI/Form";
-import { useActionState, useEffect } from "react";
-
+import { useActionState } from "react";
+import { postUser } from "@/src/actions/usuarios-actions/postUser";
 import UsuariosInfosForm from "./UsuariosInfosForm";
 import UsuariosPemissoesForm from "./UsuariosPermissoesForm";
 import PrimaryButton from "../../UI/PrimaryButton";
 import { Check } from "lucide-react";
 
-
 export default function UsuarioForm() {
-  /* const [state, formAction] = useActionState(postUser, {
+  const [state, formAction] = useActionState(postUser, {
     errors: [],
     msg_success: "",
     success: false,
-  }); */
+  });
   return (
     <Form.Root
-      /*  action={formAction} */
+      action={formAction}
       className="flex flex-col gap-4 *:border-b-1 *:border-slate-200 *:pb-6"
     >
       <UsuariosInfosForm />

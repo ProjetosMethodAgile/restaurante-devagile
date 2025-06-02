@@ -1,15 +1,21 @@
-"use client";
+import getRoles from "@/src/actions/roles/getRoles";
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
-import SecondaryTitle from "@/src/components/UI/SecondaryTitle";
-import UsuarioForm from "@/src/components/Usuarios/UsuarioForm/UsuarioForm";
-import { Check } from "lucide-react";
-import { useActionState } from "react";
+
+import UsuarioForm from "@/src/components/Usuarios/UsuarioForm/UsuariosForm";
 
 export default async function UsuarioFormPage() {
+  const { data: roles } = await getRoles();
+  console.log(roles);
+  if (!roles) return <div>Ocorreu um erro ao carregar os dados</div>;
+  /*   const roles = getRoles(); */
+  /*   console.log(roles);  */
+
+  /*   if (!roles) return <div>Ocorreu um erro ao cadastrar</div>; */
+
   return (
     <section className="m-4 bg-white flex flex-col gap-6 p-6 rounded-xl shadow-md">
       <PrimaryTitle title="Cadastro de usuario" />
-      <UsuarioForm />
+      <UsuarioForm roles={roles} />
     </section>
   );
 }

@@ -1,15 +1,24 @@
 import SecondaryTitle from "../../UI/SecondaryTitle";
 import { div } from "framer-motion/client";
 import { Form } from "../../UI/Form/index";
+import { currentUserProps } from "./UsuariosForm";
+import { RoleBase } from "@/src/types/role/roleType";
 
-export default function UsuariosPemissoesForm() {
+export default function UsuariosPemissoesForm({
+  currentUser,
+  setCurrentUser,
+  roles,
+}: currentUserProps & { roles: RoleBase[] }) {
   return (
     <div className="flex flex-col gap-6">
       <div>
         <SecondaryTitle title="Permissões" />
         <Form.InputOptions
           label="Perfil de acesso"
-          options={[{ label: "Administrador", value: "001" }]}
+          options={roles.map((role) => ({
+            value: role.id,
+            label: role.nome,
+          }))}
         />
       </div>
       <div className="">

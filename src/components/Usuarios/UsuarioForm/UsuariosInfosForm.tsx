@@ -12,7 +12,6 @@ export default function UsuariosInfosForm() {
           type="email"
           placeholder="usuario@email.com.br"
         />
-        <Form.InputOptions label="Empresa" options={[{label:'Empresa X',value: '001'}]} />
       </div>
     </div>
   );

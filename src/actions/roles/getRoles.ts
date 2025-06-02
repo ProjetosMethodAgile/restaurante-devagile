@@ -7,7 +7,7 @@ export default async function getRoles() {
     const token = (await cookies()).get("token")?.value;
 
     if (token) {
-      const url = process.env.URL_API;
+      const url = "http://localhost:3001";
       if (url) {
         const res = await fetch(`${url}/role`, {
           method: "GET",

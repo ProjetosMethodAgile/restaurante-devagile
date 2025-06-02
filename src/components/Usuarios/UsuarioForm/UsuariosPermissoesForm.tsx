@@ -3,12 +3,22 @@ import { div } from "framer-motion/client";
 import { Form } from "../../UI/Form/index";
 import { currentUserProps } from "./UsuariosForm";
 import { RoleBase } from "@/src/types/role/roleType";
+import getTelasByRoleId from "@/src/actions/telas/getTelasByRoleId";
+import { useEffect } from "react";
 
 export default function UsuariosPemissoesForm({
   currentUser,
   setCurrentUser,
   roles,
 }: currentUserProps & { roles: RoleBase[] }) {
+  useEffect(() => {
+    async function getTelas() {
+      const data = await getTelasByRoleId(currentUser.roleId);
+      console.log(data);
+    }
+    getTelas();
+  }, [currentUser]);
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -19,6 +29,10 @@ export default function UsuariosPemissoesForm({
             value: role.id,
             label: role.nome,
           }))}
+          name="roleId"
+          onChange={(e) =>
+            setCurrentUser({ ...currentUser, roleId: e.target.value })
+          }
         />
       </div>
       <div className="">

@@ -9,6 +9,7 @@ import { Check } from "lucide-react";
 import UsuarioEmpresasForm from "./UsuariosEmpresasForm";
 import { useUser } from "@/src/context/userContext";
 import { RoleBase } from "@/src/types/role/roleType";
+import { postUser } from "@/src/actions/user/postUser";
 
 type UsuarioFormProps = {
   roles: RoleBase[];
@@ -17,14 +18,11 @@ type UsuarioFormProps = {
 export type currentUserType = {
   nome: string;
   email: string;
-  empresas: {
-    label: string;
-    add: boolean;
+  empresaIds: {
+    id: string,
+    nome: string
   }[];
-  role: {
-    label: string;
-    value: string;
-  };
+  roleId: string;
 };
 
 export type currentUserProps = {
@@ -33,41 +31,46 @@ export type currentUserProps = {
 };
 
 export default function UsuarioForm({ roles }: UsuarioFormProps) {
-  /*   const [state, formAction] = useActionState(postUser, {
+  const [state, formAction] = useActionState(postUser, {
     errors: [],
     msg_success: "",
     success: false,
-  }); */
+  });
+
+  // pega usuario atual (logado)
   const { user } = useUser();
 
   // Transformando as empresas do usuário em um formato adequado para o formulário
   const empresas =
     user?.empresas.map((empresa) => ({
       label: empresa.empresa.razao_social,
-      add: false,
+      value: empresa.empresa.id,
     })) || [];
 
-  const role = user?.role;
-
+  // cria estado do formulario do usuario atual
   const [currentUser, setCurrentUser] = React.useState<currentUserType>({
     nome: "",
     email: "",
-    empresas: empresas,
-    role: {
-      label: role?.descricao || "",
-      value: role?.id || "",
-    },
+    empresaIds: [],
+    roleId: "",
   });
+
 
   return (
     <Form.Root
-      /*       action={formAction} */
+      action={formAction}
       className="flex flex-col gap-4 *:border-b-1 *:border-slate-200 *:pb-6"
     >
-      <UsuariosInfosForm />
+
+
+      <UsuariosInfosForm
+        currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
+      />
       <UsuarioEmpresasForm
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
+        empresas={empresas}
       />
       <UsuariosPemissoesForm
         currentUser={currentUser}

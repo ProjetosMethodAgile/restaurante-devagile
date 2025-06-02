@@ -9,7 +9,7 @@ export default async function getUserId() {
 
   if (token) {
     const userdata = jwt.decode(token) as tokenUserAuth;
-    const url = "http://localhost:3001";
+    const url = process.env.URL_API;
     if (url) {
       const res = await fetch(`${url}/usuario/${userdata.id}`, {
         method: "GET",

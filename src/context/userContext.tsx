@@ -2,10 +2,24 @@
 
 import React from "react";
 import { UsuarioData } from "@/src/actions/user/type/userType";
+import { UsuarioTelas } from "@/src/types/user/userType";
+
+export type CurrentEmpresaProps = {
+  id: string;
+  codigo: string;
+  status: string;
+  razao_social: string;
+  cnpj: string;
+  tipoEmpresa: { nome: string };
+};
 
 type IUserContext = {
-  user: UsuarioData | null;
-  setUser: React.Dispatch<React.SetStateAction<UsuarioData | null>>;
+  user: UsuarioTelas | null;
+  setUser: React.Dispatch<React.SetStateAction<UsuarioTelas | null>>;
+  empresa?: CurrentEmpresaProps | null;
+  setCurrentEmpresa: React.Dispatch<
+    React.SetStateAction<CurrentEmpresaProps | null>
+  >;
 };
 
 const UserContext = React.createContext<IUserContext | null>(null);
@@ -21,17 +35,23 @@ export const useUser = () => {
 export function UserContextProvider({
   children,
   user,
+  empresa,
 }: {
   children: React.ReactNode;
-  user: UsuarioData | null;
+  user: UsuarioTelas | null;
+  empresa?: CurrentEmpresaProps | null;
 }) {
-  const [userState, setUser] = React.useState<UsuarioData | null>(user);
+  const [userState, setUser] = React.useState<UsuarioTelas | null>(user);
+  const [currentEmpresa, setCurrentEmpresa] =
+    React.useState<CurrentEmpresaProps | null>(empresa || null);
 
   return (
     <UserContext.Provider
       value={{
         user: userState,
         setUser,
+        empresa: currentEmpresa,
+        setCurrentEmpresa,
       }}
     >
       {children}

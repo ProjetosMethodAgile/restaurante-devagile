@@ -181,11 +181,11 @@ function handleCancel() {
         {editIndex !== null ? "Alterar cliente" : "Cadastrar cliente"}
       </h1>
 
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <SecondaryButton
           type="button"
           onClick={() => setAutoCepEnabled((p) => !p)}
-          className="text-sm"
+          className={`${autoCepEnabled?"bg-primary hover:bg-red-600 text-white":"bg-blue-500 text-white hover:bg-blue-600"}`}
           text={
             autoCepEnabled
               ? "Desativar busca automática CEP"
@@ -299,7 +299,8 @@ function handleCancel() {
         text={editIndex !== null ? "Alterar" : "Cadastrar"}
         className="w-full bg-blue-500 hover:bg-blue-600 text-white"
       />
-      {dataAlteredUser.map((item)=>item.status?  <PrimaryButton
+      {dataAlteredUser.map((item,idx)=>item.status?  <PrimaryButton
+        key={idx}
         type="submit"
         text={"Cancelar"}
         className="w-full" 

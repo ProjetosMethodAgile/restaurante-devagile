@@ -54,8 +54,7 @@ export async function postUser(
       }),
     });
 
-    console.log(await response.json());
-
+   
     if (response.ok) {
       revalidateTag("new-user");
       return {
@@ -64,9 +63,10 @@ export async function postUser(
         msg_success: "Usuário cadastrado com sucesso.",
       };
     } else {
+      const { message } = await response.json();
       return {
         success: false,
-        errors: ["Erro ao cadastrar, contate o administrador do sistema."],
+        errors: [message],
         msg_success: "",
       };
     }

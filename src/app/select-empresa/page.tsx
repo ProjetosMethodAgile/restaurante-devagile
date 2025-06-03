@@ -9,7 +9,6 @@ export default async function SelectEmpresaPage() {
   const { data: user } = await getUserId();
   if (!user) {
     redirect("/");
-    return null;
   }
 
   const cookieStore = cookies();
@@ -19,7 +18,7 @@ export default async function SelectEmpresaPage() {
       (e) => e.empresa.id === empresaCookie
     );
     if (encontrada) {
-      redirect("/protect/home");
+      redirect("/app/home");
     } else {
       (await cookieStore).delete({ name: "empresaStorage", path: "/" });
     }

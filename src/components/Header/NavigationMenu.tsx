@@ -20,8 +20,8 @@ export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
   }
 
   return (
-    <header className="bg-white w-full shadow-md">
-      <nav className="flex justify-between items-center px-6 py-4 container-global">
+    <header className="bg-white  w-full shadow-md">
+      <nav className="flex justify-between items-center flex-wrap  px-6 py-4  container-global">
         <div className="flex items-center gap-2">
           <BookOpen className="bg-primary p-2 text-card rounded-full size-10" />
           <h1 className="font-semibold text-2xl text-slate-900">
@@ -29,18 +29,18 @@ export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
           </h1>
         </div>
 
-        <nav className="flex items-center gap-10 text-text-secondary">
+        <nav className="flex items-center flex-wrap justify-center gap-5 text-text-secondary">
           <ul className="flex gap-6">
             {empresa && (
               <div className="flex gap-6">
                 <li className="cursor-pointer hover:text-primary font-semibold">
-                  <Link href="/protect/home">Início</Link>
+                  <Link href="/app/home">Início</Link>
                 </li>
                 <li className="cursor-pointer hover:text-primary font-semibold">
-                  <Link href="/protect/cliente">Clientes</Link>
+                  <Link href="/app/cliente">Clientes</Link>
                 </li>
                 <li className="cursor-pointer hover:text-primary font-semibold">
-                  <Link href="/protect/relatorios">Relatórios</Link>
+                  <Link href="/app/relatorios">Relatórios</Link>
                 </li>
               </div>
             )}
@@ -53,7 +53,7 @@ export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
           </ul>
 
           <div className="flex items-center gap-4">
-            <h3>{user.nome ?? "Usuário"}</h3>
+            <h3>{user.nome.split(" ")[0] ?? "Usuário"}</h3>
             <User2 className="bg-primary/50 text-primary p-1 rounded-full size-10" />
           </div>
         </nav>

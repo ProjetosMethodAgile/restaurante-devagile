@@ -32,6 +32,6 @@ export async function setEmpresa(formData: FormData): Promise<void> {
     path: "/",
   });
 
-  // 5) Redirecionar para /protect/home
-  redirect("/protect/home");
+  // 5) Redirecionar para /app/home
+  redirect("/app/home");
 }

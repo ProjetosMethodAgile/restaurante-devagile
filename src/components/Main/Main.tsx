@@ -15,7 +15,7 @@ export default function Main() {
   const router = useRouter();
 
   const handleNovoPedido = () => {
-    router.push("/protect/pedido");
+    router.push("/app/pedido");
   };
 
   return (

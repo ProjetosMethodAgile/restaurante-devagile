@@ -5,7 +5,7 @@ import SecondaryButton from "@/src/components/UI/SecondaryButton";
 import { useState, useEffect, useActionState } from "react";
 import { handleChangeCep } from "@/src/actions/api-externas/cep/getcep";
 import { FormClienteData } from "@/src/types/cliente/clientType";
-import { registerCli } from "@/src/app/protect/cliente/action-cliente/registercli";
+import { registerCli } from "@/src/app/app/cliente/action-cliente/registercli";
 import { ComponenteClientesState } from "./ContainerClientes";
 
 const estados = [

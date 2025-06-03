@@ -1,4 +1,4 @@
-// /app/protect/layout.tsx
+// /app/app/layout.tsx
 import React, { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

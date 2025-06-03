@@ -1,4 +1,4 @@
-// /app/protect/page.tsx
+// /app/app/page.tsx
 import React from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -27,7 +27,7 @@ export default async function SelectEmpresaPage() {
       (e) => e.empresa.id === empresaCookie
     );
     if (encontrada) {
-      redirect("/protect/home");
+      redirect("/app/home");
     } else {
       // Se o cookie existir mas for inválido, apaga e continua
       (await cookieStore).delete({ name: "empresaStorage", path: "/" });
@@ -61,7 +61,7 @@ export default async function SelectEmpresaPage() {
 
                 {/* 
                   Botão “Entrar” dispara a Server Action `setEmpresa`, que grava o cookie
-                  e redireciona para /protect/home. 
+                  e redireciona para /app/home. 
                 */}
                 <form action={setEmpresa} method="POST">
                   <input type="hidden" name="empresaId" value={empObj.id} />

@@ -6,7 +6,7 @@ export default async function LoginPage() {
   const { data: user } = await getUserId();
 
   if (user) {
-    redirect("/protect/");
+    redirect("/app/");
   }
   return (
     <div className="flex items-center justify-center min-h-screen bg-light w-full">

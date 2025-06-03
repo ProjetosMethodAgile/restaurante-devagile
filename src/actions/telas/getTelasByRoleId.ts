@@ -22,7 +22,6 @@ export default async function getTelasByRoleId(roleId: string) {
         revalidate: 60,
       },
     });
-    console.log(res)
 
     if (!res.ok) {
       const message = await res.text();

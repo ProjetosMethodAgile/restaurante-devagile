@@ -19,10 +19,11 @@ export type currentUserType = {
   nome: string;
   email: string;
   empresaIds: {
-    id: string,
-    nome: string
+    id: string;
+    nome: string;
   }[];
   roleId: string;
+  telas: Record<string, { id: string; nome: string; ativo: boolean }>;
 };
 
 export type currentUserProps = {
@@ -52,17 +53,15 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
     nome: "",
     email: "",
     empresaIds: [],
-    roleId: "",
+    roleId: "57a8e310-b3e8-4d7a-90f5-08de6e3c634f",
+    telas: {},
   });
-
 
   return (
     <Form.Root
       action={formAction}
       className="flex flex-col gap-4 *:border-b-1 *:border-slate-200 *:pb-6"
     >
-
-
       <UsuariosInfosForm
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
@@ -77,11 +76,27 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
         setCurrentUser={setCurrentUser}
         roles={roles}
       />
-      <PrimaryButton
-        text="Cadastrar "
-        className="bg-secondary self-end rounded-xl hover:bg-secondary/90"
-        icon={Check}
-        type="submit"
+      <div className="flex justify-end mt-4">
+        <PrimaryButton
+          text="Cadastrar"
+          className="bg-secondary rounded-xl hover:bg-secondary/90"
+          icon={Check}
+          type="submit"
+        />
+      </div>
+      <input
+        type="hidden"
+        name="empresaIds"
+        value={JSON.stringify(currentUser.empresaIds.map((e) => e.id))}
+      />
+      <input
+        type="hidden"
+        name="telaIds"
+        value={JSON.stringify(
+          Object.values(currentUser.telas)
+            .filter((t) => t.ativo)
+            .map((t) => t.id)
+        )}
       />
     </Form.Root>
   );

@@ -2,7 +2,6 @@
 import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { tokenUserAuth } from "./type/authType";
 
 export async function postUser(
   state:
@@ -16,7 +15,7 @@ export async function postUser(
     const roleId = formData.get("roleId") as string;
     const empresas = formData.get("empresaIds") as string;
     const telas = formData.get("telaIds") as string;
-  
+
     if (!nome || !email || !roleId) {
       return {
         errors: ["Preencha todos os campos obrigatórios."],

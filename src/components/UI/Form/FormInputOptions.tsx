@@ -3,7 +3,7 @@ import { FormInputOptionsProps } from "./FormsType/FormType";
 
 export default function FormInputOptions({
   label,
-  icon: Icon,
+  // icon: Icon,
   className,
   disabled,
   options,

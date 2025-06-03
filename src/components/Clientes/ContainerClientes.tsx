@@ -53,7 +53,7 @@ export default function ContainerClientes({
     if (!searchTerm) return true;
     const onlyDigits = /^\d+$/.test(searchTerm);
     if (onlyDigits) {
-      const phone = item.telefone.replace(/\D/g, "");
+      const phone = item.contato.replace(/\D/g, "");
       return phone.includes(searchTerm);
     }
     return item.nome.toLowerCase().includes(searchTerm.toLowerCase());
@@ -82,7 +82,7 @@ export default function ContainerClientes({
         numeroInt: data.numeroInt,
         bairro: data.bairro,
         CEP: data.CEP,
-        telefone: data.telefone,
+        contato: data.contato,
         frete: data.frete,
         observacao: data.observacao,
         cidade:data.cidade,
@@ -142,9 +142,7 @@ export default function ContainerClientes({
                         Contato: {item.contato}
                       </span>
                     )}
-                    <span className="text-sm text-gray-600">
-                      Telefone: {item.telefone}
-                    </span>
+                  
                   </div>
                   <div className="space-x-2 flex">
                     <SecondaryButton className=" bg-blue-500 text-white rounded hover:bg-blue-600 transition"

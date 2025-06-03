@@ -33,7 +33,6 @@ export default function FormCliente({
     nome: "",
     email: "",
     cpf: "",
-    telefone: "",
     CEP: "",
     logradouro: "",
     numeroInt: "",
@@ -63,7 +62,7 @@ export default function FormCliente({
         nome:      toEdit.nome,
         email:     toEdit.email,
         cpf:       toEdit.cpf,
-        telefone:  toEdit.telefone,
+        contato:  toEdit.contato,
         CEP:       toEdit.CEP,
         logradouro:toEdit.logradouro,
         numeroInt: toEdit.numeroInt,
@@ -130,16 +129,16 @@ export default function FormCliente({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // registra via action (API) se desejar
+
     submitForm();
 
     if (editIndex !== null) {
-      // atualizar item existente
+     
       const updated = [...dataAlteredUser];
       updated[editIndex] = { ...form, status: false };
       setDataAlteredUser(updated);
     } else {
-      // adicionar novo cliente
+
       setDataAlteredUser([
         ...dataAlteredUser,
         { ...form, status: false },
@@ -158,7 +157,6 @@ function handleCancel() {
       nome: "",
       email: "",
       cpf: "",
-      telefone: "",
       CEP: "",
       logradouro: "",
       numeroInt: "",
@@ -176,7 +174,7 @@ function handleCancel() {
     setDataAlteredUser(updated);
 }
   return (
-    <Form.Root onSubmit={handleSubmit} className="space-y-4">
+    <Form.Root onSubmit={(e)=> registerCli(form)} className="space-y-4">
       <h1 className="text-xl font-semibold">
         {editIndex !== null ? "Alterar cliente" : "Cadastrar cliente"}
       </h1>
@@ -210,9 +208,9 @@ function handleCancel() {
           onChange={handleChange}
         />
         <Form.InputText
-          id="telefone"
-          placeholder="Telefone"
-          value={form.telefone}
+          id="contato"
+          placeholder="contato"
+          value={form.contato}
           onChange={handleChange}
         />
         <Form.InputText

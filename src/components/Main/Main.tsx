@@ -4,7 +4,7 @@ import GenericInput from "@/src/components/UI/GenericInput";
 import GenericSelectInput from "@/src/components/UI/GenericSelectInput";
 import PrimaryButton from "@/src/components/UI/PrimaryButton";
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
-import { LayoutGrid, LayoutList, List, Plus } from "lucide-react";
+import { LayoutGrid, List, Plus } from "lucide-react";
 import OrdersSummary from "./OrderResume/OdersSummary";
 import OrdersList from "./Orders/List/OrdersList";
 import OrdersGrid from "./Orders/Grid/OrdersGrid";
@@ -15,7 +15,7 @@ export default function Main() {
   const router = useRouter();
 
   const handleNovoPedido = () => {
-    router.push("/protect/pedido");
+    router.push("/app/pedido");
   };
 
   return (

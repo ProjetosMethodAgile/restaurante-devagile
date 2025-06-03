@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import SecondaryTitle from "../../UI/SecondaryTitle";
+
 import { Form } from "../../UI/Form/index";
 import { currentUserProps } from "./UsuariosForm";
 import { RoleBase } from "@/src/types/role/roleType";
@@ -33,8 +34,7 @@ export default function UsuariosPermissoesForm({
     }
   }, [currentUser.roleId]);
 
-  const isChecked = (id: string) =>
-    currentUser.telas?.[id]?.ativo ?? false;
+  const isChecked = (id: string) => currentUser.telas?.[id]?.ativo ?? false;
 
   const handleToggleTela = (tela: any) => {
     const isActive = isChecked(tela.id);

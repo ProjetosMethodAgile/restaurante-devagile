@@ -32,6 +32,8 @@ export default async function getUserId() {
       return { data: null };
     }
   } catch (error) {
+    console.log(error);
+
     return { data: null };
   }
 }

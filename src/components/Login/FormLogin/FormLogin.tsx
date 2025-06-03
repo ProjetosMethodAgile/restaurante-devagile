@@ -12,7 +12,7 @@ import { login } from "@/src/actions/auth/login";
 export default function FormLogin() {
   const [usuario, setUsuario] = React.useState("");
   const [senha, setSenha] = React.useState("");
-  const [resetSenha, setResetSenha] = React.useState(false);
+  // const [resetSenha, setResetSenha] = React.useState(false);
 
   const [result, loginAction, pending] = useActionState(login, {
     success: true,
@@ -67,7 +67,7 @@ export default function FormLogin() {
       <p
         className="text-text-secondary text-sm mt-2 cursor-pointer hover:underline"
         onClick={() => {
-          setResetSenha(true);
+          // setResetSenha(true);
         }}
       >
         Esqueci a senha

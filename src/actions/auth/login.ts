@@ -18,7 +18,7 @@ export async function login(
     if (!email || !senha) {
       return { success: false, message: "E-mail e senha são obrigatórios" };
     }
-    const url = 'http://localhost:3001';
+    const url = "http://localhost:3001";
 
     if (url) {
       const res = await fetch(`${url}/usuario/login`, {
@@ -42,7 +42,7 @@ export async function login(
         maxAge: 60 * 60 * 24 * 7, // 7 dias
       });
 
-      redirect("/protect/");
+      redirect("/app/");
     } else {
       return {
         success: false,
@@ -50,6 +50,8 @@ export async function login(
       };
     }
   } catch (error) {
+    console.log(error);
+
     return {
       success: false,
       message: "Erro interno no sistema",

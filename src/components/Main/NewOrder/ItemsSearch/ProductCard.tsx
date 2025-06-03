@@ -1,7 +1,7 @@
 import SecondaryButton from "@/src/components/UI/SecondaryButton";
 import { Hash } from "lucide-react";
 import Image from "next/image";
-const parmesiana = require("@/public/image/foods/parmesiana-1.jpg");
+import parmesiana from "@/public/image/foods/parmesiana-1.jpg";
 
 export default function ProductCard() {
   return (

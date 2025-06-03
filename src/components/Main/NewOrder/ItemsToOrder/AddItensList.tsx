@@ -1,5 +1,3 @@
-import Counter from "@/src/components/UI/Counter";
-import { Pen, Trash } from "lucide-react";
 import ItemOrder from "./ItemOrder";
 
 export default function AddItensList() {

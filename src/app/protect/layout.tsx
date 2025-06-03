@@ -1,25 +1,47 @@
-import getUserId from "@/src/actions/user/getUserId";
-import NavigationMenu from "@/src/components/Header/NavigationMenu";
-import { UserContextProvider } from "@/src/context/userContext";
+// /app/protect/layout.tsx
+import React, { ReactNode } from "react";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-// app/[empresa]/protect/layout.tsx
-export default async function ProtectedEmpresaLayout({
+import getUserId from "@/src/actions/user/getUserId";
+import { UserContextProvider } from "@/src/context/userContext";
+import NavigationMenu from "@/src/components/Header/NavigationMenu";
+
+export default async function ProtectLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
+  // 1) Verificar token do usuário
   const { data: user } = await getUserId();
-
   if (!user) {
     redirect("/");
+    return null;
   }
+
+  // 2) Verificar cookie "empresaStorage"
+  const cookieStore = cookies();
+  const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
+  if (!empresaCookie) {
+    redirect("/select-empresa");
+    return null;
+  }
+
+  // 3) Verificar se a empresa pertence ao usuário
+  const encontrada = user.empresas.find((e) => e.empresa.id === empresaCookie);
+  if (!encontrada) {
+    (await cookieStore).delete({ name: "empresaStorage", path: "/" });
+    redirect("/select-empresa");
+    return null;
+  }
+
+  const empresaSelecionada = encontrada.empresa;
+
+  // 4) Renderizar contexto + header + conteúdo protegido
   return (
-    <UserContextProvider user={user}>
-      <div className="bg-card">
-        <NavigationMenu />
-        <div className="overflow-auto bg-stone-100">{children}</div>
-      </div>
+    <UserContextProvider user={user} empresa={empresaSelecionada}>
+      <NavigationMenu user={user} empresa={empresaSelecionada} />
+      {children}
     </UserContextProvider>
   );
 }

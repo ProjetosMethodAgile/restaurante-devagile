@@ -1,59 +1,32 @@
+// /src/components/Header/NavigationMenu.tsx
 "use client";
 
-import React, { useEffect } from "react";
-import { useUser } from "@/src/context/userContext";
-import { BookOpen, User2 } from "lucide-react";
+import React from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { BookOpen, User2 } from "lucide-react";
 import logoff from "@/src/actions/auth/logoff";
+import { UsuarioTelas } from "@/src/types/user/userType";
+import { CurrentEmpresaProps } from "@/src/context/userContext";
 
-export default function NavigationMenu() {
-  const { user, empresa, setCurrentEmpresa } = useUser();
-  const router = useRouter();
-  const pathname = usePathname();
+type NavigationMenuProps = {
+  user: UsuarioTelas;
+  empresa: CurrentEmpresaProps | null;
+};
 
-  // Enquanto user for undefined (por exemplo, contexto ainda carregando), não renderiza nada
-  if (user === undefined) {
-    return null;
-  }
-
-  useEffect(() => {
-    // Se não há user, redireciona para tela de login/protect
-    if (!user) {
-      logoff();
-      return;
-    }
-
-    // Se já existe empresa salva no localStorage, dispara o setCurrentEmpresa
-    const empresaId = window.localStorage.getItem("empresaStorage");
-    if (empresaId) {
-      const encontrada = user.empresas.find(
-        (emp) => emp.empresa.id === empresaId
-      );
-      if (encontrada) {
-        setCurrentEmpresa(encontrada.empresa);
-      }
-    } else {
-      setCurrentEmpresa(null);
-      if (pathname !== "/protect/") {
-        router.replace("/protect/");
-      }
-    }
-  }, [user, router, setCurrentEmpresa, pathname]);
-
-  if (!user) return null;
-
+export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
   async function handleLogout() {
-    window.localStorage.removeItem("empresaStorage");
-    logoff();
+    await logoff();
+    // clearEmpresa() apaga o cookie e redireciona para /select-empresa
   }
 
   return (
-    <header className="bg-white  w-full shadow-bottom shadow-2xl">
-      <nav className="flex justify-between items-center  px-6 py-4  container-global">
+    <header className="bg-white w-full shadow-md">
+      <nav className="flex justify-between items-center px-6 py-4 container-global">
         <div className="flex items-center gap-2">
           <BookOpen className="bg-primary p-2 text-card rounded-full size-10" />
-          <h1 className="font-semibold text-2xl text-slate-900">Bikeline</h1>
+          <h1 className="font-semibold text-2xl text-slate-900">
+            Bikeline {empresa && " - " + empresa.razao_social}
+          </h1>
         </div>
 
         <nav className="flex items-center gap-10 text-text-secondary">
@@ -61,7 +34,7 @@ export default function NavigationMenu() {
             {empresa && (
               <div className="flex gap-6">
                 <li className="cursor-pointer hover:text-primary font-semibold">
-                  <Link href="/protect/home">Inicio</Link>
+                  <Link href="/protect/home">Início</Link>
                 </li>
                 <li className="cursor-pointer hover:text-primary font-semibold">
                   <Link href="/protect/cliente">Clientes</Link>
@@ -73,9 +46,7 @@ export default function NavigationMenu() {
             )}
             <li
               className="cursor-pointer hover:text-primary font-semibold"
-              onClick={() => {
-                handleLogout();
-              }}
+              onClick={handleLogout}
             >
               Sair
             </li>

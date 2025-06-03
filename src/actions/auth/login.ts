@@ -50,6 +50,8 @@ export async function login(
       };
     }
   } catch (error) {
+    console.log(error);
+
     return {
       success: false,
       message: "Erro interno no sistema",

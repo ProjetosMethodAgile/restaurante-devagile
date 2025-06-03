@@ -1,63 +1,31 @@
-"use client";
-
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { CurrentEmpresaProps, useUser } from "@/src/context/userContext";
-import PrimaryTitle from "../../UI/PrimaryTitle";
+// /src/components/Login/SelectEmpresa/ListEmpresas.tsx
+import React from "react";
+import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
+import PrimaryButton from "@/src/components/UI/PrimaryButton";
 import { CheckCircle } from "lucide-react";
-import PrimaryButton from "../../UI/PrimaryButton";
-import logoff from "@/src/actions/auth/logoff";
 
-export type ListEmpresasProps = React.ComponentProps<"div"> & {};
+import getUserId from "@/src/actions/user/getUserId";
+import { setEmpresa } from "@/src/actions/auth/empresa";
+import { redirect } from "next/navigation";
 
-export default function ListEmpresas({ ...props }: ListEmpresasProps) {
-  const { user, empresa, setCurrentEmpresa } = useUser();
-  const router = useRouter();
-
-  // Enquanto user estiver undefined, não renderiza nada
-  if (user === undefined) {
-    return null;
+export default async function ListEmpresas() {
+  const { data: user } = await getUserId();
+  if (!user) {
+    // Isso não costuma acontecer porque já verificamos acima, mas só por segurança:
+    redirect("/");
   }
 
-  // Se usuário não autenticado, redireciona para login/protect
-  useEffect(() => {
-    if (!user) {
-      router.replace("/login");
-    }
-  }, [user, router]);
-
-  // Assim que detectar empresa já no contexto ou no localStorage, redireciona para /protect/home
-  useEffect(() => {
-    if (!user) return;
-
-    // Se existir empresa salva no localStorage e for válida, seta contexto e redireciona
-    const empresaId = window.localStorage.getItem("empresaStorage");
-    if (empresaId) {
-      const encontrada = user.empresas.find(
-        (emp) => emp.empresa.id === empresaId
-      );
-      if (encontrada) {
-        setCurrentEmpresa(encontrada.empresa);
-      } else {
-        logoff();
-      }
-    }
-  }, [user, empresa, setCurrentEmpresa, router]);
-
-  // Se não há user (usuário não está autenticado), não mostra nada
-  if (!user) return null;
-
   return (
-    <main className="min-h-screen" {...props}>
+    <main className="min-h-screen">
       <section className="container-global mt-10">
         <PrimaryTitle title="Selecione a empresa desejada" className="mb-3" />
 
         <div className="flex flex-col gap-6">
           {user.empresas.map((e) => {
-            const empObj: CurrentEmpresaProps = e.empresa;
+            const empObj = e.empresa;
             return (
               <div
-                key={e.empresa.codigo}
+                key={empObj.codigo}
                 className="bg-white shadow-md rounded-xl p-8 flex flex-wrap items-center justify-between"
               >
                 <div className="flex flex-wrap items-center">
@@ -70,19 +38,16 @@ export default function ListEmpresas({ ...props }: ListEmpresasProps) {
                     <p>Situação: {empObj.status}</p>
                   </div>
                 </div>
-                <div>
+
+                <form action={setEmpresa}>
+                  <input type="hidden" name="empresaId" value={empObj.id} />
                   <PrimaryButton
                     className="bg-red-300 border border-red-400/50 hover:bg-red-400 text-red-900"
                     icon={CheckCircle}
                     text="Entrar"
-                    onClick={() => {
-                      // Salva no localStorage, atualiza contexto e redireciona
-                      window.localStorage.setItem("empresaStorage", empObj.id);
-                      setCurrentEmpresa(empObj);
-                      router.replace("/protect/home");
-                    }}
+                    type="submit"
                   />
-                </div>
+                </form>
               </div>
             );
           })}

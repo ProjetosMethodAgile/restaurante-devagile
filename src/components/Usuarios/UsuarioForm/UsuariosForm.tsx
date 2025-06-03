@@ -10,6 +10,7 @@ import UsuarioEmpresasForm from "./UsuariosEmpresasForm";
 import { useUser } from "@/src/context/userContext";
 import { RoleBase } from "@/src/types/role/roleType";
 import { postUser } from "@/src/actions/user/postUser";
+import { toast } from "react-toastify";
 
 type UsuarioFormProps = {
   roles: RoleBase[];
@@ -42,8 +43,17 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
   const { user } = useUser();
 
   useEffect(() => {
-    console.log(state);
-  });
+    if (state?.errors.length) {
+      state.errors.forEach((erro: string) => {
+        toast.error(erro);
+      });
+    }
+    if (state?.success) {
+      toast.success(state.msg_success);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
   // Transformando as empresas do usuário em um formato adequado para o formulário
   const empresas =
     user?.empresas.map((empresa) => ({

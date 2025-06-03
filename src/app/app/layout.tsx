@@ -2,10 +2,12 @@
 import React, { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import "react-toastify/dist/ReactToastify.css";
 
 import getUserId from "@/src/actions/user/getUserId";
 import { UserContextProvider } from "@/src/context/userContext";
 import NavigationMenu from "@/src/components/Header/NavigationMenu";
+import { ToastContainer } from "react-toastify";
 
 export default async function ProtectLayout({
   children,
@@ -42,6 +44,7 @@ export default async function ProtectLayout({
     <UserContextProvider user={user} empresa={empresaSelecionada}>
       <NavigationMenu user={user} empresa={empresaSelecionada} />
       {children}
+      <ToastContainer position="top-right" autoClose={3000} />
     </UserContextProvider>
   );
 }

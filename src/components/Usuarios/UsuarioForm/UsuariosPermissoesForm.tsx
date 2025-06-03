@@ -6,14 +6,14 @@ import { Form } from "../../UI/Form/index";
 import { currentUserProps } from "./UsuariosForm";
 import { RoleBase } from "@/src/types/role/roleType";
 import getTelasByRoleId from "@/src/actions/telas/getTelasByRoleId";
-import { SubtelaBase } from "@/src/types/tela/tela";
+import { SubtelaBase, TelaBase } from "@/src/types/tela/tela";
 
 export default function UsuariosPermissoesForm({
   currentUser,
   setCurrentUser,
   roles,
 }: currentUserProps & { roles: RoleBase[] }) {
-  const [telas, setTelas] = useState<any[]>([]);
+  const [telas, setTelas] = useState<TelaBase[]>([]);
 
   useEffect(() => {
     async function criaObjetoPermissoes() {
@@ -36,13 +36,13 @@ export default function UsuariosPermissoesForm({
 
   const isChecked = (id: string) => currentUser.telas?.[id]?.ativo ?? false;
 
-  const handleToggleTela = (tela: any) => {
+  const handleToggleTela = (tela: TelaBase) => {
     const isActive = isChecked(tela.id);
     const updated = { ...currentUser.telas };
 
     if (isActive) {
       delete updated[tela.id];
-      tela.subtelas?.forEach((sub: any) => {
+      tela.subtelas?.forEach((sub: SubtelaBase) => {
         delete updated[sub.id];
       });
     } else {
@@ -52,7 +52,7 @@ export default function UsuariosPermissoesForm({
     setCurrentUser({ ...currentUser, telas: updated });
   };
 
-  const handleToggleSubtela = (subtela: any) => {
+  const handleToggleSubtela = (subtela: SubtelaBase) => {
     const isActive = isChecked(subtela.id);
     const updated = { ...currentUser.telas };
 
@@ -70,7 +70,7 @@ export default function UsuariosPermissoesForm({
 
     telas.forEach((tela) => {
       updated[tela.id] = { id: tela.id, nome: tela.nome, ativo: true };
-      tela.subtelas?.forEach((sub: any) => {
+      tela.subtelas?.forEach((sub) => {
         updated[sub.id] = { id: sub.id, nome: sub.nome, ativo: true };
       });
     });

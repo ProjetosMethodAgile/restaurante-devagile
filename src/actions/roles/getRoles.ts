@@ -28,6 +28,8 @@ export default async function getRoles() {
       return { data: null };
     }
   } catch (error) {
+    console.log(error);
+
     return { data: null };
   }
 }

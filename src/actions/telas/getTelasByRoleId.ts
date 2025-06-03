@@ -30,7 +30,8 @@ export default async function getTelasByRoleId(roleId: string) {
 
     const telas = (await res.json()) as TelaBase[];
     return { data: telas };
-  } catch (error: any) {
-    return { data: null, error: error.message || "Erro inesperado." };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: "Erro inesperado." };
   }
 }

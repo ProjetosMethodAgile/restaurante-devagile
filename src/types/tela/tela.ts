@@ -3,10 +3,10 @@ export type TelaBase = {
   codigo: string;
   nome: string;
   tela_parent?: string;
-  subtelas?: string[];
+  subtelas?: SubtelaBase[];
 };
 
 export type SubtelaBase = {
   nome: string;
-  id: string
-}
+  id: string;
+};

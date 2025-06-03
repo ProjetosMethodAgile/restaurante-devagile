@@ -1,6 +1,6 @@
 "use client";
 import { Form } from "../../UI/Form";
-import React, { useActionState } from "react";
+import React, { useActionState, useEffect } from "react";
 /* import { postUser } from "@/src/actions/usuarios-actions/postUser"; */
 import UsuariosInfosForm from "./UsuariosInfosForm";
 import UsuariosPemissoesForm from "./UsuariosPermissoesForm";
@@ -41,6 +41,9 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
   // pega usuario atual (logado)
   const { user } = useUser();
 
+  useEffect(() => {
+    console.log(state);
+  });
   // Transformando as empresas do usuário em um formato adequado para o formulário
   const empresas =
     user?.empresas.map((empresa) => ({

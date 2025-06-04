@@ -4,7 +4,6 @@ export type FormClienteData = {
   numeroInt:     string;
   bairro:     string;
   CEP:        string;
-  telefone:   string;
   frete:      string;
   observacao?:  string;
   contato?   :  string;

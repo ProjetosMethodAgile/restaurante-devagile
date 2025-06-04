@@ -1,12 +1,14 @@
-"use server";
-import { FormClienteData } from "@/src/types/cliente/clientType";
+// src/app/protect/cliente/action-cliente/registercli.ts
+
+'use server';
+
+import { FormClienteData } from '@/src/types/cliente/clientType';
+import { postCustomer } from '@/src/actions/clientes/postCustomers';
+
+export async function registerCli(formData: FormClienteData) {
+  const result = await postCustomer(formData);
 
 
-export async function registerCli(
-  formData: FormClienteData
-): Promise<FormClienteData> {
 
-console.log(formData)
-
-  return formData;
+  return result;
 }

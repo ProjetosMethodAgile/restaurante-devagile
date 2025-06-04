@@ -1,11 +1,11 @@
 import { UsuarioBase } from "@/src/types/user/userType";
 import { Clock, Mail } from "lucide-react";
+import Link from "next/link";
 type UsuarioCardProps = {
   usuario: UsuarioBase;
 };
 
 export default function UsuarioCard({ usuario }: UsuarioCardProps) {
-
   return (
     <div className="bg-blue-50  p-4 rounded-xl shadow-sm w-85 hover:scale-101 transition-transform ease-in-out">
       <div className="flex items-start gap-4">
@@ -39,7 +39,9 @@ export default function UsuarioCard({ usuario }: UsuarioCardProps) {
         </div>
       </div>
       <div className="flex justify-end *:cursor-pointer gap-4 border-t border-slate-200 pt-3 mt-4 text-sm">
-        <button className="text-blue-600 hover:underline">Editar</button>
+        <button className="text-blue-600 hover:underline">
+          <Link href={`/app/usuarios/form/${usuario.id}`}>Editar</Link>
+        </button>
         <button className="text-red-600 hover:underline">Desativar</button>
       </div>
     </div>

@@ -25,7 +25,7 @@ export default function ComponenteClientes({ clientes }: ComponenteClientesProps
       </h2>
       <div className="flex flex-col lg:flex-row w-full gap-4 h-full items-start">
 
-      <section className="w-full lg:w-2/3 bg-white rounded-lg shadow p-4 lg:p-6 overflow-auto shadow-mb ">
+      <section className="w-full lg:w-2/3 bg-white rounded-lg shadow p-4 lg:p-6 overflow-auto shadow-mb">
         <ContainerClientes
           clientes={clientes}
           dataAlteredUser={dataAlteredUser}

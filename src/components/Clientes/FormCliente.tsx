@@ -33,6 +33,7 @@ export default function FormCliente({
     nome: "",
     email: "",
     cpf: "",
+    telefone: "",
     CEP: "",
     logradouro: "",
     numeroInt: "",
@@ -63,14 +64,12 @@ export default function FormCliente({
     if (idx >= 0) {
       const toEdit = dataAlteredUser[idx];
       setForm({
-
-        nome:      toEdit.nome,
-        email:     toEdit.email,
-        cpf:       toEdit.cpf,
-        contato:  toEdit.contato,
-        CEP:       toEdit.CEP,
-        logradouro:toEdit.logradouro,
-
+        nome: toEdit.nome,
+        email: toEdit.email,
+        cpf: toEdit.cpf,
+        telefone: toEdit.telefone,
+        CEP: toEdit.CEP,
+        logradouro: toEdit.logradouro,
         numeroInt: toEdit.numeroInt,
         complemento: toEdit.complemento,
         bairro: toEdit.bairro,
@@ -134,22 +133,18 @@ export default function FormCliente({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-
+    // registra via action (API) se desejar
     submitForm();
 
     if (editIndex !== null) {
-     
+      // atualizar item existente
       const updated = [...dataAlteredUser];
       updated[editIndex] = { ...form, status: false };
       setDataAlteredUser(updated);
     } else {
-
-
-      setDataAlteredUser([
-        ...dataAlteredUser,
-        { ...form, status: false },
-      ]);
-
+      // adicionar novo cliente
+      setDataAlteredUser([...dataAlteredUser, { ...form, status: false }]);
+    }
 
     handleCancel();
     setEditIndex(null);
@@ -163,6 +158,7 @@ export default function FormCliente({
       nome: "",
       email: "",
       cpf: "",
+      telefone: "",
       CEP: "",
       logradouro: "",
       numeroInt: "",
@@ -180,7 +176,7 @@ export default function FormCliente({
     setDataAlteredUser(updated);
   }
   return (
-    <Form.Root onSubmit={(e)=> registerCli(form)} className="space-y-4">
+    <Form.Root onSubmit={handleSubmit} className="space-y-4">
       <h1 className="text-xl font-semibold">
         {editIndex !== null ? "Alterar cliente" : "Cadastrar cliente"}
       </h1>
@@ -217,9 +213,9 @@ export default function FormCliente({
           onChange={handleChange}
         />
         <Form.InputText
-          id="contato"
-          placeholder="contato"
-          value={form.contato}
+          id="telefone"
+          placeholder="Telefone"
+          value={form.telefone}
           onChange={handleChange}
         />
         <Form.InputText
@@ -323,5 +319,4 @@ export default function FormCliente({
       )}
     </Form.Root>
   );
-}
 }

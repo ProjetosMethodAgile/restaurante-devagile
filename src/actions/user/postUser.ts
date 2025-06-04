@@ -2,6 +2,7 @@
 import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
+import { log } from "console";
 
 export async function postUser(
   state:
@@ -24,8 +25,17 @@ export async function postUser(
       };
     }
 
+  
     const empresaIds = JSON.parse(empresas || "[]") as string[];
     const telaIds = JSON.parse(telas || "[]") as string[];
+
+      if (empresaIds.length === 0) {
+      return {
+        errors: ["Atribua pelo menos uma empresa ao usuario."],
+        msg_success: "",
+        success: false,
+      };
+    }
 
     const token = (await cookies()).get("token")?.value;
 
@@ -54,9 +64,9 @@ export async function postUser(
       }),
     });
 
-   
     if (response.ok) {
       revalidateTag("new-user");
+
       return {
         success: true,
         errors: [],

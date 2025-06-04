@@ -12,7 +12,7 @@ export default function UsuariosPermissoesForm({
   currentUser,
   setCurrentUser,
   roles,
-}: currentUserProps & { roles: RoleBase[] }) {
+}: currentUserProps & { roles: RoleBase[] | null }) {
   const [telas, setTelas] = useState<TelaBase[]>([]);
 
   useEffect(() => {
@@ -77,6 +77,8 @@ export default function UsuariosPermissoesForm({
 
     setCurrentUser({ ...currentUser, telas: updated });
   };
+
+  if(roles === null) return <div>Carregando roles...</div>;
 
   return (
     <div className="flex flex-col gap-6">

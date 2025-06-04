@@ -1,15 +1,22 @@
 import getRoles from "@/src/actions/roles/getRoles";
+import getUserId from "@/src/actions/user/getUserId";
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 
 import UsuarioForm from "@/src/components/Usuarios/UsuarioForm/UsuariosForm";
-import { ArrowLeft}from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+type AtualizarUsuariosProps = {
+  params: Promise<{ id: string; empresaTag: string }>;
+};
 
-export default async function UsuarioFormPage() {
+export default async function UsuarioFormUpdatePage({
+  params,
+}: AtualizarUsuariosProps) {
+
   const { data: roles } = await getRoles();
-
-  if (!roles) return <div>Ocorreu um erro ao carregar os dados</div>;
+  const { data } = await getUserId((await params).id);
+  console.log("data", data);
 
   return (
     <section className="m-4 bg-white flex flex-col gap-6 p-6 rounded-xl container-global shadow-md">
@@ -20,7 +27,7 @@ export default async function UsuarioFormPage() {
 
         <PrimaryTitle title="Cadastro de usuario" />
       </div>
-      <UsuarioForm roles={roles} />
+      <UsuarioForm isEditMode editData={data} roles={roles} />
     </section>
   );
 }

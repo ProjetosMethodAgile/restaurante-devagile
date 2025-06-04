@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, BadgeCheck, ShoppingBasket, X } from "lucide-react";
+import { ArrowLeft, ShoppingBasket } from "lucide-react";
 import ClientInfo from "./ClientInfos/ClientInfo";
 import ItemsToOrder from "./ItemsToOrder/ItemsToOrder";
 import ItemsSearch from "./ItemsSearch/ItemSearch";

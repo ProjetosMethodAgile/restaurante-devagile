@@ -29,7 +29,7 @@ export default async function RootLayout({
 
   return (
     <UserContextProvider user={user}>
-      <html lang="pt-BR">
+      <html lang="pt-BR" className="bg-slate-50 ">
         <body
           className={`${poppins.variable} ${roboto.variable}  antialiased `}
         >

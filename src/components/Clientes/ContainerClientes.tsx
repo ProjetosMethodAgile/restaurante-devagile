@@ -1,12 +1,10 @@
-'use client'
+"use client";
 import { Form } from "@/src/components/UI/Form";
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 
 import SecondaryButton from "../UI/SecondaryButton";
 import { FormClienteData } from "@/src/types/cliente/clientType";
-
-
 
 export type ComponenteClientesState = FormClienteData & {
   status: boolean;
@@ -23,7 +21,7 @@ export interface ContainerClientesProps {
 export default function ContainerClientes({
   setDataAlteredUser,
   clientes,
-}: ContainerClientesProps ) {
+}: ContainerClientesProps) {
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -71,31 +69,29 @@ export default function ContainerClientes({
     if (isLoading) {
       setIsLoading(false);
     }
-  }, [paginated]);
+  }, [paginated, isLoading]);
 
   function handleAlterUser(data: FormClienteData) {
-    setDataAlteredUser(
-[
+    setDataAlteredUser([
       {
         nome: data.nome,
-        logradouro:data.logradouro,
+        logradouro: data.logradouro,
         numeroInt: data.numeroInt,
         bairro: data.bairro,
         CEP: data.CEP,
         contato: data.contato,
         frete: data.frete,
         observacao: data.observacao,
-        cidade:data.cidade,
+        cidade: data.cidade,
         Estado: data.Estado,
         complemento: data.complemento,
         email: data.email,
         cpf: data.cpf,
         status: true,
-      },]
-    );
+      },
+    ]);
   }
   return (
-  
     <section className="gap-3 flex flex-col">
       {/* Input + Botão de Busca */}
       <div className="flex items-center gap-2 mb-4">
@@ -118,7 +114,6 @@ export default function ContainerClientes({
       <p className="text-text-primary">
         Clientes cadastrados: {filteredClientes.length}
       </p>
-
 
       {isLoading ? (
         <div className="flex justify-center py-8">
@@ -145,12 +140,14 @@ export default function ContainerClientes({
                   
                   </div>
                   <div className="space-x-2 flex">
-                    <SecondaryButton className=" bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                      text="Editar"onClick={()=>handleAlterUser(item)}
-
+                    <SecondaryButton
+                      className=" bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                      text="Editar"
+                      onClick={() => handleAlterUser(item)}
                     />
-                    <SecondaryButton className=" bg-red-500 text-white rounded hover:bg-red-600 transition"
-                     text= {"Excluir"}
+                    <SecondaryButton
+                      className=" bg-red-500 text-white rounded hover:bg-red-600 transition"
+                      text={"Excluir"}
                     />
                   </div>
                 </div>
@@ -211,8 +208,6 @@ export default function ContainerClientes({
               className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
               text="Próximo"
             />
-              
-          
           </div>
         </>
       )}

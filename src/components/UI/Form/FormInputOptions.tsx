@@ -1,10 +1,9 @@
 import { twMerge } from "tailwind-merge";
-import { FormInputOptionsProps, InputProps } from "./FormsType/FormType";
+import { FormInputOptionsProps } from "./FormsType/FormType";
 
 export default function FormInputOptions({
   label,
-  icon: Icon,
-  iconPosition = "right",
+  // icon: Icon,
   className,
   disabled,
   options,
@@ -26,8 +25,12 @@ export default function FormInputOptions({
       {label && (
         <label className="text-text-secondary mb-2 text-sm">{label}</label>
       )}
-      <select className={containerClass}>
-        {options.map(option =><option value={option.value}>{option.label}</option>)}
+      <select {...props} className={containerClass}>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </div>
   );

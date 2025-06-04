@@ -1,6 +1,5 @@
 import Counter from "@/src/components/UI/Counter";
-import { ListOrdered, Pen, Trash, Trash2 } from "lucide-react";
-import OrderCard from "../../Orders/Grid/OrderCard";
+import { Trash2 } from "lucide-react";
 
 export default function ItemOrder() {
   return (

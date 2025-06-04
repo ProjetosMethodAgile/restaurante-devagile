@@ -1,4 +1,3 @@
-import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import { Search } from "lucide-react";
 import ProductCard from "./ProductCard";
 import CategoriesList from "./CategoriesList";

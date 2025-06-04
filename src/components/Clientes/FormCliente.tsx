@@ -1,11 +1,11 @@
-'use client'
+"use client";
 import { Form } from "@/src/components/UI/Form";
 import PrimaryButton from "@/src/components/UI/PrimaryButton";
 import SecondaryButton from "@/src/components/UI/SecondaryButton";
 import { useState, useEffect, useActionState } from "react";
 import { handleChangeCep } from "@/src/actions/api-externas/cep/getcep";
 import { FormClienteData } from "@/src/types/cliente/clientType";
-import { registerCli } from "@/src/app/protect/cliente/action-cliente/registercli";
+import { registerCli } from "@/src/app/app/cliente/action-cliente/registercli";
 import { ComponenteClientesState } from "./ContainerClientes";
 
 const estados = [
@@ -53,25 +53,31 @@ export default function FormCliente({
     form
   );
 
+  useEffect(() => {
+    console.log(registerState);
+  });
+
   // Quando dataAlteredUser muda, se encontrar um item com status=true, entramos em modo edição
   useEffect(() => {
     const idx = dataAlteredUser.findIndex((u) => u.status);
     if (idx >= 0) {
       const toEdit = dataAlteredUser[idx];
       setForm({
+
         nome:      toEdit.nome,
         email:     toEdit.email,
         cpf:       toEdit.cpf,
         contato:  toEdit.contato,
         CEP:       toEdit.CEP,
         logradouro:toEdit.logradouro,
+
         numeroInt: toEdit.numeroInt,
         complemento: toEdit.complemento,
-        bairro:    toEdit.bairro,
-        cidade:    toEdit.cidade,
-        Estado:    toEdit.Estado,
-        frete:     toEdit.frete,
-        observacao:toEdit.observacao,
+        bairro: toEdit.bairro,
+        cidade: toEdit.cidade,
+        Estado: toEdit.Estado,
+        frete: toEdit.frete,
+        observacao: toEdit.observacao,
       });
       setEditIndex(idx);
       setAddressDisabled(true);
@@ -98,7 +104,6 @@ export default function FormCliente({
       }));
     }
   };
-
 
   const handleCepBlur = async () => {
     if (!autoCepEnabled) return;
@@ -139,18 +144,19 @@ export default function FormCliente({
       setDataAlteredUser(updated);
     } else {
 
+
       setDataAlteredUser([
         ...dataAlteredUser,
         { ...form, status: false },
       ]);
-    }
 
-     handleCancel()
+
+    handleCancel();
     setEditIndex(null);
     setAddressDisabled(false);
   };
 
-function handleCancel() {
+  function handleCancel() {
     // Limpa o formulário e sai do modo edição
     setForm({
       contato: "",
@@ -172,7 +178,7 @@ function handleCancel() {
     // Atualiza o estado para remover o status de edição
     const updated = dataAlteredUser.map((item) => ({ ...item, status: false }));
     setDataAlteredUser(updated);
-}
+  }
   return (
     <Form.Root onSubmit={(e)=> registerCli(form)} className="space-y-4">
       <h1 className="text-xl font-semibold">
@@ -183,7 +189,11 @@ function handleCancel() {
         <SecondaryButton
           type="button"
           onClick={() => setAutoCepEnabled((p) => !p)}
-          className={`${autoCepEnabled?"bg-primary hover:bg-red-600 text-white":"bg-blue-500 text-white hover:bg-blue-600"}`}
+          className={`${
+            autoCepEnabled
+              ? "bg-primary hover:bg-red-600 text-white"
+              : "bg-blue-500 text-white hover:bg-blue-600"
+          }`}
           text={
             autoCepEnabled
               ? "Desativar busca automática CEP"
@@ -193,7 +203,6 @@ function handleCancel() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
         <Form.InputText
           id="nome"
           placeholder="Nome"
@@ -297,15 +306,22 @@ function handleCancel() {
         text={editIndex !== null ? "Alterar" : "Cadastrar"}
         className="w-full bg-blue-500 hover:bg-blue-600 text-white"
       />
-      {dataAlteredUser.map((item,idx)=>item.status?  <PrimaryButton
-        key={idx}
-        type="submit"
-        text={"Cancelar"}
-        className="w-full" 
-        onClick={(() => {handleCancel()})}
-        
-        
-        />:"" )}
+      {dataAlteredUser.map((item, idx) =>
+        item.status ? (
+          <PrimaryButton
+            key={idx}
+            type="submit"
+            text={"Cancelar"}
+            className="w-full"
+            onClick={() => {
+              handleCancel();
+            }}
+          />
+        ) : (
+          ""
+        )
+      )}
     </Form.Root>
   );
+}
 }

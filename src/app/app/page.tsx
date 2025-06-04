@@ -1,20 +1,40 @@
-// /src/components/Login/SelectEmpresa/ListEmpresas.tsx
+// /app/app/page.tsx
 import React from "react";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import PrimaryButton from "@/src/components/UI/PrimaryButton";
 import { CheckCircle } from "lucide-react";
 
 import getUserId from "@/src/actions/user/getUserId";
 import { setEmpresa } from "@/src/actions/auth/empresa";
-import { redirect } from "next/navigation";
 
-export default async function ListEmpresas() {
+export default async function SelectEmpresaPage() {
+  // 1) Buscar o usuário autenticado
   const { data: user } = await getUserId();
   if (!user) {
-    // Isso não costuma acontecer porque já verificamos acima, mas só por segurança:
+    // Se não está logado, envia para a rota pública de login ("/")
     redirect("/");
   }
 
+  // 2) Tentar ler cookie “empresaStorage”
+  const cookieStore = cookies();
+  const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
+
+  if (empresaCookie) {
+    // Se já tiver cookie e pertencer ao user, redireciona direto para home
+    const encontrada = user.empresas.find(
+      (e) => e.empresa.id === empresaCookie
+    );
+    if (encontrada) {
+      redirect("/app/home");
+    } else {
+      // Se o cookie existir mas for inválido, apaga e continua
+      (await cookieStore).delete({ name: "empresaStorage", path: "/" });
+    }
+  }
+
+  // 3) Renderizar lista de empresas para seleção
   return (
     <main className="min-h-screen">
       <section className="container-global mt-10">
@@ -39,7 +59,11 @@ export default async function ListEmpresas() {
                   </div>
                 </div>
 
-                <form action={setEmpresa}>
+                {/* 
+                  Botão “Entrar” dispara a Server Action `setEmpresa`, que grava o cookie
+                  e redireciona para /app/home. 
+                */}
+                <form action={setEmpresa} method="POST">
                   <input type="hidden" name="empresaId" value={empObj.id} />
                   <PrimaryButton
                     className="bg-red-300 border border-red-400/50 hover:bg-red-400 text-red-900"

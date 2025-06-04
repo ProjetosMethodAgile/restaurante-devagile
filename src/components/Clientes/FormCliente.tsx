@@ -1,19 +1,38 @@
-"use client";
-import { Form } from "@/src/components/UI/Form";
-import PrimaryButton from "@/src/components/UI/PrimaryButton";
-import SecondaryButton from "@/src/components/UI/SecondaryButton";
-import { useState, useEffect, useActionState } from "react";
-import { handleChangeCep } from "@/src/actions/api-externas/cep/getcep";
-import { FormClienteData } from "@/src/types/cliente/clientType";
-import { registerCli } from "@/src/app/app/cliente/action-cliente/registercli";
-import { ComponenteClientesState } from "./ContainerClientes";
+'use client';
+
+import React, { useState, useEffect, startTransition } from 'react';
+import { useActionState } from 'react'; // <–– import corrigido
+import { Form } from '@/src/components/UI/Form';
+import PrimaryButton from '@/src/components/UI/PrimaryButton';
+import SecondaryButton from '@/src/components/UI/SecondaryButton';
+import { handleChangeCep } from '@/src/actions/api-externas/cep/getcep';
+import type { FormClienteData } from '@/src/types/cliente/clientType';
+import { registerCli } from '@/src/actions/clientes/registercli';
+import type { ComponenteClientesState } from './ContainerClientes';
 
 const estados = [
-  { value: "", label: "Estado" },
-  { value: "SP", label: "SP" },
-  { value: "RJ", label: "RJ" },
+  { value: '', label: 'Estado' },
+  { value: 'SP', label: 'SP' },
+  { value: 'RJ', label: 'RJ' },
   /* … outros estados … */
 ];
+
+// Estado inicial para o useActionState
+const initialForm: FormClienteData = {
+  nome: '',
+  contato: '',
+  email: '',
+  cpf: '',
+  rua: '',
+  numero: '',
+  bairro: '',
+  cep: '',
+  cidade: '',
+  estado: '',
+  complemento: '',
+  frete: '',
+  observacao: '',
+};
 
 export interface FormClienteProps {
   dataAlteredUser: ComponenteClientesState[];
@@ -28,86 +47,46 @@ export default function FormCliente({
 }: FormClienteProps) {
   const [addressDisabled, setAddressDisabled] = useState(false);
   const [autoCepEnabled, setAutoCepEnabled] = useState(true);
-  const [form, setForm] = useState<FormClienteData>({
-    contato: "",
-    nome: "",
-    email: "",
-    cpf: "",
-    CEP: "",
-    logradouro: "",
-    numeroInt: "",
-    complemento: "",
-    bairro: "",
-    cidade: "",
-    Estado: "",
-    frete: "",
-    observacao: "",
-  });
 
-  // índice do cliente que está sendo editado, ou null se for novo
+  const [form, setForm] = useState<FormClienteData>({ ...initialForm });
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
-  // intercepta o registro da action (pode ser usado para chamadas API)
-  const [registerState, submitForm] = useActionState<FormClienteData>(
-    registerCli,
-    form
-  );
+  // ----- useActionState COM 2 argumentos: ação + estado inicial -----
+  const [registerState, submitForm, isPending] =
+    useActionState<FormClienteData>(registerCli, initialForm);
 
   useEffect(() => {
-    console.log(registerState);
-  });
-
-  // Quando dataAlteredUser muda, se encontrar um item com status=true, entramos em modo edição
-  useEffect(() => {
-    const idx = dataAlteredUser.findIndex((u) => u.status);
-    if (idx >= 0) {
-      const toEdit = dataAlteredUser[idx];
-      setForm({
-
-        nome:      toEdit.nome,
-        email:     toEdit.email,
-        cpf:       toEdit.cpf,
-        contato:  toEdit.contato,
-        CEP:       toEdit.CEP,
-        logradouro:toEdit.logradouro,
-
-        numeroInt: toEdit.numeroInt,
-        complemento: toEdit.complemento,
-        bairro: toEdit.bairro,
-        cidade: toEdit.cidade,
-        Estado: toEdit.Estado,
-        frete: toEdit.frete,
-        observacao: toEdit.observacao,
-      });
-      setEditIndex(idx);
-      setAddressDisabled(true);
-    }
-  }, [dataAlteredUser]);
+    console.log('Estado da Action (registerState):', registerState);
+    console.log('Está pendente? (isPending):', isPending);
+  }, [registerState, isPending]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { id, value } = e.target;
-    if (id === "logradouro" && addressDisabled) {
-      alert("Para editar o logradouro, apague o CEP primeiro.");
+
+    if (id === 'rua' && addressDisabled) {
+      alert('Para editar a rua (logradouro), apague o CEP primeiro.');
       return;
     }
+
     setForm((prev) => ({ ...prev, [id]: value }));
-    if (id === "CEP") {
+
+    if (id === 'cep') {
       setAddressDisabled(false);
       setForm((prev) => ({
         ...prev,
-        logradouro: "",
-        bairro: "",
-        cidade: "",
-        Estado: "",
+        rua: '',
+        bairro: '',
+        cidade: '',
+        estado: '',
       }));
     }
   };
 
   const handleCepBlur = async () => {
     if (!autoCepEnabled) return;
-    const cepDigits = form.CEP.replace(/\D/g, "");
+    const cepDigits = form.cep.replace(/\D/g, '');
     if (cepDigits.length === 8) {
       try {
         const res = await handleChangeCep(cepDigits);
@@ -116,10 +95,10 @@ export default function FormCliente({
           const { logradouro, bairro, localidade, uf } = data;
           setForm((prev) => ({
             ...prev,
-            logradouro,
+            rua: logradouro,
             bairro,
             cidade: localidade,
-            Estado: uf,
+            estado: uf,
           }));
           setAddressDisabled(true);
         } else {
@@ -134,22 +113,18 @@ export default function FormCliente({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-
-    submitForm();
+    // Ao submeter, passa o form atual como argumento
+    startTransition(() => {
+      registerCli(form);
+    });
 
     if (editIndex !== null) {
-     
       const updated = [...dataAlteredUser];
       updated[editIndex] = { ...form, status: false };
       setDataAlteredUser(updated);
     } else {
-
-
-      setDataAlteredUser([
-        ...dataAlteredUser,
-        { ...form, status: false },
-      ]);
-
+      setDataAlteredUser([...dataAlteredUser, { ...form, status: false }]);
+    }
 
     handleCancel();
     setEditIndex(null);
@@ -157,47 +132,35 @@ export default function FormCliente({
   };
 
   function handleCancel() {
-    // Limpa o formulário e sai do modo edição
-    setForm({
-      contato: "",
-      nome: "",
-      email: "",
-      cpf: "",
-      CEP: "",
-      logradouro: "",
-      numeroInt: "",
-      complemento: "",
-      bairro: "",
-      cidade: "",
-      Estado: "",
-      frete: "",
-      observacao: "",
-    });
+    setForm({ ...initialForm });
     setEditIndex(null);
     setAddressDisabled(false);
-    // Atualiza o estado para remover o status de edição
     const updated = dataAlteredUser.map((item) => ({ ...item, status: false }));
     setDataAlteredUser(updated);
   }
+
   return (
-    <Form.Root onSubmit={(e)=> registerCli(form)} className="space-y-4">
+    <Form.Root
+      onSubmit={handleSubmit}
+      className="space-y-4 bg-white p-6 rounded-lg shadow-md"
+    >
       <h1 className="text-xl font-semibold">
-        {editIndex !== null ? "Alterar cliente" : "Cadastrar cliente"}
+        {editIndex !== null ? 'Alterar cliente' : 'Cadastrar cliente'}
       </h1>
 
-      <div className="flex justify-start">
+      <div className="flex justify-start mb-4">
         <SecondaryButton
           type="button"
           onClick={() => setAutoCepEnabled((p) => !p)}
           className={`${
             autoCepEnabled
-              ? "bg-primary hover:bg-red-600 text-white"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-          }`}
+              ? 'bg-blue-500 hover:bg-blue-600 text-white'
+              : 'bg-gray-300 hover:bg-gray-400 text-white'
+          } px-4 py-2 rounded`}
           text={
             autoCepEnabled
-              ? "Desativar busca automática CEP"
-              : "Ativar busca automática CEP"
+              ? 'Desativar busca automática CEP'
+              : 'Ativar busca automática CEP'
           }
         />
       </div>
@@ -209,72 +172,90 @@ export default function FormCliente({
           value={form.nome}
           onChange={handleChange}
           required
+          className="w-full"
         />
-        <Form.InputText
-          id="cpf"
-          placeholder="CPF"
-          value={form.cpf}
-          onChange={handleChange}
-        />
+
         <Form.InputText
           id="contato"
-          placeholder="contato"
+          placeholder="Contato"
           value={form.contato}
           onChange={handleChange}
+          className="w-full"
         />
+
         <Form.InputText
           id="email"
           type="email"
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
+          className="w-full"
         />
+
         <Form.InputText
-          id="CEP"
+          id="cpf"
+          placeholder="CPF"
+          value={form.cpf}
+          onChange={handleChange}
+          className="w-full"
+        />
+
+        <Form.InputText
+          id="cep"
           placeholder="CEP"
-          value={form.CEP}
+          value={form.cep}
           onChange={handleChange}
           onBlur={handleCepBlur}
+          className="w-full"
         />
+
         <Form.InputText
-          id="logradouro"
-          placeholder="Logradouro"
-          value={form.logradouro}
+          id="rua"
+          placeholder="Rua"
+          value={form.rua}
           onChange={handleChange}
           disabled={addressDisabled}
           required
+          className="col-span-full sm:col-span-2 w-full"
         />
+
         <Form.InputText
-          id="numeroInt"
-          placeholder="Número casa."
-          value={form.numeroInt}
+          id="numero"
+          placeholder="Número"
+          value={form.numero}
           onChange={handleChange}
+          className="w-full"
         />
+
         <Form.InputText
           id="complemento"
           placeholder="Complemento"
           value={form.complemento}
           onChange={handleChange}
-          className="col-span-full sm:col-span-2"
+          className="col-span-full sm:col-span-2 w-full"
         />
+
         <Form.InputText
           id="bairro"
           placeholder="Bairro"
           value={form.bairro}
           onChange={handleChange}
-          className="col-span-full sm:col-span-2"
           required
+          className="col-span-full sm:col-span-2 w-full"
         />
+
         <Form.InputText
           id="cidade"
           placeholder="Cidade"
           value={form.cidade}
           onChange={handleChange}
           disabled={addressDisabled}
+          className="w-full"
         />
+
         <select
-          id="Estado"
-          value={form.Estado}
+          id="estado"
+          value={form.estado}
           onChange={handleChange}
           disabled={addressDisabled}
           className="w-full border rounded px-3 py-2 bg-white disabled:opacity-50"
@@ -285,43 +266,39 @@ export default function FormCliente({
             </option>
           ))}
         </select>
+
         <Form.InputText
           id="frete"
           placeholder="Frete (R$)"
           value={form.frete}
           onChange={handleChange}
+          className="w-full"
         />
+
         <Form.InputText
           id="observacao"
           placeholder="Observação"
           value={form.observacao}
           onChange={handleChange}
           type="textarea"
-          className="col-span-full"
+          className="col-span-full sm:col-span-2 w-full"
         />
       </div>
 
       <PrimaryButton
         type="submit"
-        text={editIndex !== null ? "Alterar" : "Cadastrar"}
-        className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+        text={editIndex !== null ? 'Alterar' : 'Cadastrar'}
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded mt-4"
       />
-      {dataAlteredUser.map((item, idx) =>
-        item.status ? (
-          <PrimaryButton
-            key={idx}
-            type="submit"
-            text={"Cancelar"}
-            className="w-full"
-            onClick={() => {
-              handleCancel();
-            }}
-          />
-        ) : (
-          ""
-        )
+
+      {dataAlteredUser.some((item) => item.status) && (
+        <PrimaryButton
+          type="button"
+          text="Cancelar"
+          className="w-full mt-2 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
+          onClick={handleCancel}
+        />
       )}
     </Form.Root>
   );
-}
 }

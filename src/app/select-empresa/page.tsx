@@ -17,10 +17,8 @@ export default async function SelectEmpresaPage() {
     const encontrada = user.empresas.find(
       (e) => e.empresa.id === empresaCookie
     );
-    if (encontrada) {
-      redirect("/app/home");
-    } else {
-      (await cookieStore).delete({ name: "empresaStorage", path: "/" });
+    if (!encontrada) {
+      // (await cookieStore).delete({ name: "empresaStorage", path: "/" });
     }
   }
 

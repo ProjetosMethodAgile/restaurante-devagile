@@ -1,6 +1,6 @@
 "use client";
 import { Form } from "../../UI/Form";
-import React, { useActionState, useEffect } from "react";
+import React, { useActionState, useEffect, useTransition } from "react";
 /* import { postUser } from "@/src/actions/usuarios-actions/postUser"; */
 import UsuariosInfosForm from "./UsuariosInfosForm";
 import UsuariosPemissoesForm from "./UsuariosPermissoesForm";
@@ -11,9 +11,13 @@ import { useUser } from "@/src/context/userContext";
 import { RoleBase } from "@/src/types/role/roleType";
 import { postUser } from "@/src/actions/user/postUser";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { UsuarioBase } from "@/src/types/user/userType";
 
 type UsuarioFormProps = {
-  roles: RoleBase[];
+  roles: RoleBase[] | null;
+  isEditMode?: boolean;
+  editData?: UsuarioBase | null;
 };
 
 export type currentUserType = {
@@ -32,7 +36,13 @@ export type currentUserProps = {
   setCurrentUser: React.Dispatch<React.SetStateAction<currentUserType>>;
 };
 
-export default function UsuarioForm({ roles }: UsuarioFormProps) {
+export default function UsuarioForm({
+  roles,
+  editData,
+  isEditMode,
+}: UsuarioFormProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const [state, formAction] = useActionState(postUser, {
     errors: [],
     msg_success: "",
@@ -43,16 +53,16 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
   const { user } = useUser();
 
   useEffect(() => {
-    if (state?.errors.length) {
-      state.errors.forEach((erro: string) => {
-        toast.error(erro);
-      });
+    if (state?.errors?.length) {
+      state.errors.forEach((erro: string) => toast.error(erro));
     }
+
     if (state?.success) {
       toast.success(state.msg_success);
+      router.push("/app/usuarios"); // redireciona após o sucesso
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [state.success, state.errors, state.msg_success]);
 
   // Transformando as empresas do usuário em um formato adequado para o formulário
   const empresas =
@@ -63,10 +73,13 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
 
   // cria estado do formulario do usuario atual
   const [currentUser, setCurrentUser] = React.useState<currentUserType>({
-    nome: "",
-    email: "",
-    empresaIds: [],
-    roleId: "57a8e310-b3e8-4d7a-90f5-08de6e3c634f",
+    nome: editData?.nome || "",
+    email: editData?.email || "",
+    empresaIds:
+      editData?.empresas?.map((e) => {
+        return { id: e.empresa.id, nome: e.empresa.razao_social };
+      }) || [],
+    roleId: editData?.role?.id || "",
     telas: {},
   });
 
@@ -91,10 +104,11 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
       />
       <div className="flex justify-end mt-4">
         <PrimaryButton
-          text="Cadastrar"
+          text={isPending ? "Salvando..." : "Cadastrar"}
           className="bg-secondary rounded-xl hover:bg-secondary/90"
           icon={Check}
           type="submit"
+          disabled={isPending}
         />
       </div>
       <input

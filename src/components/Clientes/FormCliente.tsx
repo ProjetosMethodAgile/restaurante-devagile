@@ -9,15 +9,16 @@ import { handleChangeCep } from '@/src/actions/api-externas/cep/getcep';
 import type { FormClienteData } from '@/src/types/cliente/clientType';
 import { registerCli } from '@/src/actions/clientes/registercli';
 import type { ComponenteClientesState } from './ContainerClientes';
+import { toast } from 'react-toastify';
 
 const estados = [
   { value: '', label: 'Estado' },
   { value: 'SP', label: 'SP' },
   { value: 'RJ', label: 'RJ' },
-  /* … outros estados … */
+
 ];
 
-// Estado inicial para o useActionState
+
 const initialForm: FormClienteData = {
   nome: '',
   contato: '',
@@ -52,7 +53,7 @@ export default function FormCliente({
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
   // ----- useActionState COM 2 argumentos: ação + estado inicial -----
-  const [registerState, submitForm, isPending] =
+  const [registerState, isPending] =
     useActionState<FormClienteData>(registerCli, initialForm);
 
   useEffect(() => {
@@ -110,12 +111,19 @@ export default function FormCliente({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const [disabledBtn, setDisabledBtn] = useState(false);
 
-    // Ao submeter, passa o form atual como argumento
-    startTransition(() => {
-      registerCli(form);
+ async function handleSubmit  (e: React.FormEvent)  {
+    e.preventDefault();
+    
+   setDisabledBtn(true);
+    startTransition(async () => {
+      const res = await registerCli(form);
+      if (!res || res.length === 0) {
+      toast.error('Erro ao cadastrar cliente. Verifique os dados e tente novamente.');
+      return;
+    }
+      toast.success('Cliente cadastrado com sucesso!');
     });
 
     if (editIndex !== null) {
@@ -125,8 +133,10 @@ export default function FormCliente({
     } else {
       setDataAlteredUser([...dataAlteredUser, { ...form, status: false }]);
     }
-
-    handleCancel();
+    setTimeout(() => {
+      setDisabledBtn(false);}
+    ,2000)
+    
     setEditIndex(null);
     setAddressDisabled(false);
   };
@@ -165,14 +175,14 @@ export default function FormCliente({
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 ">
         <Form.InputText
           id="nome"
           placeholder="Nome"
           value={form.nome}
           onChange={handleChange}
           required
-          className="w-full"
+           className="w-full"
         />
 
         <Form.InputText
@@ -180,7 +190,7 @@ export default function FormCliente({
           placeholder="Contato"
           value={form.contato}
           onChange={handleChange}
-          className="w-full"
+        className="w-full" 
         />
 
         <Form.InputText
@@ -288,7 +298,8 @@ export default function FormCliente({
       <PrimaryButton
         type="submit"
         text={editIndex !== null ? 'Alterar' : 'Cadastrar'}
-        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded mt-4"
+        className={disabledBtn?"w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4":`w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded mt-4`}
+        disabled={disabledBtn}
       />
 
       {dataAlteredUser.some((item) => item.status) && (

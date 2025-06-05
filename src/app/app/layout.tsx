@@ -8,6 +8,7 @@ import getUserId from "@/src/actions/user/getUserId";
 import { UserContextProvider } from "@/src/context/userContext";
 import NavigationMenu from "@/src/components/Header/NavigationMenu";
 import { ToastContainer } from "react-toastify";
+import getTelasByRoleId from "@/src/actions/telas/getTelasByRoleId";
 
 export default async function ProtectLayout({
   children,
@@ -18,6 +19,15 @@ export default async function ProtectLayout({
   const { data: user } = await getUserId();
   if (!user) {
     redirect("/");
+    return null;
+  }
+
+  const telas = await getTelasByRoleId(user.role.id);
+
+
+  if (telas.error) {
+    console.error("Erro ao buscar telas:", telas.error);
+    redirect("/error");
     return null;
   }
 
@@ -42,7 +52,10 @@ export default async function ProtectLayout({
   // 4) Renderizar contexto + header + conteúdo protegido
   return (
     <UserContextProvider user={user} empresa={empresaSelecionada}>
-      <NavigationMenu user={user} empresa={empresaSelecionada} />
+      <NavigationMenu
+        user={user}
+        empresa={empresaSelecionada}
+      />
       {children}
       <ToastContainer position="top-right" autoClose={3000} />
     </UserContextProvider>

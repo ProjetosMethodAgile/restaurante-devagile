@@ -29,6 +29,7 @@ export default async function getTelasByRoleId(roleId: string) {
     }
 
     const telas = (await res.json()) as TelaBase[];
+
     return { data: telas };
   } catch (error) {
     console.log(error);

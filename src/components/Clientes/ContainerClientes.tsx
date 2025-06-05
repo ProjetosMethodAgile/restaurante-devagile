@@ -51,7 +51,7 @@ export default function ContainerClientes({
     if (!searchTerm) return true;
     const onlyDigits = /^\d+$/.test(searchTerm);
     if (onlyDigits) {
-      const phone = item.contato.replace(/\D/g, "");
+      const phone = (item.contato ?? "").replace(/\D/g, "");
       return phone.includes(searchTerm);
     }
     return item.nome.toLowerCase().includes(searchTerm.toLowerCase());
@@ -75,15 +75,15 @@ export default function ContainerClientes({
     setDataAlteredUser([
       {
         nome: data.nome,
-        logradouro: data.logradouro,
-        numeroInt: data.numeroInt,
+        rua: data.rua,
+        numero: data.numero,
         bairro: data.bairro,
-        CEP: data.CEP,
+        cep: data.cep,
         contato: data.contato,
         frete: data.frete,
         observacao: data.observacao,
         cidade: data.cidade,
-        Estado: data.Estado,
+        estado: data.estado,
         complemento: data.complemento,
         email: data.email,
         cpf: data.cpf,
@@ -153,13 +153,13 @@ export default function ContainerClientes({
                 </div>
                 <div className="px-4 py-3 space-y-1">
                   <p className="text-sm text-gray-700">
-                    Endereço: {item.logradouro}, {item.numeroInt}{" "}
+                    Endereço: {item.rua}, {item.numero}{" "}
                     {item.complemento && `- ${item.complemento}`}, {item.bairro}
                   </p>
                   <p className="text-sm text-gray-700">
-                    Cidade/Estado: {item.cidade}/{item.Estado}
+                    Cidade/Estado: {item.cidade}/{item.estado}
                   </p>
-                  <p className="text-sm text-gray-700">CEP: {item.CEP}</p>
+                  <p className="text-sm text-gray-700">CEP: {item.cep}</p>
                   <p className="text-sm text-gray-700">
                     Frete: R$ {item.frete}
                   </p>

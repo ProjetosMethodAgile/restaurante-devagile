@@ -1,11 +1,15 @@
 import { UsuarioBase } from "@/src/types/user/userType";
-import { Clock, Mail } from "lucide-react";
+import { Clock, Key, KeyIcon, Mail } from "lucide-react";
 import Link from "next/link";
+import React from "react";
+import { PassThrough } from "stream";
 type UsuarioCardProps = {
   usuario: UsuarioBase;
 };
 
 export default function UsuarioCard({ usuario }: UsuarioCardProps) {
+  const [keyButton, setKeyButton] = React.useState(false);
+
   return (
     <div className="bg-blue-50  p-4 rounded-xl shadow-sm w-85 hover:scale-101 transition-transform ease-in-out">
       <div className="flex items-start gap-4">
@@ -28,13 +32,11 @@ export default function UsuarioCard({ usuario }: UsuarioCardProps) {
               Ativo
             </span>
           </div>
-          <div className="mt-3 space-y-1 text-sm text-gray-600">
-            <div className="flex items-center  gap-2">
-              <Mail size={15} />
-              <span className=" block truncate max-w-[220px]">
-                {usuario.email}
-              </span>
-            </div>
+          <div className="mt-3 flex items-center  gap-2 space-y-1 text-sm text-gray-600">
+            <Mail size={15} />
+            <span className=" block truncate max-w-[220px]">
+              {usuario.email}
+            </span>
           </div>
         </div>
       </div>

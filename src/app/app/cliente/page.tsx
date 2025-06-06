@@ -13,7 +13,7 @@ async function fetchClientes() {
 
 const clientes= await fetchClientes();
   return (
-    <div >
+    <div className="" >
       <ComponenteClientes clientes={clientes} />
     </div>
   );

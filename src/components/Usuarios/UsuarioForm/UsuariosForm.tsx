@@ -13,6 +13,7 @@ import { postUser } from "@/src/actions/user/postUser";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { UsuarioBase } from "@/src/types/user/userType";
+import { patchUser } from "@/src/actions/user/patchUser";
 
 type UsuarioFormProps = {
   roles: RoleBase[] | null;
@@ -43,11 +44,14 @@ export default function UsuarioForm({
 }: UsuarioFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [state, formAction] = useActionState(postUser, {
-    errors: [],
-    msg_success: "",
-    success: false,
-  });
+  const [state, formAction] = useActionState(
+    isEditMode ? patchUser : postUser,
+    {
+      errors: [],
+      msg_success: "",
+      success: false,
+    }
+  );
 
   // pega usuario atual (logado)
   const { user } = useUser();
@@ -115,6 +119,11 @@ export default function UsuarioForm({
         type="hidden"
         name="empresaIds"
         value={JSON.stringify(currentUser.empresaIds.map((e) => e.id))}
+      />
+       <input
+        type="hidden"
+        name="userId"
+        value={editData?.id}
       />
       <input
         type="hidden"

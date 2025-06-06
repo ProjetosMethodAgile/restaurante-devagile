@@ -7,6 +7,7 @@ import { currentUserProps } from "./UsuariosForm";
 import { RoleBase } from "@/src/types/role/roleType";
 import getTelasByRoleId from "@/src/actions/telas/getTelasByRoleId";
 import { SubtelaBase, TelaBase } from "@/src/types/tela/tela";
+import { Loader, LoaderIcon } from "lucide-react";
 
 export default function UsuariosPermissoesForm({
   currentUser,
@@ -18,14 +19,16 @@ export default function UsuariosPermissoesForm({
   useEffect(() => {
     async function criaObjetoPermissoes() {
       const data = await getTelasByRoleId(currentUser.roleId);
+
       if (data.error) {
         console.error("Erro ao buscar telas:", data.error);
         return;
       }
 
       const telasFiltradas = data.data?.filter(
-        (tela) => tela.tela_parent === null
+        (tela) => tela.tela_parent_id === null
       );
+      console.log(data.data);
       setTelas(telasFiltradas || []);
     }
 
@@ -78,7 +81,7 @@ export default function UsuariosPermissoesForm({
     setCurrentUser({ ...currentUser, telas: updated });
   };
 
-  if(roles === null) return <div>Carregando roles...</div>;
+  if (roles === null) return <div>Carregando roles...</div>;
 
   return (
     <div className="flex flex-col gap-6">
@@ -127,20 +130,23 @@ export default function UsuariosPermissoesForm({
 
                   {tela.subtelas && tela.subtelas.length > 0 && (
                     <div className="ml-6 mt-1 flex flex-col gap-1">
-                      {tela.subtelas.map((subtela: SubtelaBase) => (
-                        <label
-                          key={subtela.id}
-                          className="flex items-center gap-2 text-sm text-gray-700"
-                        >
-                          <input
-                            type="checkbox"
-                            disabled={!telaChecked}
-                            checked={isChecked(subtela.id)}
-                            onChange={() => handleToggleSubtela(subtela)}
-                          />
-                          {subtela.nome}
-                        </label>
-                      ))}
+                      {tela.subtelas.map((subtela: SubtelaBase) => {
+                        
+                        return (
+                          <label
+                            key={subtela.id}
+                            className="flex items-center gap-2 text-sm text-gray-700"
+                          >
+                            <input
+                              type="checkbox"
+                              disabled={!telaChecked}
+                              checked={isChecked(subtela.id)}
+                              onChange={() => handleToggleSubtela(subtela)}
+                            />
+                            {subtela.nome}
+                          </label>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

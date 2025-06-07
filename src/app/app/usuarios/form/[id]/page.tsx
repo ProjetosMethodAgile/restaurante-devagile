@@ -13,10 +13,8 @@ type AtualizarUsuariosProps = {
 export default async function UsuarioFormUpdatePage({
   params,
 }: AtualizarUsuariosProps) {
-
   const { data: roles } = await getRoles();
   const { data } = await getUserId((await params).id);
-  console.log("data", data);
 
   return (
     <section className="m-4 bg-white flex flex-col gap-6 p-6 rounded-xl container-global shadow-md">

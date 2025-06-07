@@ -4,7 +4,7 @@ import React, { useActionState, useEffect, useTransition } from "react";
 import UsuariosInfosForm from "./UsuariosInfosForm";
 import UsuariosPermissoesForm from "./UsuariosPermissoesForm";
 import PrimaryButton from "../../UI/PrimaryButton";
-import { Check } from "lucide-react";
+import { Check, LoaderCircle } from "lucide-react";
 import UsuarioEmpresasForm from "./UsuariosEmpresasForm";
 import { useUser } from "@/src/context/userContext";
 import { RoleBase } from "@/src/types/role/roleType";
@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { UsuarioBase } from "@/src/types/user/userType";
 import { patchUser } from "@/src/actions/user/patchUser";
-import { TelaBase } from "@/src/types/tela/tela";
+import { SubtelaBase, TelaBase } from "@/src/types/tela/tela";
 
 type UsuarioFormProps = {
   roles: RoleBase[] | null;
@@ -29,7 +29,9 @@ export type currentUserType = {
     nome: string;
   }[];
   roleId: string;
-  telas: TelaBase[];
+  telas: {
+    tela: TelaBase | SubtelaBase;
+  }[];
 };
 
 export type currentUserProps = {
@@ -63,7 +65,10 @@ export default function UsuarioForm({
 
     if (state?.success) {
       toast.success(state.msg_success);
-      router.push("/app/usuarios");
+
+      startTransition(() => {
+        router.push("/app/usuarios");
+      });
     }
   }, [state.success, state.errors, state.msg_success, router]);
 
@@ -82,7 +87,10 @@ export default function UsuarioForm({
         nome: e.empresa.razao_social,
       })) || [],
     roleId: editData?.role?.id || "",
-    telas: editData?.telas || [],
+    telas:
+      editData?.telas?.map(
+        (t: any) => ("tela" in t ? t : { tela: t }) // garante que cada item tenha a estrutura { tela: ... }
+      ) || [],
   });
 
   return (
@@ -109,11 +117,14 @@ export default function UsuarioForm({
 
       <div className="flex justify-end mt-4">
         <PrimaryButton
-          text={isPending ? "Salvando..." : isEditMode ? "Atualizar" : "Cadastrar"}
+          text={
+            isPending ? "Salvando..." : isEditMode ? "Atualizar" : "Cadastrar"
+          }
           className="bg-secondary rounded-xl hover:bg-secondary/90"
-          icon={Check}
+          icon={isPending ? LoaderCircle : Check }
           type="submit"
           disabled={isPending}
+          isPending
         />
       </div>
 
@@ -131,7 +142,7 @@ export default function UsuarioForm({
       <input
         type="hidden"
         name="telaIds"
-        value={JSON.stringify(currentUser.telas.map((t) => t.id))}
+        value={JSON.stringify(currentUser.telas.map((t) => t.tela.id))}
       />
     </Form.Root>
   );

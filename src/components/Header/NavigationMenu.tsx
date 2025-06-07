@@ -16,6 +16,11 @@ export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // filtra das telas pai e ordena conforme o codigo
+  const userTelas = user.telas.filter(
+    (tela) => tela.tela.tela_parent_id === null
+  ).sort((a,b)=> String(b.tela.codigo).localeCompare(a.tela.codigo));
+
   function handleToggle(menu: string) {
     setOpenMenu((prev) => (prev === menu ? null : menu));
   }
@@ -50,113 +55,66 @@ export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
           </h1>
         </div>
 
-        <div className="flex items-center gap-6 text-sm text-gray-700 flex-wrap font-medium">
-          <ul className="flex flex-wrap gap-6 items-center relative">
+        <div className="flex items-center gap-10 text-sm text-gray-700 flex-wrap font-medium">
+          <ul className="flex flex-row-reverse flex-wrap gap-6 items-center relative">
             {empresa && (
               <>
-                <li
-                  onClick={() => setOpenMenu(null)}
-                  className={`cursor-pointer hover:text-primary ${
-                    openMenu === null && "text-primary font-semibold"
-                  }`}
-                >
-                  <Link href="/app/home">Início</Link>
-                </li>
+                {userTelas.map((tela) => (
+                  <li key={tela.tela.id} className="relative">
+                    {tela.tela.subtelas && tela.tela.subtelas.length > 0 ? (
+                      <>
+                        <div
+                          className="flex items-center gap-1 cursor-pointer hover:text-primary"
+                          onClick={() => handleToggle(tela.tela.codigo)}
+                        >
+                          {tela.tela.nome} <ChevronDown size={16} />
+                        </div>
+                        {openMenu === tela.tela.codigo && (
+                          <ul className="absolute top-full left-0 mt-[2px] bg-white border rounded-md w-64 z-50 shadow-sm border-t-4 border-primary">
+                            {tela.tela.subtelas.map((sub) => {
+                              const telaLiberada = user.telas.some(
+                                (allTela) => allTela.tela.id === sub.id
+                              );
 
-                <li className="relative">
-                  <div
-                    className="flex items-center gap-1 cursor-pointer hover:text-primary"
-                    onClick={() => handleToggle("cadastro")}
-                  >
-                    Cadastro <ChevronDown size={16} />
-                  </div>
-                  {openMenu === "cadastro" && (
-                    <ul className="absolute top-full left-0 mt-[2px] bg-white border   rounded-md w-56 z-50 shadow-sm border-t-4 border-primary">
-                      <li>
-                        <Link
-                          href="/app/cliente"
-                          className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-                        >
-                          Clientes
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/app/produto"
-                          className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-                        >
-                          Produtos
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/app/motorista"
-                          className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-                        >
-                          Motoristas
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-
-                <li className="relative">
-                  <div
-                    className="flex items-center gap-1 cursor-pointer hover:text-primary"
-                    onClick={() => handleToggle("config")}
-                  >
-                    Configurações <ChevronDown size={16} />
-                  </div>
-                  {openMenu === "config" && (
-                    <ul className="absolute top-full left-0 mt-[2px] bg-white border  rounded-md w-64 z-50 shadow-sm border-t-4 border-primary">
-                      <li>
-                        <Link
-                          href="/app/usuarios"
-                          className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-                        >
-                          Usuários do Sistema
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/app/parametros"
-                          className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-                        >
-                          Parâmetros
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/app/empresa"
-                          className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-                        >
-                          Empresa
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/select-empresa"
-                          className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
-                        >
-                          Trocar de empresa
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
-                </li>
+                              if (!telaLiberada) return null;
+                              return (
+                                <li key={sub.id}>
+                                  <Link
+                                    href={sub.href}
+                                    className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-800"
+                                  >
+                                    {sub.nome}
+                                  </Link>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+                      </>
+                    ) : (
+                      <Link
+                        href={tela.tela.href}
+                        className="cursor-pointer hover:text-primary block"
+                      >
+                        {tela.tela.nome}
+                      </Link>
+                    )}
+                  </li>
+                ))}
               </>
             )}
+          </ul>
+
+          <div className="flex items-center gap-4">
+            <User2 className="bg-primary/50 text-primary p-1 rounded-full size-10" />
+            <h3>{user.nome.split(" ")[0] ?? "Usuário"}</h3>
+            |
             <li
-              className="cursor-pointer hover:text-primary"
+              className="cursor-pointer list-none hover:text-primary"
               onClick={handleLogout}
             >
               Sair
             </li>
-          </ul>
-
-          <div className="flex items-center gap-4">
-            <h3>{user.nome.split(" ")[0] ?? "Usuário"}</h3>
-            <User2 className="bg-primary/50 text-primary p-1 rounded-full size-10" />
           </div>
         </div>
       </nav>

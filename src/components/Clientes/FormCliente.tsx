@@ -53,9 +53,7 @@ export default function FormCliente({
     form
   );
 
-  useEffect(() => {
-    console.log(registerState);
-  });
+
 
   // Quando dataAlteredUser muda, se encontrar um item com status=true, entramos em modo edição
   useEffect(() => {

@@ -20,6 +20,7 @@ export type UsuarioBase = {
       tipoEmpresa: { nome: string };
     };
   }[];
+  telas: TelaBase[]
 };
 
 export type UsuarioTelas = UsuarioBase & {

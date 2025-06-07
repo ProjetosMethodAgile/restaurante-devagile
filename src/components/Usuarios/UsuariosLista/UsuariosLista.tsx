@@ -12,6 +12,8 @@ type UsuariosListaProps = {
 
 export default function UsuariosLista({ usuarios }: UsuariosListaProps) {
   const router = useRouter();
+  console.log(usuarios)
+  if(usuarios.length === 0) return <div>Não foi possivel obter os usuarios</div>
   return (
     <section>
       <div className="flex items-center gap-6">

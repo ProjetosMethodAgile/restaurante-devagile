@@ -8,6 +8,6 @@ export async function registerCli(formData: FormClienteData) {
 
 
   const result = await postCustomer(formData);
-  console.log('Dados enviados para API (server action):', formData);
+  
   return result;
 }

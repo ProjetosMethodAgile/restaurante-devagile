@@ -5,19 +5,38 @@ import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import SecondaryButton from "../UI/SecondaryButton";
 import { FormClienteData } from "@/src/types/cliente/clientType";
+import { deleteCustomerForID } from "@/src/actions/clientes/deleteCustomerForID";
+import { toast } from "react-toastify";
 
 export type ComponenteClientesState = FormClienteData & {
   status: boolean;
+  __editIdx?: number;
 };
 
-export interface ContainerClientesProps {
+export type ContainerClientesProps = {
   clientes: FormClienteData[];
   dataAlteredUser: ComponenteClientesState[];
   setDataAlteredUser: React.Dispatch<
     React.SetStateAction<ComponenteClientesState[]>
   >;
 }
-
+export  const initialForm: FormClienteData = {
+    id: "",
+    nome: "",
+    contato: "",
+    email: "",
+    cpf: "",
+    rua: "",
+    numero: "",
+    bairro: "",
+    cep: "",
+    cidade: "",
+    estado: "",
+    complemento: "",
+    frete: "",
+    observacao: "",
+  };
+  
 export default function ContainerClientes({
   setDataAlteredUser,
   clientes,
@@ -26,6 +45,8 @@ export default function ContainerClientes({
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<FormClienteData | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const pageSize = 5;
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,13 +82,32 @@ export default function ContainerClientes({
     if (isLoading) setIsLoading(false);
   }, [paginated, isLoading]);
 
-  function handleAlterUser(data: FormClienteData) {
+  // Recebe dados e índice real para edição
+  function handleAlterUser(data: FormClienteData, idx: number) {
     setDataAlteredUser([
       {
         ...data,
         status: true,
+        __editIdx: idx,
       },
     ]);
+  }
+
+
+  async function confirmDelete() {
+setDataAlteredUser([]);
+   
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      await deleteCustomerForID(deleteTarget.id);
+      toast.success(`Cliente ${deleteTarget.nome} deletado com sucesso`);
+      setDeleteTarget(null);
+    } catch (error) {
+      toast.error('Falha ao deletar cliente. Tente novamente.');
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   return (
@@ -121,16 +161,19 @@ export default function ContainerClientes({
                           Contato: {item.contato}
                         </span>
                       )}
+                    
                     </div>
                     <div className="flex space-x-2">
                       <SecondaryButton
                         className="bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                         text="Editar"
-                        onClick={() => handleAlterUser(item)}
+                        onClick={() => handleAlterUser(item, currentPage * pageSize + idx)}
                       />
                       <SecondaryButton
                         className="bg-red-500 text-white rounded hover:bg-red-600 transition"
                         text="Excluir"
+
+                       onClick={() => setDeleteTarget(item)}
                       />
                     </div>
                   </div>
@@ -194,7 +237,36 @@ export default function ContainerClientes({
           </>
         )}
       </div>
+      {/* MODAL DE CONFIRMAÇÃO */}
+      {deleteTarget && (
+        <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-9999 ">
+          <div className="bg-white rounded-lg p-6 w-80">
+            <h2 className="text-lg font-semibold mb-4">Confirmação</h2>
+            <p className="mb-6">
+              Tem certeza que deseja excluir <strong>{deleteTarget.nome}</strong>?
+            </p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setDeleteTarget(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={()=>confirmDelete()}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition disabled:opacity-50 flex items-center"
+              >
+                {isDeleting && (
+                  <span className="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4" />
+                )}
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
-

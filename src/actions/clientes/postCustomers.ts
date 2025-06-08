@@ -35,24 +35,26 @@ export async function postCustomer(data: FormClienteData | undefined) {
   const cpfSomenteDigitos = (data.cpf ?? '').replace(/\D/g, '');
   if (cpfSomenteDigitos.length !== 11) {
     console.error('CPF inválido: precisa de exatamente 11 dígitos.');
-    return [];
+    
+    return {message:"CPF inválido: precisa de exatamente 11 dígitos.",error:true};
   }
-
+  
   // CEP (8 dígitos)
   const cepSomenteDigitos = data.cep.replace(/\D/g, '');
   if (cepSomenteDigitos.length !== 8) {
     console.error('CEP inválido: precisa de exatamente 8 dígitos.');
-    return [];
+    return {message:"CEP inválido: precisa de exatamente 8 dígitos",error:true};
   }
-
+  
   // Conversão de frete (string "x.xxx,xx" ou "xxx,xx"): transformamos em número
   const freteRaw = typeof data.frete === 'string' ? data.frete : '';
   const freteFormatado = freteRaw
-    ? Number(freteRaw.replace(/\./g, '').replace(',', '.'))
-    : 0; // Ou, se a API quiser string: freteRaw.replace(/\./g, '').replace(',', '.')
+  ? Number(freteRaw.replace(/\./g, '').replace(',', '.'))
+  : 0; // Ou, se a API quiser string: freteRaw.replace(/\./g, '').replace(',', '.')
   if (isNaN(freteFormatado) || freteFormatado < 0) {
     console.error('Frete inválido: precisa ser um número maior ou igual a zero.');
-    return [];
+    return {message:"Frete inválido: precisa ser um número maior ou igual a zero.",error:true};
+
   }
    const cpfTratado = cpfSomenteDigitos.replace(/\D/g, '');
   // 3) Montar payload conforme o que a API realmente espera
@@ -91,7 +93,7 @@ export async function postCustomer(data: FormClienteData | undefined) {
         erroDetalhado = await res.text();
       }
       console.error('Resposta de erro do servidor:', erroDetalhado);
-      return [];
+      return{ message:erroDetalhado,error:true};
     }
     revalidateTag('clientes');
     const responseData = await res.json();
@@ -99,6 +101,6 @@ export async function postCustomer(data: FormClienteData | undefined) {
 
   } catch (error) {
     console.error('Erro ao criar cliente (exceção):', error);
-    return [];
+      return{ message:"Solicite suporte",error:true};
   }
 }

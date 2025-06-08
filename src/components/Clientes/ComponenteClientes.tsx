@@ -6,6 +6,7 @@ import { FormClienteData } from "@/src/types/cliente/clientType";
 import { useState } from "react";
 
 export type ComponenteClientesProps = {
+  id:string;
   clientes: FormClienteData[];
 };
 
@@ -15,6 +16,8 @@ export type ComponenteClientesState = FormClienteData & {
 
 export default function ComponenteClientes({ clientes }: ComponenteClientesProps) {
   const [dataAlteredUser, setDataAlteredUser] = useState<ComponenteClientesState[]>([]);
+
+
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-screen-xl mx-auto">

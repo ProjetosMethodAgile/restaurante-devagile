@@ -1,36 +1,30 @@
-'use client';
+// src/components/Clientes/FormCliente.tsx
+"use client";
 
-import React, { useState, useEffect, startTransition } from 'react';
-import { useActionState } from 'react'; // <–– import corrigido
-import { Form } from '@/src/components/UI/Form';
-import PrimaryButton from '@/src/components/UI/PrimaryButton';
-import { handleChangeCep } from '@/src/actions/api-externas/cep/getcep';
-import type { FormClienteData } from '@/src/types/cliente/clientType';
-import { registerCli } from '@/src/actions/clientes/registercli';
-import type { ComponenteClientesState } from './ContainerClientes';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect, startTransition } from "react";
+import { Form } from "@/src/components/UI/Form";
+import PrimaryButton from "@/src/components/UI/PrimaryButton";
+import { handleChangeCep } from "@/src/actions/api-externas/cep/getcep";
+import { registerCli } from "@/src/actions/clientes/registercli";
+import { alterCustomerForID } from "@/src/actions/clientes/alterCustomerForID";
+import type { FormClienteData } from "@/src/types/cliente/clientType";
+import { toast } from "react-toastify";
+import { ComponenteClientesState, initialForm } from "./ContainerClientes";
+
+type ResponseError = { error: true; message: string };
+type ResponseSuccess = FormClienteData & {
+  id: string;
+  error?: false;
+  message?: string;
+};
+type ClienteResponse = ResponseError | ResponseSuccess;
 
 const estados = [
-  { value: '', label: 'Estado' },
-  { value: 'SP', label: 'SP' },
-  { value: 'RJ', label: 'RJ' },
+  { value: "", label: "Estado" },
+  { value: "SP", label: "SP" },
+  { value: "RJ", label: "RJ" },
 ];
 
-const initialForm: FormClienteData = {
-  nome: '',
-  contato: '',
-  email: '',
-  cpf: '',
-  rua: '',
-  numero: '',
-  bairro: '',
-  cep: '',
-  cidade: '',
-  estado: '',
-  complemento: '',
-  frete: '',
-  observacao: '',
-};
 
 export interface FormClienteProps {
   dataAlteredUser: ComponenteClientesState[];
@@ -43,48 +37,50 @@ export default function FormCliente({
   dataAlteredUser,
   setDataAlteredUser,
 }: FormClienteProps) {
+  
+  
   const [addressDisabled, setAddressDisabled] = useState(false);
   const [autoCepEnabled, setAutoCepEnabled] = useState(true);
-
   const [form, setForm] = useState<FormClienteData>({ ...initialForm });
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [disabledBtn, setDisabledBtn] = useState(false);
 
-  // ----- useActionState COM 2 argumentos: ação + estado inicial -----
-  const [registerState, isPending] =
-    useActionState<FormClienteData>(registerCli, initialForm);
-
+  // Preenche para edição
   useEffect(() => {
-    console.log('Estado da Action (registerState):', registerState);
-    console.log('Está pendente? (isPending):', isPending);
-  }, [registerState, isPending]);
+    const editing = dataAlteredUser.find((item) => item.status);
+    if (editing) {
+      const { status, __editIdx, ...userData } = editing as any;
+      setForm(userData);
+      setEditIndex(typeof __editIdx === "number" ? __editIdx : null);
+    }
+  }, [dataAlteredUser]);
 
+  // Atualiza campos do form
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { id, value } = e.target;
-
-    if (id === 'rua' && addressDisabled) {
-      alert('Para editar a rua (logradouro), apague o CEP primeiro.');
+    if (id === "rua" && addressDisabled) {
+      alert("Para editar a rua, apague o CEP primeiro.");
       return;
     }
-
     setForm((prev) => ({ ...prev, [id]: value }));
-
-    if (id === 'cep') {
+    if (id === "cep") {
       setAddressDisabled(false);
       setForm((prev) => ({
         ...prev,
-        rua: '',
-        bairro: '',
-        cidade: '',
-        estado: '',
+        rua: "",
+        bairro: "",
+        cidade: "",
+        estado: "",
       }));
     }
   };
 
+  // Busca automática de CEP
   const handleCepBlur = async () => {
     if (!autoCepEnabled) return;
-    const cepDigits = form.cep.replace(/\D/g, '');
+    const cepDigits = form.cep.replace(/\D/g, "");
     if (cepDigits.length === 8) {
       try {
         const res = await handleChangeCep(cepDigits);
@@ -108,57 +104,107 @@ export default function FormCliente({
     }
   };
 
-  const [disabledBtn, setDisabledBtn] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
+  // Submit unificado (novo ou edição)
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    setDisabledBtn(true);
-    startTransition(async () => {
-      const res = await registerCli(form);
-      if (!res || res.length === 0) {
-        toast.error(
-          'Erro ao cadastrar cliente. Verifique os dados e tente novamente.'
-        );
-        return;
-      }
-      toast.success('Cliente cadastrado com sucesso!');
-    });
-
-    if (editIndex !== null) {
-      const updated = [...dataAlteredUser];
-      updated[editIndex] = { ...form, status: false };
-      setDataAlteredUser(updated);
-    } else {
-      setDataAlteredUser([...dataAlteredUser, { ...form, status: false }]);
+    // Validações de CPF e CEP
+    const cpfDigits = form.cpf.replace(/\D/g, "");
+    if (cpfDigits.length !== 11) {
+      toast.error("CPF inválido: precisa de exatamente 11 dígitos.");
+      return;
+    }
+    const cepDigits = form.cep.replace(/\D/g, "");
+    if (cepDigits.length !== 8) {
+      toast.error("CEP inválido: precisa de exatamente 8 dígitos.");
+      return;
     }
 
-    setTimeout(() => {
+    setDisabledBtn(true);
+
+    startTransition(async () => {
+      let res: ClienteResponse;
+
+      try {
+        if (editIndex !== null) {
+          res = (await alterCustomerForID(form.id, {
+            nome: form.nome,
+            contato: form.contato,
+            email: form.email,
+            cpf: form.cpf,
+            rua: form.rua,
+            numero: form.numero,
+            bairro: form.bairro,
+            cep: form.cep,
+            cidade: form.cidade,
+            estado: form.estado,
+            complemento: form.complemento,
+            frete: form.frete,
+            observacao: form.observacao,
+          })) as ResponseSuccess;
+        } else {
+          res = (await registerCli(form)) as ClienteResponse;
+        }
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Erro inesperado na requisição";
+        toast.error(msg);
+        setDisabledBtn(false);
+        return;
+      }
+
+      if ("error" in res && res.error) {
+        toast.error(res.message);
+        setDisabledBtn(false);
+        return;
+      }
+
+      const action = editIndex !== null ? "alterado" : "cadastrado";
+      toast.success(`Usuário ${form.nome} ${action} com sucesso!`);
+      setForm(initialForm);
+      // Atualiza lista local
+      if (editIndex !== null) {
+        const updated = [...dataAlteredUser];
+        updated[editIndex] = {
+          ...form,
+          status: false,
+          __editIdx: editIndex,
+        } as ComponenteClientesState;
+        setDataAlteredUser(updated);
+      } else {
+        setDataAlteredUser([
+          ...dataAlteredUser,
+          { ...form, status: false } as ComponenteClientesState,
+        ]);
+      }
+
+      // Reset só em caso de sucesso
+      setForm({ ...initialForm });
+      setEditIndex(null);
+      setAddressDisabled(false);
       setDisabledBtn(false);
-    }, 2000);
+    });
+  };
 
-    setEditIndex(null);
-    setAddressDisabled(false);
-  }
-
-  function handleCancel() {
+  // Cancela edição
+  const handleCancel = () => {
     setForm({ ...initialForm });
     setEditIndex(null);
     setAddressDisabled(false);
-    const updated = dataAlteredUser.map((item) => ({ ...item, status: false }));
-    setDataAlteredUser(updated);
-  }
+    setDataAlteredUser(
+      dataAlteredUser.map((item) => ({
+        ...item,
+        status: false,
+      } as ComponenteClientesState))
+    );
+  };
 
   return (
-    <Form.Root
-      onSubmit={handleSubmit}
-      className="space-y-4 bg-white p-6 rounded-lg"
-    >
+    <Form.Root onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg">
       <h1 className="text-xl font-semibold">
-        {editIndex !== null ? 'Alterar cliente' : 'Cadastrar cliente'}
+        {editIndex !== null ? "Alterar cliente" : "Cadastrar cliente"}
       </h1>
 
-      {/* Checkbox para ativar/desativar busca automática de CEP */}
       <div className="flex items-center gap-2 mb-4">
         <input
           id="autoCep"
@@ -172,9 +218,7 @@ export default function FormCliente({
         </label>
       </div>
 
-      {/* Grid reorganizado */}
       <div className="grid grid-cols-3 gap-4">
-        {/* 1. Nome → ocupa 3 colunas */}
         <Form.InputText
           id="nome"
           placeholder="Nome"
@@ -183,8 +227,6 @@ export default function FormCliente({
           className="col-span-3 w-full"
           required
         />
-
-        {/* 2. Contato (1) | Email (2) */}
         <Form.InputText
           id="contato"
           placeholder="Contato"
@@ -200,8 +242,6 @@ export default function FormCliente({
           onChange={handleChange}
           className="col-span-2 w-full"
         />
-
-        {/* 3. CPF (1) | CEP (1) | Número (1) */}
         <Form.InputText
           id="cpf"
           placeholder="CPF"
@@ -224,8 +264,6 @@ export default function FormCliente({
           onChange={handleChange}
           className="col-span-1 w-full"
         />
-
-        {/* 4. Rua (2) | Complemento (1) */}
         <Form.InputText
           id="rua"
           placeholder="Rua"
@@ -240,10 +278,8 @@ export default function FormCliente({
           placeholder="Complemento"
           value={form.complemento}
           onChange={handleChange}
-          className="col-span-2 w-full"
+          className="col-span-1 w-full"
         />
-
-        {/* 5. Bairro (1) | Cidade (1) | Estado (1) */}
         <Form.InputText
           id="bairro"
           placeholder="Bairro"
@@ -273,8 +309,6 @@ export default function FormCliente({
             </option>
           ))}
         </select>
-
-        {/* 6. Frete (1) */}
         <Form.InputText
           id="frete"
           placeholder="Frete (R$)"
@@ -282,8 +316,6 @@ export default function FormCliente({
           onChange={handleChange}
           className="col-span-1 w-full"
         />
-
-        {/* 7. Observação (textarea) → ocupa 3 colunas e ganha altura */}
         <Form.InputText
           id="observacao"
           placeholder="Observação"
@@ -294,20 +326,18 @@ export default function FormCliente({
         />
       </div>
 
-      {/* Botão Cadastrar / Alterar */}
       <PrimaryButton
         type="submit"
-        text={editIndex !== null ? 'Alterar' : 'Cadastrar'}
+        text={editIndex !== null ? "Alterar" : "Cadastrar"}
         className={
           disabledBtn
-            ? 'w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4'
-            : 'w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded mt-4'
+            ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
+            : "w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded mt-4"
         }
         disabled={disabledBtn}
       />
 
-      {/* Botão Cancelar só aparece se houver alteração */}
-      {dataAlteredUser.some((item) => item.status) && (
+      {editIndex !== null && (
         <PrimaryButton
           type="button"
           text="Cancelar"

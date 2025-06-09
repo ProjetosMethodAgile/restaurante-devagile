@@ -11,7 +11,7 @@ export default function UsuarioCard({ usuario }: UsuarioCardProps) {
   const [keyButton, setKeyButton] = React.useState(false);
 
   return (
-    <div className="bg-blue-50  p-4 rounded-xl shadow-sm w-85 hover:scale-101 transition-transform ease-in-out">
+    <div className="bg-blue-50  p-4 rounded-xl shadow-sm  hover:scale-101 transition-transform ease-in-out">
       <div className="flex items-start gap-4">
         <div className="bg-blue-500 text-white font-bold rounded-full min-w-10 min-h-10 flex items-center justify-center text-lg">
           {usuario.nome

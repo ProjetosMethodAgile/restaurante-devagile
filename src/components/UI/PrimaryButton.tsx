@@ -9,7 +9,7 @@ export default function PrimaryButton({
   icon: Icon,
   text,
   className,
-  isPending,
+  isPending = false,
   ...props
 }: primaryButtonProps) {
   return (
@@ -25,7 +25,7 @@ export default function PrimaryButton({
         <Icon
           className={twMerge(
             "w-4 h-4 transition-opacity duration-200",
-            !isPending ? "animate-spin opacity-60" : ""
+            isPending ? "animate-spin opacity-60" : ""
           )}
         />
       )}

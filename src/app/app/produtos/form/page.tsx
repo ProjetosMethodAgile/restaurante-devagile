@@ -10,7 +10,6 @@ export default async function ProdutoFormPage() {
         <Link href="/app/produtos">
           <ArrowLeft className="hover:-translate-x-1 transition-all cursor-pointer" />
         </Link>
-
         <PrimaryTitle title="Cadastro de produto" />
       </div>
       <div className="m-4 bg-white flex flex-col gap-6 p-6 rounded-xl container-global shadow-md">

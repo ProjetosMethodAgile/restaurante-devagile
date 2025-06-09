@@ -17,15 +17,17 @@ export default async function UsuarioFormUpdatePage({
   const { data } = await getUserId((await params).id);
 
   return (
-    <section className="m-4 bg-white flex flex-col gap-6 p-6 rounded-xl container-global shadow-md">
-      <div className="flex items-center gap-4">
+    <section>
+      <div className="flex items-center gap-4 container-global m-4" >
         <Link href="/app/usuarios">
           <ArrowLeft className="hover:-translate-x-1 transition-all cursor-pointer" />
         </Link>
 
         <PrimaryTitle title="Cadastro de usuario" />
       </div>
-      <UsuarioForm isEditMode editData={data} roles={roles} />
+      <div className="m-4 bg-white flex flex-col gap-6 p-6 rounded-xl container-global shadow-md">
+        <UsuarioForm isEditMode editData={data} roles={roles} />
+      </div>
     </section>
   );
 }

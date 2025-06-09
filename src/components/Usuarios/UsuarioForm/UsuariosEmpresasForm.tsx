@@ -39,7 +39,7 @@ export default function UsuarioEmpresasForm({
                 ) : (
                   <Plus
                     size={18}
-                    className="bg-secondary rounded-full text-white p-0.5 cursor-pointer"
+                    className="bg-secondary rounded-full min-w-4 min-h-4 text-white p-0.5 cursor-pointer"
                     onClick={() =>
                       setCurrentUser((prev) => ({
                         ...prev,

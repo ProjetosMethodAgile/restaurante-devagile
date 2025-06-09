@@ -10,10 +10,10 @@ export default function FormInputOptions({
   ...props
 }: FormInputOptionsProps) {
   const containerClass = twMerge(
-    `flex mt-1 py-2 px-4 items-center transition justify-between 
+    `flex py-2 px-4 items-center transition justify-between 
     border rounded-lg text-sm sm:text-base text-text-secondary 
     ease-out hover:border-primary/70 active:scale-102 active:border-primary itens-center gap-2 
-    focus:outline-none focus:ring-2 focus:ring-[#D72626]`,
+    focus:outline-none focus:ring-2 focus:ring-[#D72626] w-full`,
     disabled
       ? "bg-gray-100 border-gray-300 pointer-events-none opacity-60"
       : "border-gray-300",
@@ -21,7 +21,7 @@ export default function FormInputOptions({
   );
 
   return (
-    <div className="mt-1 ">
+    <div className=" ">
       {label && (
         <label className="text-text-secondary mb-2 text-sm">{label}</label>
       )}

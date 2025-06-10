@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 import { log } from "console";
 
-export async function postUser(
+export async function postProduto(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
     | undefined,
@@ -12,12 +12,14 @@ export async function postUser(
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   try {
     const nome = formData.get("nome") as string;
-    const email = formData.get("email") as string;
-    const roleId = formData.get("roleId") as string;
+    const descricao = formData.get("descricao") as string;
+    const categoria = formData.get("categoria") as string;
     const empresas = formData.get("empresaIds") as string;
-    const telas = formData.get("telaIds") as string;
+    const precoBase = formData.get("precoBase") as string;
+    const variantes = formData.get("variantes") as string;
+    const incluir_variacoes = formData.get("incluir_variacoes") as string;
 
-    if (!nome || !email || !roleId) {
+    if (!nome || !descricao) {
       return {
         errors: ["Preencha todos os campos obrigatórios."],
         msg_success: "",
@@ -26,11 +28,10 @@ export async function postUser(
     }
 
     const empresaIds = JSON.parse(empresas || "[]") as string[];
-    const telaIds = JSON.parse(telas || "[]") as string[];
 
-      if (empresaIds.length === 0) {
+    if (empresaIds.length === 0) {
       return {
-        errors: ["Atribua pelo menos uma empresa ao usuario."],
+        errors: ["Atribua pelo menos uma empresa ao produto."],
         msg_success: "",
         success: false,
       };
@@ -47,7 +48,7 @@ export async function postUser(
     }
 
     const url = "http://localhost:3001/";
-    const response = await fetch(url + "usuario/register", {
+    const response = await fetch(url + "produto", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,21 +56,27 @@ export async function postUser(
       },
       body: JSON.stringify({
         nome,
-        email,
-        role_Id: roleId,
+        descricao,
         empresaIds,
-        telaIds,
-        acaoTelaIds: ["8808d943-d840-43b8-a148-3d967b71c229"], // ajuste quando tiver isso implementado
+        categoryIds: [categoria],
+        variacoes: incluir_variacoes
+          ? [
+              {
+                variacao_id: "7f148f90-5d64-459c-8b10-765f7b105f44",
+                preco: precoBase,
+              },
+            ]
+          : [],
       }),
     });
 
     if (response.ok) {
-      revalidateTag("new-user");
+      revalidateTag("new-product");
 
       return {
         success: true,
         errors: [],
-        msg_success: "Usuário cadastrado com sucesso.",
+        msg_success: "Produto Cadastrado com sucesso.",
       };
     } else {
       const { message } = await response.json();

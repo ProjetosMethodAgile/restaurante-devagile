@@ -16,13 +16,16 @@ import { postProduto } from "@/src/actions/produtos/postProduto";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/src/context/userContext";
+import ProdutoInfoForm from "./ProdutoInfoForm";
+import ProdutoFormVariacoes from "./ProdutoFormVariacoes";
+import { ProdutoFormSubmit } from "./ProdutoFormSubmit";
 
 type ProdutoFormType = {
   categorias: CategoriaBase[] | [];
   variacoes: VariacaoBase[] | [];
 };
 
-type VariacaoState = {
+export type VariacaoState = {
   sku: string;
   variacaoId: string;
   preco_variacao: string;
@@ -40,7 +43,7 @@ export default function ProdutoForm({
       variacaoId: "",
     },
   ]);
- const [preco, setPreco] = useState<string>("");
+  const [preco, setPreco] = useState<string>("");
   const [activeVariacoes, setActiveVariacoes] = useState(false);
   const { user } = useUser();
   const router = useRouter();
@@ -51,6 +54,7 @@ export default function ProdutoForm({
     success: false,
   });
 
+  //realiza funcões após o feedback do formularop
   useEffect(() => {
     if (state?.errors?.length) {
       state.errors.forEach((erro: string) => toast.error(erro));
@@ -65,6 +69,7 @@ export default function ProdutoForm({
     }
   }, [state.success, state.errors, state.msg_success, router]);
 
+  //rastreia a mudança nos inputs e atualiza o estado
   const handleChange = (
     idx: number,
     target: EventTarget & { name?: string; value?: string }
@@ -85,6 +90,7 @@ export default function ProdutoForm({
     });
   };
 
+  //adiciona nova variação na listagem
   const addVariacao = () => {
     setVariacoesData((prev) => [
       ...prev,
@@ -96,6 +102,7 @@ export default function ProdutoForm({
     ]);
   };
 
+  //seta o preço base como preço das variações
   const setPrecoBase = (checked: boolean) => {
     if (checked) {
       setVariacoesData((prev) => {
@@ -122,149 +129,29 @@ export default function ProdutoForm({
     }
   };
 
+  //ativa ou desativa variacoes
   const ativaVariacoes = (checked: boolean) => {
     if (checked) setActiveVariacoes(true);
-    else setActiveVariacoes(false)
+    else setActiveVariacoes(false);
   };
 
   return (
     <Form.Root action={formAction}>
-      <div className="border-b border-slate-200 py-4">
-        <SecondaryTitle title="Informações Basicas" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4  ">
-          <Form.InputText
-            label="SKU"
-            name="codigo"
-            type="text"
-            placeholder="PRATO-001"
-          />
-
-          <Form.InputText
-            label="Nome do Produto"
-            type="text"
-            placeholder="Feijoada Completa"
-            name="nome"
-          />
-
-          <Form.InputText
-            label="Preço Base"
-            type="text"
-            placeholder="R$"
-            name="precoBase"
-            value={preco}
-           onChange={(e) => setPreco(e.target.value)}
-          />
-          <Form.InputOptions
-            label="Categoria"
-            name="categoria"
-            options={categorias.map((categoria) => {
-              return { label: categoria.nome, value: categoria.id };
-            })}
-          />
-          <Form.InputText
-            label="Descrição"
-            type="text"
-            placeholder="Feijoada, Arroz, Batata..."
-            name="descricao"
-          />
-        </div>
-      </div>
-
-      <div className="border-b border-slate-200 py-4">
-        <div className="flex flex-col gap-4 ">
-          <div className="flex gap-2 mt-2">
-            <input
-              type="checkbox"
-              name="incluir_variacoes"
-              id="incluir_variacoes"
-              onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                ativaVariacoes((e.target as HTMLInputElement).checked)
-              }
-            />
-            <label htmlFor="incluir_variacoes">Incluir variações</label>
-          </div>
-          {activeVariacoes && (
-            <ul className="flex flex-col shadow-sm gap-4 bg-gray-100 p-4 rounded-xl">
-              <li className="flex justify-between">
-                <SecondaryTitle title="Variações" />
-                <div>
-                  {variacoesData.length > 0 && (
-                    <div className="flex gap-2 mt-2">
-                      <input
-                        type="checkbox"
-                        name="incluir_preco_base"
-                        id="incluir_preco_base"
-                        onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                          setPrecoBase((e.target as HTMLInputElement).checked)
-                        }
-                      />
-                      <label htmlFor="incluir_preco_base">
-                        Utilizar preço base
-                      </label>
-                    </div>
-                  )}
-                </div>
-              </li>
-              {variacoesData.map((variacao, idx) => {
-                return (
-                  <li className="grid grid-cols-[auto_1fr_1fr_1fr_auto] border-b-2 border-gray-200/80 pb-4 items-center gap-4 bg-gray-100 ">
-                    <span className="text-slate-700 text-sm "># {idx + 1}</span>
-                    <Form.InputText
-                      label="SKU"
-                      name="sku"
-                      type="text"
-                      value={variacao.sku}
-                      placeholder="PRATO-001"
-                      className="bg-white"
-                      onChange={(e) => handleChange(idx, e.target)}
-                    />
-                    <Form.InputOptions
-                      label="Variação"
-                      options={variacoes.map((variacao) => {
-                        return { label: variacao.nome, value: variacao.id };
-                      })}
-                      className="bg-white"
-                      value={variacao.variacaoId}
-                      onChange={(e) => handleChange(idx, e.target)}
-                      name="variacaoId"
-                    />
-                    <Form.InputText
-                      label="Preço"
-                      type="text"
-                      placeholder="R$"
-                      name="preco_variacao"
-                      className="bg-white"
-                      value={variacao.preco_variacao}
-                      onChange={(e) => handleChange(idx, e.target)}
-                    />
-                    <Trash2Icon className="mt-4 cursor-pointer hover:scale-102 transition-all text-primary" />
-                  </li>
-                );
-              })}
-              <li
-                onClick={addVariacao}
-                className="bg-secondary gap-2 items-center flex cursor-pointer hover:scale-102 transition-all rounded-xl mx-auto p-2 text-white mt-2"
-              >
-                <span>Adicionar Variação</span>
-                <Plus />
-              </li>
-            </ul>
-          )}
-        </div>
-      </div>
-
-      <div className="flex justify-end mt-4">
-        <PrimaryButton
-          text={
-            isPending ? "Salvando..." : !isEditMode ? "Atualizar" : "Cadastrar"
-          }
-          className="bg-secondary rounded-xl hover:bg-secondary/90"
-          icon={isPending ? LoaderCircle : Check}
-          type="submit"
-          disabled={isPending}
-          isPending={isPending}
-        />
-      </div>
+      <ProdutoInfoForm
+        categorias={categorias}
+        preco={preco}
+        setPreco={setPreco}
+      />
+      <ProdutoFormVariacoes
+        activeVariacoes={activeVariacoes}
+        addVariacao={addVariacao}
+        ativaVariacoes={ativaVariacoes}
+        handleChange={handleChange}
+        setPrecoBase={setPrecoBase}
+        variacoes={variacoes}
+        variacoesData={variacoesData}
+      />
+      <ProdutoFormSubmit isEditMode={isEditMode} isPending={isPending} />
 
       <input
         type="hidden"

@@ -2,7 +2,7 @@
 import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { log } from "console";
+
 
 export async function postProduto(
   state:
@@ -16,8 +16,16 @@ export async function postProduto(
     const categoria = formData.get("categoria") as string;
     const empresas = formData.get("empresaIds") as string;
     const precoBase = formData.get("precoBase") as string;
-    const variantes = formData.get("variantes") as string;
+    const variantesIds = formData.getAll("variacaoId") as string[];
+    const precosVariantes= formData.getAll("preco_variacao") as string[];
     const incluir_variacoes = formData.get("incluir_variacoes") as string;
+    const empresaIds = JSON.parse(empresas || "[]") as string[];
+    const variacoesObj = variantesIds.map((varianteId,index)=>{
+      return {
+        variacao_id: varianteId,
+        preco: +precosVariantes[index]
+      }
+    })
 
     if (!nome || !descricao) {
       return {
@@ -26,8 +34,6 @@ export async function postProduto(
         success: false,
       };
     }
-
-    const empresaIds = JSON.parse(empresas || "[]") as string[];
 
     if (empresaIds.length === 0) {
       return {
@@ -59,16 +65,10 @@ export async function postProduto(
         descricao,
         empresaIds,
         categoryIds: [categoria],
-        variacoes: incluir_variacoes
-          ? [
-              {
-                variacao_id: "7f148f90-5d64-459c-8b10-765f7b105f44",
-                preco: precoBase,
-              },
-            ]
-          : [],
+        variacoes: variacoesObj
       }),
     });
+    console.log(response)
 
     if (response.ok) {
       revalidateTag("new-product");

@@ -18,7 +18,7 @@ export default function UsuariosLista({ usuarios }: UsuariosListaProps) {
   return (
     <section>
       <div className="flex items-center gap-6">
-        <UsuariosFiltro />{" "}
+        <UsuariosFiltro />
         <SecondaryButton
           className="bg-secondary text-white"
           text="Adicionar"

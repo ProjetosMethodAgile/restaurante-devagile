@@ -1,25 +1,34 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { ProdutoBase } from "@/src/types/produto/produtoType";
-import { LayoutList, LayoutGrid, Package2 } from "lucide-react";
+import { LayoutList, LayoutGrid, Package2, Plus } from "lucide-react";
 import clsx from "clsx";
 import PrimaryButton from "../../UI/PrimaryButton";
+import ProdutosFiltro from "./ProdutosFiltro";
+import SecondaryButton from "../../UI/SecondaryButton";
+import { useRouter } from "next/navigation";
 
 type ProdutosListaProps = {
   produtos: ProdutoBase[] | null;
 };
 
 export default function ProdutosLista({ produtos }: ProdutosListaProps) {
-  const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">("lista");
+  const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
+    "lista"
+  );
+    const router = useRouter();
 
   return (
     <section className="w-full px-4 py-4">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end gap-4 mb-4">
+        <ProdutosFiltro />
         <button
           onClick={() =>
-            setModoVisualizacao((prev) => (prev === "lista" ? "cards" : "lista"))
+            setModoVisualizacao((prev) =>
+              prev === "lista" ? "cards" : "lista"
+            )
           }
-          className="flex items-center gap-2 text-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 transition-all text-white rounded-lg"
+          className="flex items-center gap-2 text-sm px-4 py-2 bg-primary cursor-pointer hover:bg-primary/90 transition-all text-white rounded-lg"
         >
           {modoVisualizacao === "lista" ? (
             <>
@@ -33,6 +42,12 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
             </>
           )}
         </button>
+        <SecondaryButton
+          className="bg-secondary text-white"
+          text="Adicionar"
+          icon={Plus}
+          onClick={() => router.push("/app/produtos/form")}
+        />
       </div>
 
       {modoVisualizacao === "lista" ? (
@@ -58,7 +73,9 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
                       <Package2 className="w-4 h-4 text-blue-600" />
                       {produto.nome}
                     </td>
-                    <td className="px-4 py-3 text-gray-500">{produto.codigo}</td>
+                    <td className="px-4 py-3 text-gray-500">
+                      {produto.codigo}
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className={clsx(
@@ -75,7 +92,9 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
                     </td>
                     <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
                       {produto.descricao || (
-                        <span className="italic text-gray-400">Sem descrição</span>
+                        <span className="italic text-gray-400">
+                          Sem descrição
+                        </span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -94,14 +113,19 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
                           ))}
                         </ul>
                       ) : (
-                        <span className="text-gray-400 italic">Sem variações</span>
+                        <span className="text-gray-400 italic">
+                          Sem variações
+                        </span>
                       )}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
+                  <td
+                    colSpan={5}
+                    className="px-4 py-6 text-center text-gray-500"
+                  >
                     Nenhum produto cadastrado
                   </td>
                 </tr>

@@ -1,6 +1,6 @@
 // src/app/relatorios/page.tsx
-import ReportTable from "@/src/components/relatorios/ReportTable";
-import ChartsWrapper from "@/src/components/relatorios/ChartsWrapper";
+import ReportTable from "@/src/components/Relatorios/ReportTable";
+import ChartsWrapper from "@/src/components/Relatorios/ChartsWrapper";
 
 export default function ReportsPage() {
   const pedidosData = [

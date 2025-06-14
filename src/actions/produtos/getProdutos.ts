@@ -2,9 +2,9 @@
 
 import { cookies } from "next/headers";
 import { CategoriaBase } from "@/src/types/categoria/categoriaType";
-import { VariacaoBase } from "@/src/types/variacoes/variacoesType";
+import { ProdutoBase } from "@/src/types/produto/produtoType";
 
-export default async function getVariacoesByEmp() {
+export default async function getProdutos() {
   const token = (await cookies()).get("token")?.value;
   const empresaId = (await cookies()).get("empresaStorage")?.value;
 
@@ -19,26 +19,25 @@ export default async function getVariacoesByEmp() {
   const url = process.env.API_URL || "http://localhost:3001";
 
   try {
-    const res = await fetch(`${url}/variacao`, {
+    const res = await fetch(`${url}/produto`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       next: {
-        tags: ["get-variacao"],
+        tags: ["new-produto"],
       },
     });
 
     if (!res.ok) {
       const message = await res.text();
-      return { data: null, error: `Erro ao buscar categorias: ${message}` };
+      return { data: null, error: `Erro ao buscar produtos: ${message}` };
     }
-    const variacoes = (await res.json()) as VariacaoBase[];
+    const produtos = (await res.json()) as ProdutoBase[];
+    if (produtos.length < 1)
+      return { data: null, error: "Produtos não encontrados" };
 
-    if (variacoes.length < 1)
-      return { data: null, error: "Variações não encontradas" };
-
-    return { data: variacoes, error: "" };
+    return { data: produtos, error: "" };
   } catch (error) {
     return { data: null, error: "Erro inesperado." };
   }

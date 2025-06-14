@@ -27,8 +27,8 @@ type ProdutoFormType = {
 
 export type VariacaoState = {
   sku: string;
-  variacaoId: string;
-  preco_variacao: string;
+  variacao_id: string;
+  variacao_preco: string;
 };
 
 export default function ProdutoForm({
@@ -38,13 +38,14 @@ export default function ProdutoForm({
   const [isPending, startTransition] = useTransition();
   const [variacoesData, setVariacoesData] = useState<VariacaoState[] | []>([
     {
-      preco_variacao: "",
+      variacao_preco: "",
       sku: "",
-      variacaoId: "",
+      variacao_id: "",
     },
   ]);
   const [preco, setPreco] = useState<string>("");
-  const [activeVariacoes, setActiveVariacoes] = useState(false);
+  const [tipoProduto, setTipoProduto] = useState<string>("unico");
+
   const { user } = useUser();
   const router = useRouter();
   const isEditMode = true;
@@ -64,7 +65,7 @@ export default function ProdutoForm({
       toast.success(state.msg_success);
 
       startTransition(() => {
-        router.push("/app/usuarios");
+        router.push("/app/produtos");
       });
     }
   }, [state.success, state.errors, state.msg_success, router]);
@@ -75,6 +76,7 @@ export default function ProdutoForm({
     target: EventTarget & { name?: string; value?: string }
   ) => {
     const { name, value } = target;
+
     if (!name) return; // Se não tem nome, não atualiza
 
     setVariacoesData((prev) => {
@@ -96,8 +98,8 @@ export default function ProdutoForm({
       ...prev,
       {
         sku: "",
-        variacaoId: "",
-        preco_variacao: "0",
+        variacao_id: "",
+        variacao_preco: "0",
       },
     ]);
   };
@@ -129,27 +131,22 @@ export default function ProdutoForm({
     }
   };
 
-  //ativa ou desativa variacoes
-  const ativaVariacoes = (checked: boolean) => {
-    if (checked) setActiveVariacoes(true);
-    else setActiveVariacoes(false);
-  };
-
   return (
     <Form.Root action={formAction}>
       <ProdutoInfoForm
         categorias={categorias}
         preco={preco}
         setPreco={setPreco}
+        setTipoProduto={setTipoProduto}
       />
       <ProdutoFormVariacoes
-        activeVariacoes={activeVariacoes}
         addVariacao={addVariacao}
-        ativaVariacoes={ativaVariacoes}
         handleChange={handleChange}
         setPrecoBase={setPrecoBase}
         variacoes={variacoes}
         variacoesData={variacoesData}
+        setTipoProduto={setTipoProduto}
+        tipoProduto={tipoProduto}
       />
       <ProdutoFormSubmit isEditMode={isEditMode} isPending={isPending} />
 
@@ -158,6 +155,8 @@ export default function ProdutoForm({
         name="empresaIds"
         value={JSON.stringify(user?.empresas.map((e) => e.empresa.id))}
       />
+
+      <input type="hidden" name="default_variacao_id" value={""} />
     </Form.Root>
   );
 }

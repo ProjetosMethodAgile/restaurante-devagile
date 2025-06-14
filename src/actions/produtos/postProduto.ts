@@ -3,7 +3,6 @@ import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 
-
 export async function postProduto(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
@@ -15,17 +14,29 @@ export async function postProduto(
     const descricao = formData.get("descricao") as string;
     const categoria = formData.get("categoria") as string;
     const empresas = formData.get("empresaIds") as string;
-    const precoBase = formData.get("precoBase") as string;
-    const variantesIds = formData.getAll("variacaoId") as string[];
-    const precosVariantes= formData.getAll("preco_variacao") as string[];
-    const incluir_variacoes = formData.get("incluir_variacoes") as string;
     const empresaIds = JSON.parse(empresas || "[]") as string[];
-    const variacoesObj = variantesIds.map((varianteId,index)=>{
-      return {
-        variacao_id: varianteId,
-        preco: +precosVariantes[index]
-      }
-    })
+    const tipoProduto = formData.get("tipo_produto") as string;
+    const precoBase = formData.get("preco_base") as string;
+    const variacoesIds = formData.getAll("variacao_id") as string[];
+    const variacoesPrecos = formData.getAll("variacao_preco") as string[];
+    let variacoes = [];
+
+    if (tipoProduto === "unico") {
+      variacoes.push({
+        variacao_id: "587893e5-f7f9-43a2-865e-7ba84ba519a3",
+        preco: +precoBase || 0,
+      });
+    }
+
+    if (tipoProduto === "variavel") {
+      const variacoesObj = variacoesIds.map((id, index) => {
+        return {
+          variacao_id: id,
+          preco: +variacoesPrecos[index] || 0,
+        };
+      });
+      variacoes = variacoesObj;
+    }
 
     if (!nome || !descricao) {
       return {
@@ -65,10 +76,10 @@ export async function postProduto(
         descricao,
         empresaIds,
         categoryIds: [categoria],
-        variacoes: variacoesObj
+        variacoes,
+        tipo: tipoProduto,
       }),
     });
-    console.log(response)
 
     if (response.ok) {
       revalidateTag("new-product");

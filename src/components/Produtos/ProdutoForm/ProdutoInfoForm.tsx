@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction } from "react";
+"use client";
+
+import { Dispatch, SetStateAction, useState } from "react";
 import { Form } from "../../UI/Form";
 import SecondaryTitle from "../../UI/SecondaryTitle";
 import { CategoriaBase } from "@/src/types/categoria/categoriaType";
@@ -7,13 +9,16 @@ type ProdutoInfoFormProps = {
   preco: string;
   setPreco: Dispatch<SetStateAction<string>>;
   categorias: CategoriaBase[] | [];
+  setTipoProduto?: Dispatch<SetStateAction<string>>;
 };
 
 export default function ProdutoInfoForm({
   preco,
   setPreco,
   categorias,
+  setTipoProduto,
 }: ProdutoInfoFormProps) {
+  const [descricaoLength, setDescricaoLength] = useState(0);
   return (
     <div className="border-b border-slate-200 py-4">
       <SecondaryTitle title="Informações Basicas" />
@@ -36,7 +41,7 @@ export default function ProdutoInfoForm({
           label="Preço Base"
           type="text"
           placeholder="R$"
-          name="precoBase"
+          name="preco_base"
           value={preco}
           onChange={(e) => setPreco(e.target.value)}
         />
@@ -49,16 +54,19 @@ export default function ProdutoInfoForm({
         />
 
         <Form.InputText
-          label="Descrição"
+          label={`Descrição do produto (${descricaoLength}/80)`}
           type="text"
           placeholder="Feijoada, Arroz, Batata..."
           name="descricao"
+          maxLength={80}
+          onChange={(e) => setDescricaoLength(e.target.value.length)}
         />
         <Form.InputOptions
           label="Tipo do produto"
-          name="categoria"
+          name="tipo_produto"
           defaultValue={{ label: "Unico", value: "unico" }}
           options={[{ label: "Variavel", value: "variavel" }]}
+          onChange={(e) => setTipoProduto && setTipoProduto(e.target.value)}
         />
       </div>
     </div>

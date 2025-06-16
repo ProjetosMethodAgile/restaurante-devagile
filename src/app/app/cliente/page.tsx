@@ -1,18 +1,14 @@
-import { getAllCustomer } from "@/src/actions/clientes/getAllCustomers";
-import ComponenteClientes from "@/src/components/Clientes/ComponenteClientes";
+
+import getClientes from "@/src/actions/clientes/getClientes";
+import ClientesContainer from "@/src/components/Clientes/ClientesContainer";
 
 export default async function ClientePage() {
 
-
-async function fetchClientes() {
-  const response = await getAllCustomer();  
-  return response;
-}
-
-const clientes= await fetchClientes();
+const {data} = await getClientes();
+console.log(data);
   return (
-    <div >
-      <ComponenteClientes clientes={clientes} />
+    <div  >
+      <ClientesContainer clientes={data} />
     </div>
   );
 }

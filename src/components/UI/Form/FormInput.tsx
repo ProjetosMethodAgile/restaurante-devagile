@@ -21,7 +21,7 @@ export default function FormInput({
   );
 
   return (
-    <div className="">
+    <div className={className}>
       {label && <label className="text-text-secondary  text-sm">{label}</label>}
       <div className={containerClass}>
         {Icon && iconPosition === "left" ? <Icon size={20} /> : null}

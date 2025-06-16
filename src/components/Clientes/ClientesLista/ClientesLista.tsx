@@ -3,49 +3,37 @@
 import { Form } from "@/src/components/UI/Form";
 import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import SecondaryButton from "../UI/SecondaryButton";
-import { FormClienteData } from "@/src/types/cliente/clientType";
-import { deleteCustomerForID } from "@/src/actions/clientes/deleteCustomerForID";
+import SecondaryButton from "../../UI/SecondaryButton";
+import { ClienteBase } from "@/src/types/cliente/clientType";
+import { deletaClientePorID } from "@/src/actions/clientes/deletaClientePorID";
 import { toast } from "react-toastify";
 
-export type ComponenteClientesState = FormClienteData & {
+
+export type ComponenteClientesState = ClienteBase & {
   status: boolean;
   __editIdx?: number;
 };
 
 export type ContainerClientesProps = {
-  clientes: FormClienteData[];
-  dataAlteredUser: ComponenteClientesState[];
+  clientes: ClienteBase[];
   setDataAlteredUser: React.Dispatch<
-    React.SetStateAction<ComponenteClientesState[]>
+    React.SetStateAction<string>
   >;
+  setEdita?:React.Dispatch<React.SetStateAction<boolean>>;
+  edita?:boolean;
 }
-export  const initialForm: FormClienteData = {
-    id: "",
-    nome: "",
-    contato: "",
-    email: "",
-    cpf: "",
-    rua: "",
-    numero: "",
-    bairro: "",
-    cep: "",
-    cidade: "",
-    estado: "",
-    complemento: "",
-    frete: "",
-    observacao: "",
-  };
+
   
-export default function ContainerClientes({
+export default function ClientesLista({
   setDataAlteredUser,
+  setEdita,
   clientes,
 }: ContainerClientesProps) {
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<FormClienteData | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ClienteBase | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const pageSize = 5;
 
@@ -82,25 +70,23 @@ export default function ContainerClientes({
     if (isLoading) setIsLoading(false);
   }, [paginated, isLoading]);
 
-  // Recebe dados e índice real para edição
-  function handleAlterUser(data: FormClienteData, idx: number) {
-    setDataAlteredUser([
-      {
-        ...data,
-        status: true,
-        __editIdx: idx,
-      },
-    ]);
+  async function handleAlterUser(id:string) {
+     setEdita?.(true);
+     if (id) {
+      setDataAlteredUser(id)
+     }
+  
   }
 
 
   async function confirmDelete() {
-setDataAlteredUser([]);
+
+
    
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      await deleteCustomerForID(deleteTarget.id);
+      await deletaClientePorID(deleteTarget.id);
       toast.success(`Cliente ${deleteTarget.nome} deletado com sucesso`);
       setDeleteTarget(null);
     } catch (error) {
@@ -132,12 +118,12 @@ setDataAlteredUser([]);
         </button>
       </div>
 
-      {/* CONTADOR */}
+  
       <p className="px-4 py-2 text-text-primary">
         Clientes cadastrados: {filteredClientes.length}
       </p>
 
-      {/* LISTA ROLÁVEL */}
+ 
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         {isLoading ? (
           <div className="flex justify-center py-8">
@@ -167,7 +153,7 @@ setDataAlteredUser([]);
                       <SecondaryButton
                         className="bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                         text="Editar"
-                        onClick={() => handleAlterUser(item, currentPage * pageSize + idx)}
+                        onClick={() => handleAlterUser(item.id)}
                       />
                       <SecondaryButton
                         className="bg-red-500 text-white rounded hover:bg-red-600 transition"
@@ -206,7 +192,7 @@ setDataAlteredUser([]);
               ))}
             </ul>
 
-            {/* PAGINAÇÃO */}
+        
             <div className="flex justify-center items-center space-x-2 mt-4">
               <SecondaryButton
                 disabled={currentPage === 0}
@@ -237,7 +223,7 @@ setDataAlteredUser([]);
           </>
         )}
       </div>
-      {/* MODAL DE CONFIRMAÇÃO */}
+
       {deleteTarget && (
         <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-9999 ">
           <div className="bg-white rounded-lg p-6 w-80">

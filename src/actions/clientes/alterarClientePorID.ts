@@ -3,7 +3,7 @@
 import { revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
 
-export async function alterCustomerForID(
+export async function alterarClientePorID(
   id: string,
   data: {
     contato?: string;
@@ -48,9 +48,10 @@ export async function alterCustomerForID(
     frete: data.frete?.trim() ?? null,
     observacao: data.observacao?.trim() ?? null,
   };
+console.log(payload);
 
   const response = await fetch(
-    `${urlBase}/clientes/${id}`,
+    `${urlBase}/cliente/${id}`,
     {
       method: 'PATCH',                // <-- PATCH em vez de PUT
       headers: {
@@ -67,5 +68,8 @@ export async function alterCustomerForID(
   }
   revalidateTag('clientes');
   
-  return response.json();
+  return{
+        data: response.json() ,
+        error: false,
+      };
 }

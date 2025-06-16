@@ -1,23 +1,18 @@
 // src/components/Clientes/ComponenteClientes.tsx
 'use client';
-import ContainerClientes from "./ContainerClientes";
-import FormCliente from "./FormCliente";
-import { FormClienteData } from "@/src/types/cliente/clientType";
-import { useState } from "react";
+import ContainerClientes from "./ClientesLista/ClientesLista";
+import React, { useState } from "react";
+import { ClienteBase } from '@/src/types/cliente/clientType';
+import ClienteForm from "./ClienteForm/ClienteForm";
 
 export type ComponenteClientesProps = {
-  id:string;
-  clientes: FormClienteData[];
+  clientes: ClienteBase[];
 };
 
-export type ComponenteClientesState = FormClienteData & {
-  status: boolean;
-};
 
-export default function ComponenteClientes({ clientes }: ComponenteClientesProps) {
-  const [dataAlteredUser, setDataAlteredUser] = useState<ComponenteClientesState[]>([]);
-
-
+export default function ClientesContainer({ clientes }: ComponenteClientesProps) {
+  const [dataAlteredUser, setDataAlteredUser] = useState("");
+  const [edita,setEdita]=React.useState<boolean>(false)
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-screen-xl mx-auto">
@@ -25,22 +20,22 @@ export default function ComponenteClientes({ clientes }: ComponenteClientesProps
         Lista de clientes
       </h2>
 
-      {/* mobile: coluna única
-          md (≥768px): duas colunas iguais (1/2 + 1/2)
-          lg (≥1024px): lista 2/3 + form 1/3 */}
       <div className="flex flex-col md:flex-row w-full gap-4">
         <section className="w-full md:w-1/2 lg:w-2/3 bg-white rounded-lg shadow p-4">
           <ContainerClientes
             clientes={clientes}
-            dataAlteredUser={dataAlteredUser}
             setDataAlteredUser={setDataAlteredUser}
+            setEdita={setEdita}
+            edita={edita}
           />
         </section>
 
         <section className="w-full md:w-1/2 lg:w-1/2 bg-white rounded-lg shadow p-4 h-dvh">
-          <FormCliente
+          <ClienteForm
+   
+            setEdita = {setEdita}
+            edita = {edita}
             dataAlteredUser={dataAlteredUser}
-            setDataAlteredUser={setDataAlteredUser}
           />
         </section>
       </div>

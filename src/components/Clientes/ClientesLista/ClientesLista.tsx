@@ -1,13 +1,13 @@
 // src/components/Clientes/ContainerClientes.tsx
-'use client';
+"use client";
 import { Form } from "@/src/components/UI/Form";
-import { useState, useEffect } from "react";
+import { useState, useEffect,  MouseEvent } from "react";
 import { Search } from "lucide-react";
 import SecondaryButton from "../../UI/SecondaryButton";
 import { ClienteBase } from "@/src/types/cliente/clientType";
 import { deletaClientePorID } from "@/src/actions/clientes/deletaClientePorID";
 import { toast } from "react-toastify";
-
+import { scrollToSection } from "@/src/utils/ScrollFocus";
 
 export type ComponenteClientesState = ClienteBase & {
   status: boolean;
@@ -16,14 +16,11 @@ export type ComponenteClientesState = ClienteBase & {
 
 export type ContainerClientesProps = {
   clientes: ClienteBase[];
-  setDataAlteredUser: React.Dispatch<
-    React.SetStateAction<string>
-  >;
-  setEdita?:React.Dispatch<React.SetStateAction<boolean>>;
-  edita?:boolean;
-}
+  setDataAlteredUser: React.Dispatch<React.SetStateAction<string>>;
+  setEdita?: React.Dispatch<React.SetStateAction<boolean>>;
+  edita?: boolean;
+};
 
-  
 export default function ClientesLista({
   setDataAlteredUser,
   setEdita,
@@ -70,19 +67,14 @@ export default function ClientesLista({
     if (isLoading) setIsLoading(false);
   }, [paginated, isLoading]);
 
-  async function handleAlterUser(id:string) {
-     setEdita?.(true);
-     if (id) {
-      setDataAlteredUser(id)
-     }
-  
+  async function handleAlterUser(id: string) {
+    setEdita?.(true);
+    if (id) {
+      setDataAlteredUser(id);
+    }
   }
 
-
   async function confirmDelete() {
-
-
-   
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
@@ -90,7 +82,7 @@ export default function ClientesLista({
       toast.success(`Cliente ${deleteTarget.nome} deletado com sucesso`);
       setDeleteTarget(null);
     } catch (error) {
-      toast.error('Falha ao deletar cliente. Tente novamente.');
+      toast.error("Falha ao deletar cliente. Tente novamente.");
     } finally {
       setIsDeleting(false);
     }
@@ -98,7 +90,6 @@ export default function ClientesLista({
 
   return (
     <section className="flex flex-col h-full">
-      {/* HEADER FIXO */}
       <div className="flex flex-col md:flex-row items-center gap-2 p-4 bg-white sticky top-0 z-10">
         <Form.InputText
           type="text"
@@ -118,12 +109,10 @@ export default function ClientesLista({
         </button>
       </div>
 
-  
       <p className="px-4 py-2 text-text-primary">
         Clientes cadastrados: {filteredClientes.length}
       </p>
 
- 
       <div className="flex-1 overflow-y-auto px-4 pb-4">
         {isLoading ? (
           <div className="flex justify-center py-8">
@@ -147,19 +136,23 @@ export default function ClientesLista({
                           Contato: {item.contato}
                         </span>
                       )}
-                    
                     </div>
                     <div className="flex space-x-2">
                       <SecondaryButton
                         className="bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                         text="Editar"
-                        onClick={() => handleAlterUser(item.id)}
+                        onClick={(e: MouseEvent<HTMLElement>) => {
+                          handleAlterUser(item.id),
+                            scrollToSection(e, "formulario");
+                        }}
                       />
                       <SecondaryButton
                         className="bg-red-500 text-white rounded hover:bg-red-600 transition"
                         text="Excluir"
-
-                       onClick={() => setDeleteTarget(item)}
+                        onClick={(e: MouseEvent<HTMLElement>) => {
+                          setDeleteTarget(item);
+                          scrollToSection(e, "formulario");
+                        }}
                       />
                     </div>
                   </div>
@@ -177,7 +170,9 @@ export default function ClientesLista({
                       Frete: R$ {item.frete}
                     </p>
                     {item.email && (
-                      <p className="text-sm text-gray-700">Email: {item.email}</p>
+                      <p className="text-sm text-gray-700">
+                        Email: {item.email}
+                      </p>
                     )}
                     {item.cpf && (
                       <p className="text-sm text-gray-700">CPF: {item.cpf}</p>
@@ -192,7 +187,6 @@ export default function ClientesLista({
               ))}
             </ul>
 
-        
             <div className="flex justify-center items-center space-x-2 mt-4">
               <SecondaryButton
                 disabled={currentPage === 0}
@@ -206,7 +200,9 @@ export default function ClientesLista({
                   key={page}
                   onClick={() => goToPage(page)}
                   className={`px-3 py-1 rounded ${
-                    page === currentPage ? "bg-blue-500 text-white" : "bg-gray-100"
+                    page === currentPage
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100"
                   }`}
                 >
                   {page + 1}
@@ -229,7 +225,8 @@ export default function ClientesLista({
           <div className="bg-white rounded-lg p-6 w-80">
             <h2 className="text-lg font-semibold mb-4">Confirmação</h2>
             <p className="mb-6">
-              Tem certeza que deseja excluir <strong>{deleteTarget.nome}</strong>?
+              Tem certeza que deseja excluir{" "}
+              <strong>{deleteTarget.nome}</strong>?
             </p>
             <div className="flex justify-end space-x-2">
               <button
@@ -240,7 +237,7 @@ export default function ClientesLista({
                 Cancelar
               </button>
               <button
-                onClick={()=>confirmDelete()}
+                onClick={() => confirmDelete()}
                 disabled={isDeleting}
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition disabled:opacity-50 flex items-center"
               >

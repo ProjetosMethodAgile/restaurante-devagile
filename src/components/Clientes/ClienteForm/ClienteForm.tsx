@@ -177,7 +177,7 @@ if (!res.error) {
 }
 
   return (
-    <Form.Root action={formData} className="space-y-4 bg-white p-6 rounded-lg">
+    <Form.Root id="formulario" action={formData} className="space-y-4 bg-white p-6 rounded-lg">
       <h1 className="text-xl font-semibold">
         {edita ? "Alterar cliente" : "Cadastrar cliente"}
       </h1>

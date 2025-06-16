@@ -2,37 +2,42 @@
 
 import { cookies } from "next/headers";
 import { TelaBase } from "@/src/types/tela/tela";
+import { UsuarioBase } from "@/src/types/user/userType";
 
-export default async function getTelasByRoleId(roleId: string) {
+export default async function getUsersByEmpId() {
   const token = (await cookies()).get("token")?.value;
+  const empresaId = (await cookies()).get("empresaStorage")?.value;
 
   if (!token) {
     return { data: null, error: "Token não encontrado." };
   }
 
+  if (!empresaId) {
+    return { data: null, error: "Empresa não encontrada." };
+  }
+
   const url = process.env.API_URL || "http://localhost:3001";
 
   try {
-    const res = await fetch(`${url}/tela/role/${roleId}`, {
+    const res = await fetch(`${url}/usuario/empresa/${empresaId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
       next: {
-        revalidate: 60,
+        tags: ["new-user"],
       },
     });
 
     if (!res.ok) {
       const message = await res.text();
-      return { data: null, error: `Erro ao buscar telas: ${message}` };
+      return { data: null, error: `Erro ao buscar usuarios: ${message}` };
     }
 
-    const telas = (await res.json()) as TelaBase[];
+    const usuarios = (await res.json()) as UsuarioBase[];
 
-    return { data: telas };
+    return { data: usuarios };
   } catch (error) {
-    console.log(error);
     return { data: null, error: "Erro inesperado." };
   }
 }

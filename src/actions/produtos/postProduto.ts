@@ -2,9 +2,8 @@
 import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { log } from "console";
 
-export async function postUser(
+export async function postProduto(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
     | undefined,
@@ -12,12 +11,34 @@ export async function postUser(
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   try {
     const nome = formData.get("nome") as string;
-    const email = formData.get("email") as string;
-    const roleId = formData.get("roleId") as string;
+    const descricao = formData.get("descricao") as string;
+    const categoria = formData.get("categoria") as string;
     const empresas = formData.get("empresaIds") as string;
-    const telas = formData.get("telaIds") as string;
+    const empresaIds = JSON.parse(empresas || "[]") as string[];
+    const tipoProduto = formData.get("tipo_produto") as string;
+    const precoBase = formData.get("preco_base") as string;
+    const variacoesIds = formData.getAll("variacao_id") as string[];
+    const variacoesPrecos = formData.getAll("variacao_preco") as string[];
+    let variacoes = [];
 
-    if (!nome || !email || !roleId) {
+    if (tipoProduto === "unico") {
+      variacoes.push({
+        variacao_id: "587893e5-f7f9-43a2-865e-7ba84ba519a3",
+        preco: +precoBase || 0,
+      });
+    }
+
+    if (tipoProduto === "variavel") {
+      const variacoesObj = variacoesIds.map((id, index) => {
+        return {
+          variacao_id: id,
+          preco: +variacoesPrecos[index] || 0,
+        };
+      });
+      variacoes = variacoesObj;
+    }
+
+    if (!nome || !descricao) {
       return {
         errors: ["Preencha todos os campos obrigatórios."],
         msg_success: "",
@@ -25,12 +46,9 @@ export async function postUser(
       };
     }
 
-    const empresaIds = JSON.parse(empresas || "[]") as string[];
-    const telaIds = JSON.parse(telas || "[]") as string[];
-
-      if (empresaIds.length === 0) {
+    if (empresaIds.length === 0) {
       return {
-        errors: ["Atribua pelo menos uma empresa ao usuario."],
+        errors: ["Atribua pelo menos uma empresa ao produto."],
         msg_success: "",
         success: false,
       };
@@ -47,7 +65,7 @@ export async function postUser(
     }
 
     const url = "http://localhost:3001/";
-    const response = await fetch(url + "usuario/register", {
+    const response = await fetch(url + "produto", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,21 +73,21 @@ export async function postUser(
       },
       body: JSON.stringify({
         nome,
-        email,
-        role_Id: roleId,
+        descricao,
         empresaIds,
-        telaIds,
-        acaoTelaIds: ["8808d943-d840-43b8-a148-3d967b71c229"], // ajuste quando tiver isso implementado
+        categoryIds: [categoria],
+        variacoes,
+        tipo: tipoProduto,
       }),
     });
 
     if (response.ok) {
-      revalidateTag("new-user");
+      revalidateTag("new-product");
 
       return {
         success: true,
         errors: [],
-        msg_success: "Usuário cadastrado com sucesso.",
+        msg_success: "Produto Cadastrado com sucesso.",
       };
     } else {
       const { message } = await response.json();

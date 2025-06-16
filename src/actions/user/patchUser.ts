@@ -2,9 +2,8 @@
 import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { log } from "console";
 
-export async function postUser(
+export async function patchUser(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
     | undefined,
@@ -16,6 +15,7 @@ export async function postUser(
     const roleId = formData.get("roleId") as string;
     const empresas = formData.get("empresaIds") as string;
     const telas = formData.get("telaIds") as string;
+    const userId = formData.get("userId") as string;
 
     if (!nome || !email || !roleId) {
       return {
@@ -28,7 +28,7 @@ export async function postUser(
     const empresaIds = JSON.parse(empresas || "[]") as string[];
     const telaIds = JSON.parse(telas || "[]") as string[];
 
-      if (empresaIds.length === 0) {
+    if (empresaIds.length === 0) {
       return {
         errors: ["Atribua pelo menos uma empresa ao usuario."],
         msg_success: "",
@@ -47,8 +47,8 @@ export async function postUser(
     }
 
     const url = "http://localhost:3001/";
-    const response = await fetch(url + "usuario/register", {
-      method: "POST",
+    const response = await fetch(url + `usuario/${userId}`, {
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -58,18 +58,19 @@ export async function postUser(
         email,
         role_Id: roleId,
         empresaIds,
-        telaIds,
-        acaoTelaIds: ["8808d943-d840-43b8-a148-3d967b71c229"], // ajuste quando tiver isso implementado
+        telaIds
       }),
     });
 
+   
+
     if (response.ok) {
-      revalidateTag("new-user");
+      revalidateTag("auth");
 
       return {
         success: true,
         errors: [],
-        msg_success: "Usuário cadastrado com sucesso.",
+        msg_success: "Usuário atualizado com sucesso.",
       };
     } else {
       const { message } = await response.json();

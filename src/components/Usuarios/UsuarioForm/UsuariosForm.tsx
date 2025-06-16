@@ -1,19 +1,24 @@
 "use client";
 import { Form } from "../../UI/Form";
-import React, { useActionState, useEffect } from "react";
-/* import { postUser } from "@/src/actions/usuarios-actions/postUser"; */
+import React, { useActionState, useEffect, useTransition } from "react";
 import UsuariosInfosForm from "./UsuariosInfosForm";
-import UsuariosPemissoesForm from "./UsuariosPermissoesForm";
+import UsuariosPermissoesForm from "./UsuariosPermissoesForm";
 import PrimaryButton from "../../UI/PrimaryButton";
-import { Check } from "lucide-react";
+import { Check, LoaderCircle } from "lucide-react";
 import UsuarioEmpresasForm from "./UsuariosEmpresasForm";
 import { useUser } from "@/src/context/userContext";
 import { RoleBase } from "@/src/types/role/roleType";
 import { postUser } from "@/src/actions/user/postUser";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { UsuarioBase } from "@/src/types/user/userType";
+import { patchUser } from "@/src/actions/user/patchUser";
+import { SubtelaBase, TelaBase } from "@/src/types/tela/tela";
 
 type UsuarioFormProps = {
-  roles: RoleBase[];
+  roles: RoleBase[] | null;
+  isEditMode?: boolean;
+  editData?: UsuarioBase | null;
 };
 
 export type currentUserType = {
@@ -24,7 +29,9 @@ export type currentUserType = {
     nome: string;
   }[];
   roleId: string;
-  telas: Record<string, { id: string; nome: string; ativo: boolean }>;
+  telas: {
+    tela: TelaBase | SubtelaBase;
+  }[];
 };
 
 export type currentUserProps = {
@@ -32,42 +39,58 @@ export type currentUserProps = {
   setCurrentUser: React.Dispatch<React.SetStateAction<currentUserType>>;
 };
 
-export default function UsuarioForm({ roles }: UsuarioFormProps) {
-  const [state, formAction] = useActionState(postUser, {
-    errors: [],
-    msg_success: "",
-    success: false,
-  });
+export default function UsuarioForm({
+  roles,
+  editData,
+  isEditMode,
+}: UsuarioFormProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-  // pega usuario atual (logado)
+  const [state, formAction] = useActionState(
+    isEditMode ? patchUser : postUser,
+    {
+      errors: [],
+      msg_success: "",
+      success: false,
+    }
+  );
+
   const { user } = useUser();
 
   useEffect(() => {
-    if (state?.errors.length) {
-      state.errors.forEach((erro: string) => {
-        toast.error(erro);
-      });
+    if (state?.errors?.length) {
+      state.errors.forEach((erro: string) => toast.error(erro));
     }
+
     if (state?.success) {
       toast.success(state.msg_success);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
 
-  // Transformando as empresas do usuário em um formato adequado para o formulário
+      startTransition(() => {
+        router.push("/app/usuarios");
+      });
+    }
+  }, [state.success, state.errors, state.msg_success, router]);
+
   const empresas =
     user?.empresas.map((empresa) => ({
       label: empresa.empresa.razao_social,
       value: empresa.empresa.id,
     })) || [];
 
-  // cria estado do formulario do usuario atual
   const [currentUser, setCurrentUser] = React.useState<currentUserType>({
-    nome: "",
-    email: "",
-    empresaIds: [],
-    roleId: "57a8e310-b3e8-4d7a-90f5-08de6e3c634f",
-    telas: {},
+    nome: editData?.nome || "",
+    email: editData?.email || "",
+    empresaIds:
+      editData?.empresas?.map((e) => ({
+        id: e.empresa.id,
+        nome: e.empresa.razao_social,
+      })) || [],
+    roleId: editData?.role?.id || "",
+    telas:
+      editData?.telas?.map(
+        (t: any) => ("tela" in t ? t : { tela: t }) // garante que cada item tenha a estrutura { tela: ... }
+      ) || [],
   });
 
   return (
@@ -79,37 +102,47 @@ export default function UsuarioForm({ roles }: UsuarioFormProps) {
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
       />
+
       <UsuarioEmpresasForm
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
         empresas={empresas}
       />
-      <UsuariosPemissoesForm
+
+      <UsuariosPermissoesForm
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
         roles={roles}
       />
+
       <div className="flex justify-end mt-4">
         <PrimaryButton
-          text="Cadastrar"
+          text={
+            isPending ? "Salvando..." : isEditMode ? "Atualizar" : "Cadastrar"
+          }
           className="bg-secondary rounded-xl hover:bg-secondary/90"
-          icon={Check}
+          icon={isPending ? LoaderCircle : Check }
           type="submit"
+          disabled={isPending}
+          isPending
         />
       </div>
+
+      {/* Hidden inputs para envio via formulário */}
       <input
         type="hidden"
         name="empresaIds"
         value={JSON.stringify(currentUser.empresaIds.map((e) => e.id))}
       />
+
+      {isEditMode && editData?.id && (
+        <input type="hidden" name="userId" value={editData.id} />
+      )}
+
       <input
         type="hidden"
         name="telaIds"
-        value={JSON.stringify(
-          Object.values(currentUser.telas)
-            .filter((t) => t.ativo)
-            .map((t) => t.id)
-        )}
+        value={JSON.stringify(currentUser.telas.map((t) => t.tela.id))}
       />
     </Form.Root>
   );

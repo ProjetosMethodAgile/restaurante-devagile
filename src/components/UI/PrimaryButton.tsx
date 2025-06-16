@@ -1,6 +1,7 @@
 type primaryButtonProps = React.ComponentProps<"button"> & {
   text: string;
   icon?: React.ElementType;
+  isPending?: boolean;
 };
 import { twMerge } from "tailwind-merge";
 
@@ -8,6 +9,7 @@ export default function PrimaryButton({
   icon: Icon,
   text,
   className,
+  isPending = false,
   ...props
 }: primaryButtonProps) {
   return (
@@ -19,7 +21,14 @@ export default function PrimaryButton({
       )}
       {...props}
     >
-      {Icon && <Icon />}
+      {Icon && (
+        <Icon
+          className={twMerge(
+            "w-4 h-4 transition-opacity duration-200",
+            isPending ? "animate-spin opacity-60" : ""
+          )}
+        />
+      )}
       {text}
     </button>
   );

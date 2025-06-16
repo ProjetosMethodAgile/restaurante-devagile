@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import SecondaryTitle from "../../UI/SecondaryTitle";
-
 import { Form } from "../../UI/Form/index";
 import { currentUserProps } from "./UsuariosForm";
 import { RoleBase } from "@/src/types/role/roleType";
@@ -12,71 +11,79 @@ export default function UsuariosPermissoesForm({
   currentUser,
   setCurrentUser,
   roles,
-}: currentUserProps & { roles: RoleBase[] }) {
+  isEditMode,
+}: currentUserProps & { roles: RoleBase[] | null; isEditMode?: boolean }) {
   const [telas, setTelas] = useState<TelaBase[]>([]);
 
-  useEffect(() => {
-    async function criaObjetoPermissoes() {
-      const data = await getTelasByRoleId(currentUser.roleId);
-      if (data.error) {
-        console.error("Erro ao buscar telas:", data.error);
-        return;
-      }
-
-      const telasFiltradas = data.data?.filter(
-        (tela) => tela.tela_parent === null
-      );
-      setTelas(telasFiltradas || []);
+  const fetchTelas = async (roleId: string) => {
+    const data = await getTelasByRoleId(roleId);
+    if (data.error) {
+      console.error("Erro ao buscar telas:", data.error);
+      return;
     }
 
-    if (currentUser?.roleId) {
-      criaObjetoPermissoes();
+    const telasPrincipais =
+      data.data?.filter((tela) => tela.tela_parent === null) || [];
+
+    setTelas(telasPrincipais);
+
+    if (!isEditMode && (!currentUser.telas || currentUser.telas.length === 0)) {
+      setCurrentUser((prev) => ({ ...prev, telas: [] }));
+    }
+  };
+
+  // Busca as telas sempre que mudar a roleId
+  useEffect(() => {
+    if (currentUser.roleId) {
+      fetchTelas(currentUser.roleId);
     }
   }, [currentUser.roleId]);
 
-  const isChecked = (id: string) => currentUser.telas?.[id]?.ativo ?? false;
+  const handleToggleTela = (tela: TelaBase | SubtelaBase) => {
+    const isSelecionada = currentUser.telas.some((t) => t.tela.id === tela.id);
 
-  const handleToggleTela = (tela: TelaBase) => {
-    const isActive = isChecked(tela.id);
-    const updated = { ...currentUser.telas };
+    // Se for uma tela pai
+    if ("subtelas" in tela) {
+      const novasTelas = isSelecionada
+        ? currentUser.telas.filter(
+            (t) =>
+              t.tela.id !== tela.id &&
+              !tela.subtelas?.some((sub) => sub.id === t.tela.id)
+          )
+        : [
+            ...currentUser.telas,
+            { tela },
+            ...(tela.subtelas?.map((sub) => ({ tela: sub })) || []),
+          ];
 
-    if (isActive) {
-      delete updated[tela.id];
-      tela.subtelas?.forEach((sub: SubtelaBase) => {
-        delete updated[sub.id];
-      });
+      setCurrentUser({ ...currentUser, telas: novasTelas });
     } else {
-      updated[tela.id] = { id: tela.id, nome: tela.nome, ativo: true };
+      // É uma subtela
+      const parentSelecionada = telas.some(
+        (t) =>
+          t.subtelas?.some((sub) => sub.id === tela.id) &&
+          currentUser.telas.some((t2) => t2.tela.id === t.id)
+      );
+
+      if (!parentSelecionada) return; // Subtela não pode ser selecionada se pai não estiver marcado
+
+      const novasTelas = isSelecionada
+        ? currentUser.telas.filter((t) => t.tela.id !== tela.id)
+        : [...currentUser.telas, { tela }];
+
+      setCurrentUser({ ...currentUser, telas: novasTelas });
     }
-
-    setCurrentUser({ ...currentUser, telas: updated });
-  };
-
-  const handleToggleSubtela = (subtela: SubtelaBase) => {
-    const isActive = isChecked(subtela.id);
-    const updated = { ...currentUser.telas };
-
-    if (isActive) {
-      delete updated[subtela.id];
-    } else {
-      updated[subtela.id] = { id: subtela.id, nome: subtela.nome, ativo: true };
-    }
-
-    setCurrentUser({ ...currentUser, telas: updated });
   };
 
   const handleAcessoTotal = () => {
-    const updated = { ...currentUser.telas };
-
-    telas.forEach((tela) => {
-      updated[tela.id] = { id: tela.id, nome: tela.nome, ativo: true };
-      tela.subtelas?.forEach((sub) => {
-        updated[sub.id] = { id: sub.id, nome: sub.nome, ativo: true };
-      });
-    });
-
-    setCurrentUser({ ...currentUser, telas: updated });
+    const todasAsTelas = telas.flatMap((tela) => [
+      { tela },
+      ...(tela.subtelas?.map((sub) => ({ tela: sub })) || []),
+    ]);
+    setCurrentUser({ ...currentUser, telas: todasAsTelas });
   };
+
+  if (roles === null) return <div>Carregando roles...</div>;
 
   return (
     <div className="flex flex-col gap-6">
@@ -111,13 +118,16 @@ export default function UsuariosPermissoesForm({
         <div className="flex flex-col gap-3 mt-4">
           {telas.length > 0 ? (
             telas.map((tela) => {
-              const telaChecked = isChecked(tela.id);
+              const checked = currentUser.telas.some(
+                (t) => t.tela.id === tela.id
+              );
+
               return (
                 <div key={tela.id}>
                   <label className="flex items-center gap-2 font-medium">
                     <input
                       type="checkbox"
-                      checked={telaChecked}
+                      checked={checked}
                       onChange={() => handleToggleTela(tela)}
                     />
                     {tela.nome}
@@ -125,20 +135,32 @@ export default function UsuariosPermissoesForm({
 
                   {tela.subtelas && tela.subtelas.length > 0 && (
                     <div className="ml-6 mt-1 flex flex-col gap-1">
-                      {tela.subtelas.map((subtela: SubtelaBase) => (
-                        <label
-                          key={subtela.id}
-                          className="flex items-center gap-2 text-sm text-gray-700"
-                        >
-                          <input
-                            type="checkbox"
-                            disabled={!telaChecked}
-                            checked={isChecked(subtela.id)}
-                            onChange={() => handleToggleSubtela(subtela)}
-                          />
-                          {subtela.nome}
-                        </label>
-                      ))}
+                      {tela.subtelas.map((subtela) => {
+                        const subChecked = currentUser.telas.some(
+                          (t) => t.tela.id === subtela.id
+                        );
+
+                        const parentChecked = currentUser.telas.some(
+                          (t) => t.tela.id === tela.id
+                        );
+
+                        return (
+                          <label
+                            key={subtela.id}
+                            className={`flex items-center gap-2 text-sm ${
+                              parentChecked ? "text-gray-700" : "text-gray-400"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={subChecked}
+                              disabled={!parentChecked}
+                              onChange={() => handleToggleTela(subtela)}
+                            />
+                            {subtela.nome}
+                          </label>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

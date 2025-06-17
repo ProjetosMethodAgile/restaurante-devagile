@@ -32,7 +32,6 @@ export default function ClientesContainer({ clientes }: ComponenteClientesProps)
 
         <section className="w-full md:w-1/2 lg:w-1/2 bg-white rounded-lg shadow p-4 h-dvh">
           <ClienteForm
-   
             setEdita = {setEdita}
             edita = {edita}
             dataAlteredUser={dataAlteredUser}

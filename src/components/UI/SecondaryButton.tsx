@@ -14,8 +14,8 @@ export default function SecondaryButton({
   return (
     <button
       className={twMerge(
-        `cursor-pointer py-2 px-3 rounded-lg  max-lg:text-sm flex items-center  justify-center gap-2  font-medium 
-              active:scale-95 transition-all duration-150`,
+        ` py-2 px-3 rounded-lg  max-lg:text-sm flex items-center  justify-center gap-2  font-medium 
+              active:scale-95 transition-all duration-150 cursor-pointer`,
         className
       )}
       {...props}

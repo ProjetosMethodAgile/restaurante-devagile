@@ -1,0 +1,422 @@
+export const motoristas = [
+  {
+    nomeCompleto: "Carlos Alberto Pereira",
+    cpf: "321.654.987-00",
+    rg: "MG-12.345.678",
+    dataNascimento: "1988-04-22",
+    numeroCNH: "MG12345678",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2016-08-15",
+    dataValidadeCNH: "2026-08-15",
+    telefone: "(31) 99876-5432",
+    email: "carlos.pereira@exemplo.com",
+    endereco: {
+      logradouro: "Rua das Acácias",
+      numero: "456",
+      complemento: "Casa",
+      bairro: "Jardim das Flores",
+      cidade: "Belo Horizonte",
+      estado: "MG",
+      cep: "30320-650"
+    }
+  },
+  {
+    nomeCompleto: "Ana Clara Silva",
+    cpf: "123.456.789-09",
+    rg: "SP-23.456.789",
+    dataNascimento: "1990-09-15",
+    numeroCNH: "SP87654321",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2010-09-20",
+    dataValidadeCNH: "2020-09-20",
+    telefone: "(11) 91234-5678",
+    email: "ana.silva@exemplo.com",
+    endereco: {
+      logradouro: "Avenida Paulista",
+      numero: "1000",
+      complemento: "Apto 101",
+      bairro: "Bela Vista",
+      cidade: "São Paulo",
+      estado: "SP",
+      cep: "01310-100"
+    }
+  },
+  {
+    nomeCompleto: "Bruno Henrique Souza",
+    cpf: "987.654.321-11",
+    rg: "RJ-98.765.432",
+    dataNascimento: "1985-11-30",
+    numeroCNH: "RJ11223344",
+    categoriaCNH: "D",
+    dataEmissaoCNH: "2005-12-03",
+    dataValidadeCNH: "2015-12-03",
+    telefone: "(21) 98865-4321",
+    email: "bruno.souza@exemplo.com",
+    endereco: {
+      logradouro: "Rua do Ouro",
+      numero: "253",
+      complemento: "Sala 5",
+      bairro: "Centro",
+      cidade: "Rio de Janeiro",
+      estado: "RJ",
+      cep: "20000-080"
+    }
+  },
+  {
+    nomeCompleto: "Camila Rodrigues Alves",
+    cpf: "159.357.486-20",
+    rg: "BA-15.357.924",
+    dataNascimento: "1992-07-08",
+    numeroCNH: "BA55667788",
+    categoriaCNH: "C",
+    dataEmissaoCNH: "2013-07-12",
+    dataValidadeCNH: "2023-07-12",
+    telefone: "(71) 98765-4321",
+    email: "camila.alves@exemplo.com",
+    endereco: {
+      logradouro: "Travessa do Comércio",
+      numero: "45",
+      complemento: "Casa",
+      bairro: "Comércio",
+      cidade: "Salvador",
+      estado: "BA",
+      cep: "40020-030"
+    }
+  },
+  {
+    nomeCompleto: "Daniel Oliveira Santos",
+    cpf: "753.159.852-30",
+    rg: "PR-75.158.259",
+    dataNascimento: "1980-01-12",
+    numeroCNH: "PR99887766",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2000-01-15",
+    dataValidadeCNH: "2010-01-15",
+    telefone: "(41) 99123-4567",
+    email: "daniel.santos@exemplo.com",
+    endereco: {
+      logradouro: "Praça Paraná",
+      numero: "120",
+      complemento: "Conj. 2",
+      bairro: "Centro Cívico",
+      cidade: "Curitiba",
+      estado: "PR",
+      cep: "80060-150"
+    }
+  },
+  {
+    nomeCompleto: "Eduardo Lima Costa",
+    cpf: "246.810.121-40",
+    rg: "RS-24.681.012",
+    dataNascimento: "1978-06-17",
+    numeroCNH: "RS22334455",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "1998-06-20",
+    dataValidadeCNH: "2008-06-20",
+    telefone: "(51) 99555-1234",
+    email: "eduardo.costa@exemplo.com",
+    endereco: {
+      logradouro: "Rua Da República",
+      numero: "800",
+      complemento: "Apto 304",
+      bairro: "Centro",
+      cidade: "Porto Alegre",
+      estado: "RS",
+      cep: "90010-372"
+    }
+  },
+  {
+    nomeCompleto: "Fernanda Pires Rocha",
+    cpf: "369.147.258-50",
+    rg: "PE-36.914.725",
+    dataNascimento: "1987-02-05",
+    numeroCNH: "PE66778899",
+    categoriaCNH: "A",
+    dataEmissaoCNH: "2007-02-10",
+    dataValidadeCNH: "2017-02-10",
+    telefone: "(81) 99911-2233",
+    email: "fernanda.rocha@exemplo.com",
+    endereco: {
+      logradouro: "Avenida Boa Viagem",
+      numero: "1500",
+      complemento: "Apto 502",
+      bairro: "Boa Viagem",
+      cidade: "Recife",
+      estado: "PE",
+      cep: "51020-020"
+    }
+  },
+  {
+    nomeCompleto: "Gabriel Ferreira Martins",
+    cpf: "147.258.369-60",
+    rg: "SC-47.125.836",
+    dataNascimento: "1995-12-21",
+    numeroCNH: "SC33445566",
+    categoriaCNH: "C",
+    dataEmissaoCNH: "2015-12-25",
+    dataValidadeCNH: "2025-12-25",
+    telefone: "(48) 99888-3344",
+    email: "gabriel.martins@exemplo.com",
+    endereco: {
+      logradouro: "Rua das Palmeiras",
+      numero: "75",
+      complemento: "Casa",
+      bairro: "Centro",
+      cidade: "Florianópolis",
+      estado: "SC",
+      cep: "88020-100"
+    }
+  },
+  {
+    nomeCompleto: "Helena Barbosa Castro",
+    cpf: "258.369.147-70",
+    rg: "DF-58.236.947",
+    dataNascimento: "1991-03-11",
+    numeroCNH: "DF44556677",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2011-03-15",
+    dataValidadeCNH: "2021-03-15",
+    telefone: "(61) 91333-4455",
+    email: "helena.castro@exemplo.com",
+    endereco: {
+      logradouro: "Setor Hospitalar Sul",
+      numero: "204",
+      complemento: "Bloco B",
+      bairro: "Hospitalar",
+      cidade: "Brasília",
+      estado: "DF",
+      cep: "70200-040"
+    }
+  },
+  {
+    nomeCompleto: "Igor Mendes Pereira",
+    cpf: "369.258.147-80",
+    rg: "ES-69.347.158",
+    dataNascimento: "1989-10-02",
+    numeroCNH: "ES55667788",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2009-10-10",
+    dataValidadeCNH: "2019-10-10",
+    telefone: "(27) 98999-5566",
+    email: "igor.pereira@exemplo.com",
+    endereco: {
+      logradouro: "Rua da Costa",
+      numero: "120",
+      complemento: "Ap 12",
+      bairro: "Centro",
+      cidade: "Vitória",
+      estado: "ES",
+      cep: "29010-000"
+    }
+  },
+  {
+    nomeCompleto: "Juliana Ribeiro Gomes",
+    cpf: "741.852.963-90",
+    rg: "GO-14.785.269",
+    dataNascimento: "1993-05-27",
+    numeroCNH: "GO11224455",
+    categoriaCNH: "A",
+    dataEmissaoCNH: "2013-06-01",
+    dataValidadeCNH: "2023-06-01",
+    telefone: "(62) 99666-6677",
+    email: "juliana.gomes@exemplo.com",
+    endereco: {
+      logradouro: "Goias Boulevard",
+      numero: "340",
+      complemento: "Loja 10",
+      bairro: "Setor Central",
+      cidade: "Goiânia",
+      estado: "GO",
+      cep: "74015-020"
+    }
+  },
+  {
+    nomeCompleto: "Kauã Santos Dias",
+    cpf: "963.741.852-01",
+    rg: "PB-25.896.371",
+    dataNascimento: "1994-08-13",
+    numeroCNH: "PB77889900",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2014-08-17",
+    dataValidadeCNH: "2024-08-17",
+    telefone: "(83) 99444-7788",
+    email: "kaua.dias@exemplo.com",
+    endereco: {
+      logradouro: "Rua São Francisco",
+      numero: "55",
+      complemento: "Casa",
+      bairro: "Centro",
+      cidade: "João Pessoa",
+      estado: "PB",
+      cep: "58013-100"
+    }
+  },
+  {
+    nomeCompleto: "Laura Correia Lima",
+    cpf: "852.963.741-12",
+    rg: "PA-36.907.482",
+    dataNascimento: "1986-12-04",
+    numeroCNH: "PA99001122",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2006-12-10",
+    dataValidadeCNH: "2016-12-10",
+    telefone: "(91) 99222-8899",
+    email: "laura.lima@exemplo.com",
+    endereco: {
+      logradouro: "Travessa das Nações",
+      numero: "220",
+      complemento: "Conj. B",
+      bairro: "Marco",
+      cidade: "Belém",
+      estado: "PA",
+      cep: "66010-000"
+    }
+  },
+  {
+    nomeCompleto: "Marcelo Gonçalves Pinto",
+    cpf: "159.753.486-23",
+    rg: "CE-47.018.593",
+    dataNascimento: "1979-04-19",
+    numeroCNH: "CE22335544",
+    categoriaCNH: "D",
+    dataEmissaoCNH: "1999-04-22",
+    dataValidadeCNH: "2009-04-22",
+    telefone: "(85) 99333-9900",
+    email: "marcelo.pinto@exemplo.com",
+    endereco: {
+      logradouro: "Avenida Beira Mar",
+      numero: "123",
+      complemento: "Ap 34",
+      bairro: "Meireles",
+      cidade: "Fortaleza",
+      estado: "CE",
+      cep: "60165-121"
+    }
+  },
+  {
+    nomeCompleto: "Natalia Almeida Duarte",
+    cpf: "357.951.684-34",
+    rg: "MA-58.129.604",
+    dataNascimento: "1996-02-28",
+    numeroCNH: "MA33446655",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2016-03-05",
+    dataValidadeCNH: "2026-03-05",
+    telefone: "(98) 99111-0011",
+    email: "natalia.duarte@exemplo.com",
+    endereco: {
+      logradouro: "Rua dos Pescadores",
+      numero: "80",
+      complemento: "Casa",
+      bairro: "Praia Grande",
+      cidade: "São Luís",
+      estado: "MA",
+      cep: "65010-010"
+    }
+  },
+  {
+    nomeCompleto: "Otávio Teixeira Nunes",
+    cpf: "468.159.357-45",
+    rg: "PI-69.230.715",
+    dataNascimento: "1984-06-30",
+    numeroCNH: "PI44557766",
+    categoriaCNH: "C",
+    dataEmissaoCNH: "2004-07-04",
+    dataValidadeCNH: "2014-07-04",
+    telefone: "(86) 99000-1122",
+    email: "otavio.nunes@exemplo.com",
+    endereco: {
+      logradouro: "Rua da Liberdade",
+      numero: "230",
+      complemento: "Apto 14",
+      bairro: "Centro",
+      cidade: "Teresina",
+      estado: "PI",
+      cep: "64002-180"
+    }
+  },
+  {
+    nomeCompleto: "Patrícia Carvalho Rocha",
+    cpf: "579.246.813-56",
+    rg: "RN-70.341.826",
+    dataNascimento: "1992-11-14",
+    numeroCNH: "RN55668877",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2012-11-20",
+    dataValidadeCNH: "2022-11-20",
+    telefone: "(84) 98900-2233",
+    email: "patricia.rocha@exemplo.com",
+    endereco: {
+      logradouro: "Avenida Engenheiro Roberto Freire",
+      numero: "890",
+      complemento: "Casa",
+      bairro: "Capim Macio",
+      cidade: "Natal",
+      estado: "RN",
+      cep: "59090-000"
+    }
+  },
+  {
+    nomeCompleto: "Ricardo Fernandes Lopes",
+    cpf: "681.357.924-67",
+    rg: "MT-81.452.937",
+    dataNascimento: "1983-03-22",
+    numeroCNH: "MT66779988",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2003-03-25",
+    dataValidadeCNH: "2013-03-25",
+    telefone: "(65) 98800-3344",
+    email: "ricardo.lopes@exemplo.com",
+    endereco: {
+      logradouro: "Rua Universitária",
+      numero: "150",
+      complemento: "Sala 201",
+      bairro: "Centro Norte",
+      cidade: "Cuiabá",
+      estado: "MT",
+      cep: "78005-400"
+    }
+  },
+  {
+    nomeCompleto: "Sabrina Moura Almeida",
+    cpf: "792.468.135-78",
+    rg: "RO-92.563.048",
+    dataNascimento: "1990-07-04",
+    numeroCNH: "RO77881100",
+    categoriaCNH: "A",
+    dataEmissaoCNH: "2010-07-08",
+    dataValidadeCNH: "2020-07-08",
+    telefone: "(69) 98700-4455",
+    email: "sabrina.almeida@exemplo.com",
+    endereco: {
+      logradouro: "Rua Tocantins",
+      numero: "365",
+      complemento: "Apt 05",
+      bairro: "Embratel",
+      cidade: "Porto Velho",
+      estado: "RO",
+      cep: "76801-210"
+    }
+  },
+  {
+    nomeCompleto: "Thiago Castro Fonseca",
+    cpf: "814.579.246-89",
+    rg: "TO-03.674.159",
+    dataNascimento: "1988-09-09",
+    numeroCNH: "TO88992211",
+    categoriaCNH: "B",
+    dataEmissaoCNH: "2008-09-15",
+    dataValidadeCNH: "2018-09-15",
+    telefone: "(63) 98600-5566",
+    email: "thiago.fonseca@exemplo.com",
+    endereco: {
+      logradouro: "Avenida Filadélfia",
+      numero: "520",
+      complemento: "Apto 8",
+      bairro: "Plano Diretor Sul",
+      cidade: "Palmas",
+      estado: "TO",
+      cep: "77006-020"
+    }
+  }
+];

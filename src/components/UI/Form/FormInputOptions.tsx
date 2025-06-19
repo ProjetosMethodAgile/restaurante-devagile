@@ -26,12 +26,7 @@ export default function FormInputOptions({
       {label && (
         <label className="text-text-secondary mb-2 text-sm">{label}</label>
       )}
-      <select {...props} className={containerClass}>
-        {defaultValue ? (
-          <option value={defaultValue.value}>{defaultValue.label}</option>
-        ) : (
-          <option value="-">---</option>
-        )}
+      <select {...props} defaultValue={defaultValue} className={containerClass}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

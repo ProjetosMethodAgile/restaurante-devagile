@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ProdutoBase } from "@/src/types/produto/produtoType";
 import { LayoutList, LayoutGrid, Package2, Plus } from "lucide-react";
 import clsx from "clsx";
-import PrimaryButton from "../../UI/PrimaryButton";
 import ProdutosFiltro from "./ProdutosFiltro";
 import SecondaryButton from "../../UI/SecondaryButton";
 import { useRouter } from "next/navigation";
@@ -16,8 +15,12 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
   const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
     "lista"
   );
-    const router = useRouter();
-
+  const router = useRouter();
+  const openUpdateForm = (produto_id: string) => {
+    if (produto_id) {
+      router.push(`/app/produtos/form/${produto_id}`);
+    }
+  };
   return (
     <section className="w-full px-4 py-4">
       <div className="flex justify-end gap-4 mb-4">
@@ -67,7 +70,8 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
                 produtos.map((produto) => (
                   <tr
                     key={produto.id}
-                    className="hover:bg-slate-50 transition-colors"
+                    className="hover:bg-slate-50 transition-colors cursor-pointer"
+                    onClick={() => openUpdateForm(produto.id)}
                   >
                     <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
                       <Package2 className="w-4 h-4 text-blue-600" />

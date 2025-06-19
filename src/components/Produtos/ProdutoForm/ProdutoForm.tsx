@@ -1,15 +1,6 @@
 "use client";
-import {
-  ChangeEvent,
-  useActionState,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Form } from "../../UI/Form";
-import PrimaryButton from "../../UI/PrimaryButton";
-import SecondaryTitle from "../../UI/SecondaryTitle";
-import { Check, LoaderCircle, Plus, Trash2Icon } from "lucide-react";
 import { CategoriaBase } from "@/src/types/categoria/categoriaType";
 import { VariacaoBase } from "@/src/types/variacoes/variacoesType";
 import { postProduto } from "@/src/actions/produtos/postProduto";
@@ -19,10 +10,30 @@ import { useUser } from "@/src/context/userContext";
 import ProdutoInfoForm from "./ProdutoInfoForm";
 import ProdutoFormVariacoes from "./ProdutoFormVariacoes";
 import { ProdutoFormSubmit } from "./ProdutoFormSubmit";
+import { ProdutoBase } from "@/src/types/produto/produtoType";
+import { EmpresaBase } from "@/src/types/empresa/empresaType";
+import { patchProduto } from "@/src/actions/produtos/patchProduto";
 
 type ProdutoFormType = {
   categorias: CategoriaBase[] | [];
   variacoes: VariacaoBase[] | [];
+  isEditMode?: boolean;
+  editData?: ProdutoBase | null;
+};
+
+export type currentProdutoType = {
+  codigo: string;
+  nome: string;
+  descricao: string;
+  preco: string;
+  categoria_id: string;
+  tipo_produto: "unico" | "variavel";
+  id: string;
+  variacoes: {
+    variacao_id: string;
+    nome: string;
+    preco: number;
+  }[];
 };
 
 export type VariacaoState = {
@@ -34,8 +45,30 @@ export type VariacaoState = {
 export default function ProdutoForm({
   categorias,
   variacoes,
+  editData = null,
+  isEditMode = false,
 }: ProdutoFormType) {
-  const [isPending, startTransition] = useTransition();
+  const [currentProduto, setCurrentProduto] =
+    useState<currentProdutoType | null>({
+      id: editData?.id || "",
+      nome: editData?.nome || "",
+      descricao: editData?.descricao || "",
+      categoria_id: editData?.categorias?.[0]?.id || "",
+      tipo_produto: isTipoProduto(editData?.tipo) ? editData!.tipo : "unico",
+      codigo: editData?.codigo || "",
+      preco:
+        editData?.variacoes.length === 1
+          ? String(editData?.variacoes[0].preco)
+          : "",
+      variacoes:
+        editData?.variacoes.map((variacao) => {
+          return {
+            variacao_id: variacao.id,
+            nome: variacao.nome,
+            preco: variacao.preco,
+          };
+        }) || [],
+    });
   const [variacoesData, setVariacoesData] = useState<VariacaoState[] | []>([
     {
       variacao_preco: "",
@@ -44,16 +77,21 @@ export default function ProdutoForm({
     },
   ]);
   const [preco, setPreco] = useState<string>("");
-  const [tipoProduto, setTipoProduto] = useState<string>("unico");
-
   const { user } = useUser();
   const router = useRouter();
-  const isEditMode = true;
-  const [state, formAction] = useActionState(postProduto, {
-    errors: [],
-    msg_success: "",
-    success: false,
-  });
+
+  const [state, formAction, isPending] = useActionState(
+    isEditMode ? patchProduto : postProduto,
+    {
+      errors: [],
+      msg_success: "",
+      success: false,
+    }
+  );
+
+  function isTipoProduto(tipo: any): tipo is "unico" | "variavel" {
+    return tipo === "unico" || tipo === "variavel";
+  }
 
   //realiza funcões após o feedback do formularop
   useEffect(() => {
@@ -63,45 +101,26 @@ export default function ProdutoForm({
 
     if (state?.success) {
       toast.success(state.msg_success);
-
-      startTransition(() => {
-        router.push("/app/produtos");
-      });
+      router.push("/app/produtos");
     }
   }, [state.success, state.errors, state.msg_success, router]);
 
-  //rastreia a mudança nos inputs e atualiza o estado
-  const handleChange = (
-    idx: number,
-    target: EventTarget & { name?: string; value?: string }
-  ) => {
-    const { name, value } = target;
-
-    if (!name) return; // Se não tem nome, não atualiza
-
-    setVariacoesData((prev) => {
-      const newVariacoes = [...prev];
-
-      // Para sku e variacaoId (ou outros campos)
-      newVariacoes[idx] = {
-        ...newVariacoes[idx],
-        [name]: value,
-      };
-
-      return newVariacoes;
-    });
-  };
-
   //adiciona nova variação na listagem
   const addVariacao = () => {
-    setVariacoesData((prev) => [
-      ...prev,
-      {
-        sku: "",
-        variacao_id: "",
-        variacao_preco: "0",
-      },
-    ]);
+    setCurrentProduto((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        variacoes: [
+          ...prev.variacoes,
+          {
+            variacao_id: "",
+            nome: "",
+            preco: 0,
+          },
+        ],
+      };
+    });
   };
 
   //seta o preço base como preço das variações
@@ -135,21 +154,18 @@ export default function ProdutoForm({
     <Form.Root action={formAction}>
       <ProdutoInfoForm
         categorias={categorias}
-        preco={preco}
-        setPreco={setPreco}
-        setTipoProduto={setTipoProduto}
+        currentProduto={currentProduto}
+        setCurrentProduto={setCurrentProduto}
       />
       <ProdutoFormVariacoes
         addVariacao={addVariacao}
-        handleChange={handleChange}
         setPrecoBase={setPrecoBase}
         variacoes={variacoes}
         variacoesData={variacoesData}
-        setTipoProduto={setTipoProduto}
-        tipoProduto={tipoProduto}
+        setCurrentProduto={setCurrentProduto}
+        currentProduto={currentProduto}
       />
       <ProdutoFormSubmit isEditMode={isEditMode} isPending={isPending} />
-
       <input
         type="hidden"
         name="empresaIds"
@@ -157,6 +173,7 @@ export default function ProdutoForm({
       />
 
       <input type="hidden" name="default_variacao_id" value={""} />
+      <input type="hidden" name="produto_id" value={editData?.id} />
     </Form.Root>
   );
 }

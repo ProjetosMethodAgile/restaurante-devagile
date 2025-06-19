@@ -4,11 +4,12 @@ import { EmpresaBase } from "./../empresa/empresaType";
 
 export type ProdutoBase = {
   id: string;
-  codigo: number;
+  codigo: string;
   nome: string;
   descricao: string;
   tipo: string;
   empresas: EmpresaBase[];
   categorias: CategoriaBase[];
   variacoes: VariacaoBase[];
+
 };

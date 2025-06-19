@@ -3,13 +3,14 @@ import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 
-export async function postProduto(
+export async function patchProduto(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
     | undefined,
   formData: FormData
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   try {
+    const produto_id = formData.get("produto_id") as string;
     const nome = formData.get("nome") as string;
     const descricao = formData.get("descricao") as string;
     const categoria = formData.get("categoria") as string;
@@ -75,8 +76,8 @@ export async function postProduto(
     }
 
     const url = "http://localhost:3001/";
-    const response = await fetch(url + "produto", {
-      method: "POST",
+    const response = await fetch(url + "produto" + `/${produto_id}`, {
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -92,12 +93,12 @@ export async function postProduto(
     });
 
     if (response.ok) {
-      revalidateTag("new-product");
+      revalidateTag("update-product");
 
       return {
         success: true,
         errors: [],
-        msg_success: "Produto Cadastrado com sucesso.",
+        msg_success: "Produto Atualizado com sucesso.",
       };
     } else {
       const { message } = await response.json();

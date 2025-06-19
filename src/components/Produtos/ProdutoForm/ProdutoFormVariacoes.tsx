@@ -1,7 +1,7 @@
-import { Plus, Trash2Icon } from "lucide-react";
+import { ConstructionIcon, Plus, Trash2Icon } from "lucide-react";
 import { Form } from "../../UI/Form";
 import SecondaryTitle from "../../UI/SecondaryTitle";
-import { VariacaoState } from "./ProdutoForm";
+import { currentProdutoType, VariacaoState } from "./ProdutoForm";
 import { VariacaoBase } from "@/src/types/variacoes/variacoesType";
 import { Dispatch, SetStateAction } from "react";
 
@@ -9,79 +9,75 @@ type ProdutoVariacoesProps = {
   variacoesData: VariacaoState[];
   setPrecoBase: (checked: boolean) => void;
   variacoes: VariacaoBase[];
-  handleChange: (
-    idx: number,
-    target: EventTarget & {
-      name?: string;
-      value?: string;
-    }
-  ) => void;
   addVariacao: () => void;
-  setTipoProduto?: Dispatch<SetStateAction<string>>
-  tipoProduto?: string;
+
+  currentProduto: currentProdutoType | null;
+  setCurrentProduto: Dispatch<SetStateAction<currentProdutoType | null>>;
 };
 
 export default function ProdutoFormVariacoes({
-  variacoesData,
-  setPrecoBase,
   variacoes,
-  handleChange,
   addVariacao,
-  tipoProduto = "unico",
+  currentProduto = null,
+  setCurrentProduto,
 }: ProdutoVariacoesProps) {
-  if(tipoProduto === "unico") return null
-  
+  if (currentProduto?.tipo_produto === "unico") return null;
+
+  function handleVariacaoChange(
+    idx: number,
+    target: EventTarget & { name?: string; value?: string }
+  ) {
+    const { name, value } = target;
+    if (!name) return;
+
+    setCurrentProduto((prev) => {
+      if (!prev) return prev;
+
+      const novasVariacoes = [...prev.variacoes];
+      novasVariacoes[idx] = {
+        ...novasVariacoes[idx],
+        [name]: value, // name pode ser 'id' ou 'preco'
+      };
+
+      return {
+        ...prev,
+        variacoes: novasVariacoes,
+      };
+    });
+  }
+
   return (
     <div className="border-b border-slate-200 py-4">
       <div className="flex flex-col gap-4 ">
         <ul className="flex flex-col shadow-sm gap-4 bg-gray-100 p-4 rounded-xl">
           <li className="flex justify-between">
             <SecondaryTitle title="Variações" />
-            <div>
-              {variacoesData.length > 0 && (
-                <div className="flex gap-2 mt-2">
-                  <input
-                    type="checkbox"
-                    name="incluir_preco_base"
-                    id="incluir_preco_base"
-                    onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                      setPrecoBase((e.target as HTMLInputElement).checked)
-                    }
-                  />
-                  <label htmlFor="incluir_preco_base">
-                    Utilizar preço base
-                  </label>
-                </div>
-              )}
-            </div>
           </li>
-          {variacoesData.map((variacao, idx) => {
+          {currentProduto?.variacoes.map((variacao, idx) => {
             return (
               <li
                 key={idx}
                 className="grid grid-cols-[auto_1fr_1fr_1fr_auto] border-b-2 border-gray-200/80 pb-4 items-center gap-4 bg-gray-100 "
               >
                 <span className="text-slate-700 text-sm "># {idx + 1}</span>
-
                 <Form.InputOptions
                   label="Variação"
                   options={variacoes.map((variacao) => {
-                    console.log(variacoes);
                     return { label: variacao.nome, value: variacao.id };
                   })}
                   className="bg-white"
-                  value={variacao.variacao_id}
-                  onChange={(e) => handleChange(idx, e.target)}
+                  value={currentProduto?.variacoes[idx].variacao_id || ""}
+                  onChange={(e) => handleVariacaoChange(idx, e.target)}
                   name="variacao_id"
                 />
                 <Form.InputText
                   label="Preço"
                   type="text"
                   placeholder="R$"
-                  name="variacao_preco"
+                  name="preco"
                   className="bg-white"
-                  value={variacao.variacao_preco}
-                  onChange={(e) => handleChange(idx, e.target)}
+                  value={currentProduto?.variacoes[idx].preco || ""}
+                  onChange={(e) => handleVariacaoChange(idx, e.target)}
                 />
                 <Trash2Icon className="mt-4 cursor-pointer hover:scale-102 transition-all text-primary" />
               </li>

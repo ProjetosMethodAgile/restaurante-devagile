@@ -162,7 +162,7 @@ export default function ClienteForm({
   }
 
 
-async function  handleAlterUser() {
+async function  handleAlterCliente() {
 
   if (!form) return;
   const res = await alterarClientePorID(dataAlteredUser,form)
@@ -177,7 +177,7 @@ if (!res.error) {
 }
 
   return (
-    <Form.Root id="formulario" action={formData} className="space-y-4 bg-white p-6 rounded-lg">
+    <Form.Root id="formulario" action={formData} className="space-y-4 bg-white p-6 rounded-lg text-text-primary">
       <h1 className="text-xl font-semibold">
         {edita ? "Alterar cliente" : "Cadastrar cliente"}
       </h1>
@@ -188,7 +188,7 @@ if (!res.error) {
           type="checkbox"
           checked={autoCepEnabled}
           onChange={() => setAutoCepEnabled((p) => !p)}
-          className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          className="h-4 w-4 bg-secondary border-gray-300 rounded focus:ring-blue-500"
         />
         <label htmlFor="autoCep" className="text-gray-700">
           Usar busca automática de CEP
@@ -314,9 +314,9 @@ if (!res.error) {
       </div>
       {edita ? (
         <PrimaryButton
-          type="submit"
+          type="button"
           text={"Alterar"}
-          onClick={handleAlterUser}
+          onClick={handleAlterCliente}
           className={
             isPending
               ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2  mt-4"
@@ -330,8 +330,9 @@ if (!res.error) {
           text={"Cadastrar"}
           className={
             isPending
-              ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2  mt-4"
-              : "w-full bg-secondary hover:bg-secondary/80 text-white py-2  mt-4"
+              ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
+              : "w-full bg-secondary hover:bg-secondary text-white py-2 rounded mt-4"
+
           }
           disabled={isPending}
         />

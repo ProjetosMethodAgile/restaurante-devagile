@@ -30,7 +30,6 @@ export default async function getProdutoId(produtoId? : string ) {
       return { data: null };
     }
   } catch (error) {
-    console.log(error);
 
     return { data: null };
   }

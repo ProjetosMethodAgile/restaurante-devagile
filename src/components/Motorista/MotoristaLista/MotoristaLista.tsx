@@ -1,36 +1,31 @@
-// src/components/Clientes/ContainerClientes.tsx
+
 "use client";
 import { Form } from "@/src/components/UI/Form";
 import { useState, useEffect,  MouseEvent } from "react";
 import { Search } from "lucide-react";
 import SecondaryButton from "../../UI/SecondaryButton";
-import { ClienteBase } from "@/src/types/cliente/clientType";
 import { deletaClientePorID } from "@/src/actions/clientes/deletaClientePorID";
 import { toast } from "react-toastify";
 import { scrollToSection } from "@/src/utils/ScrollFocus";
+import { MotoristaBase } from "@/src/types/motorista/motoristaType";
+import { ContainerMotoristaProps } from "@/src/types/motorista/motoristaType";
 
-export type ComponenteClientesState = ClienteBase & {
+export type ComponenteClientesState = MotoristaBase & {
   status: boolean;
   __editIdx?: number;
 };
 
-export type ContainerClientesProps = {
-  clientes: ClienteBase[];
-  setDataAlteredUser: React.Dispatch<React.SetStateAction<string>>;
-  setEdita?: React.Dispatch<React.SetStateAction<boolean>>;
-  edita?: boolean;
-};
 
-export default function ClientesLista({
-  setDataAlteredUser,
+export default function MotoristaLista({
+ setAlteraMotorista,
   setEdita,
-  clientes,
-}: ContainerClientesProps) {
+  motoristas,
+}: ContainerMotoristaProps) {
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<ClienteBase | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<MotoristaBase | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const pageSize = 5;
 
@@ -47,9 +42,9 @@ export default function ClientesLista({
     setCurrentPage(page);
   };
 
-  const filteredClientes = 
-    clientes.filter(item => item.deletado === false)
-  clientes.filter((item) => {
+  const filtraMotorista = 
+    motoristas.filter(item => item.deletado === false)
+  motoristas.filter((item) => {
     if (!searchTerm) return true;
     const onlyDigits = /^\d+$/.test(searchTerm);
     if (onlyDigits) {
@@ -59,8 +54,8 @@ export default function ClientesLista({
     return item.nome.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const totalPages = Math.ceil(filteredClientes.length / pageSize);
-  const paginated = filteredClientes.slice(
+  const totalPages = Math.ceil(filtraMotorista.length / pageSize);
+  const paginated = filtraMotorista.slice(
     currentPage * pageSize,
     currentPage * pageSize + pageSize
   );
@@ -69,10 +64,10 @@ export default function ClientesLista({
     if (isLoading) setIsLoading(false);
   }, [paginated, isLoading]);
 
-  async function handleAlteraCliente(id: string) {
+  async function handleAlterMotorista(id: string) {
     setEdita?.(true);
     if (id) {
-      setDataAlteredUser(id);
+      setAlteraMotorista(id);
     }
   }
 
@@ -81,10 +76,10 @@ export default function ClientesLista({
     setIsDeleting(true);
     try {
       await deletaClientePorID(deleteTarget.id);
-      toast.success(`Cliente ${deleteTarget.nome} deletado com sucesso`);
+      toast.success(`Motorista ${deleteTarget.nome} deletado com sucesso`);
       setDeleteTarget(null);
     } catch (error) {
-      toast.error("Falha ao deletar cliente. Tente novamente.");
+      toast.error("Falha ao deletar motorista. Tente novamente.");
     } finally {
       setIsDeleting(false);
     }
@@ -105,14 +100,14 @@ export default function ClientesLista({
         <button
           type="button"
           onClick={handleSearchClick}
-          className="px-4 py-2 bg-secondary text-white rounded-lg  hover:bg-secondary/90 transition"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
         >
           Buscar
         </button>
       </div>
 
       <p className="px-4 py-2 text-text-primary">
-        Clientes cadastrados: {filteredClientes.length}
+        Motoristas cadastrados: {filtraMotorista.length}
       </p>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4">
@@ -141,15 +136,15 @@ export default function ClientesLista({
                     </div>
                     <div className="flex space-x-2">
                       <SecondaryButton
-                        className="bg-secondary text-white  hover:bg-secondary/90 transition"
+                        className="bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                         text="Editar"
                         onClick={(e: MouseEvent<HTMLElement>) => {
-                          handleAlteraCliente(item.id),
+                          handleAlterMotorista(item.id),
                             scrollToSection(e, "formulario");
                         }}
                       />
                       <SecondaryButton
-                        className="bg-primary text-white  hover:bg-primary/90 transition"
+                        className="bg-red-500 text-white rounded hover:bg-red-600 transition"
                         text="Excluir"
                         onClick={(e: MouseEvent<HTMLElement>) => {
                           setDeleteTarget(item);
@@ -169,7 +164,7 @@ export default function ClientesLista({
                     </p>
                     <p className="text-sm text-gray-700">CEP: {item.cep}</p>
                     <p className="text-sm text-gray-700">
-                      Frete: R$ {item.frete}
+                      Frete: R$ 
                     </p>
                     {item.email && (
                       <p className="text-sm text-gray-700">

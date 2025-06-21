@@ -4,21 +4,23 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Form } from "../../UI/Form";
 import SecondaryTitle from "../../UI/SecondaryTitle";
 import { CategoriaBase } from "@/src/types/categoria/categoriaType";
+import { ProdutoBase } from "@/src/types/produto/produtoType";
+import { currentProdutoType } from "./ProdutoForm";
 
 type ProdutoInfoFormProps = {
-  preco: string;
-  setPreco: Dispatch<SetStateAction<string>>;
   categorias: CategoriaBase[] | [];
-  setTipoProduto?: Dispatch<SetStateAction<string>>;
+  currentProduto: currentProdutoType | null;
+  setCurrentProduto: Dispatch<SetStateAction<currentProdutoType | null>>;
 };
 
 export default function ProdutoInfoForm({
-  preco,
-  setPreco,
   categorias,
-  setTipoProduto,
+  currentProduto = null,
+  setCurrentProduto,
 }: ProdutoInfoFormProps) {
-  const [descricaoLength, setDescricaoLength] = useState(0);
+  const isTipoProduto = (tipo: any): tipo is "unico" | "variavel" => {
+    return tipo === "unico" || tipo === "variavel";
+  };
   return (
     <div className="border-b border-slate-200 py-4">
       <SecondaryTitle title="Informações Basicas" />
@@ -28,6 +30,11 @@ export default function ProdutoInfoForm({
           name="codigo"
           type="text"
           placeholder="PRATO-001"
+          value={currentProduto?.codigo || ""}
+          onChange={(e) => {
+            if (!currentProduto) return;
+            setCurrentProduto({ ...currentProduto, codigo: e.target.value });
+          }}
         />
 
         <Form.InputText
@@ -35,6 +42,11 @@ export default function ProdutoInfoForm({
           type="text"
           placeholder="Feijoada Completa"
           name="nome"
+          value={currentProduto?.nome || ""}
+          onChange={(e) => {
+            if (!currentProduto) return;
+            setCurrentProduto({ ...currentProduto, nome: e.target.value });
+          }}
         />
 
         <Form.InputText
@@ -42,31 +54,57 @@ export default function ProdutoInfoForm({
           type="text"
           placeholder="R$"
           name="preco_base"
-          value={preco}
-          onChange={(e) => setPreco(e.target.value)}
+          value={currentProduto?.preco || ""}
+          onChange={(e) => {
+            if (!currentProduto) return;
+            setCurrentProduto({ ...currentProduto, preco: e.target.value });
+          }}
         />
+
         <Form.InputOptions
           label="Categoria"
           name="categoria"
           options={categorias.map((categoria) => {
             return { label: categoria.nome, value: categoria.id };
           })}
+          onChange={(e) => {
+            if (!currentProduto) return;
+            setCurrentProduto({
+              ...currentProduto,
+              categoria_id: e.target.value,
+            });
+          }}
+          value={currentProduto?.categoria_id || ""}
         />
 
         <Form.InputText
-          label={`Descrição do produto (${descricaoLength}/80)`}
+          label={`Descrição do produto (${currentProduto?.descricao.length}/80)`}
           type="text"
           placeholder="Feijoada, Arroz, Batata..."
           name="descricao"
           maxLength={80}
-          onChange={(e) => setDescricaoLength(e.target.value.length)}
+          onChange={(e) => {
+            if (!currentProduto) return;
+            setCurrentProduto({ ...currentProduto, descricao: e.target.value });
+          }}
+          value={currentProduto?.descricao || ""}
         />
         <Form.InputOptions
           label="Tipo do produto"
           name="tipo_produto"
-          defaultValue={{ label: "Unico", value: "unico" }}
-          options={[{ label: "Variavel", value: "variavel" }]}
-          onChange={(e) => setTipoProduto && setTipoProduto(e.target.value)}
+          options={[
+            { label: "Único", value: "unico" },
+            { label: "Variável", value: "variavel" },
+          ]}
+          value={currentProduto?.tipo_produto || "unico"}
+          onChange={(e) => {
+            if (!currentProduto) return;
+            if (!isTipoProduto(e.target.value)) return;
+            setCurrentProduto({
+              ...currentProduto,
+              tipo_produto: e.target.value,
+            });
+          }}
         />
       </div>
     </div>

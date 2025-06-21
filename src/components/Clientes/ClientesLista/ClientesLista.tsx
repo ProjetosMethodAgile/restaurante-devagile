@@ -105,7 +105,7 @@ export default function ClientesLista({
         <button
           type="button"
           onClick={handleSearchClick}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          className="px-4 py-2 bg-secondary text-white rounded-lg  hover:bg-secondary/90 transition"
         >
           Buscar
         </button>
@@ -141,7 +141,7 @@ export default function ClientesLista({
                     </div>
                     <div className="flex space-x-2">
                       <SecondaryButton
-                        className="bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                        className="bg-secondary text-white  hover:bg-secondary/90 transition"
                         text="Editar"
                         onClick={(e: MouseEvent<HTMLElement>) => {
                           handleAlteraCliente(item.id),
@@ -149,7 +149,7 @@ export default function ClientesLista({
                         }}
                       />
                       <SecondaryButton
-                        className="bg-red-500 text-white rounded hover:bg-red-600 transition"
+                        className="bg-primary text-white  hover:bg-primary/90 transition"
                         text="Excluir"
                         onClick={(e: MouseEvent<HTMLElement>) => {
                           setDeleteTarget(item);

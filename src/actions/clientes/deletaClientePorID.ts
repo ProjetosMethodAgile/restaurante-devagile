@@ -63,7 +63,6 @@ export async function deletaClientePorID(id: string) {
       // }),
     });
 
-   console.log("Response status:", response);
    
     if (response.ok) {
       revalidateTag("clientes");

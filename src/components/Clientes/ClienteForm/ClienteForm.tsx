@@ -319,8 +319,8 @@ if (!res.error) {
           onClick={handleAlterCliente}
           className={
             isPending
-              ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
-              : "w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded mt-4"
+              ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2  mt-4"
+              : "w-full bg-secondary hover:bg-secondary/80 text-white py-2  mt-4"
           }
           disabled={isPending}
         />
@@ -332,6 +332,7 @@ if (!res.error) {
             isPending
               ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
               : "w-full bg-secondary hover:bg-secondary text-white py-2 rounded mt-4"
+
           }
           disabled={isPending}
         />

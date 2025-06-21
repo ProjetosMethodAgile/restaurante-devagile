@@ -13,6 +13,7 @@ export type ClienteBase = {
   complemento: string;
   frete: string;
   observacao?: string;
+  deletado?:boolean;
 };
 
 

@@ -1,4 +1,5 @@
 export type MotoristaBase = {
+  id:string;
   nome: string;
   cpf: string;
   rg: string;
@@ -17,4 +18,19 @@ export type MotoristaBase = {
   categoria: string;
   emissaocnh: string;
   validadecnh: string;
+  logradouro:string;
+  deletado:boolean;
+};
+
+export type ContainerMotoristaProps = {
+  motoristas: MotoristaBase[];
+  setAlteraMotorista: React.Dispatch<React.SetStateAction<string>>;
+  setEdita?: React.Dispatch<React.SetStateAction<boolean>>;
+  edita?: boolean;
+dataAlteraMotorista?: string;
+};
+
+export type GetMotoristaPorIDResponse = {
+  data: MotoristaBase[];        
+  error: string | null;
 };

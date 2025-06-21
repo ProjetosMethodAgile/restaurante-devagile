@@ -4,13 +4,13 @@ import MotoristaContainer from "@/src/components/Motorista/MotoristaContainer/Mo
 
 
 export default async function MotoristaPage() {
+ const { data } = await getMotoristas();
+const motoristasArray = data?? [];
+console.log(data);
 
-  const motoristas = await getMotoristas()
-  console.log(motoristas);
-  
   return (
     <section>
-        <MotoristaContainer/>
+        <MotoristaContainer motoristas={motoristasArray} />
     </section>
   );
 }

@@ -1,11 +1,19 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Form } from "../../UI/Form";
 import PrimaryButton from "../../UI/PrimaryButton";
 import { estados } from "../../Clientes/ClienteForm/estados";
 import { postMotorista } from "@/src/actions/motorista/registraMotorista";
+import { alterarMotoristaPorID } from "@/src/actions/motorista/alterarMotoristaPorID";
+import { ContainerMotoristaProps } from "@/src/types/motorista/motoristaType";
+import { toast } from "react-toastify";
+import getMotoristaPorID from "@/src/actions/motorista/pegaMotoristaPorID";
 
-export default function MotoristaForm() {
+export default function MotoristaForm({
+  dataAlteraMotorista,
+  edita,
+  setEdita,
+}: ContainerMotoristaProps) {
   const [autoCepEnabled, setAutoCepEnabled] = React.useState(false);
   const [state, formData, isPending] = React.useActionState(postMotorista, {
     errors: [],
@@ -13,7 +21,7 @@ export default function MotoristaForm() {
     success: false,
   });
 
-  const [form, setForm] = React.useState({
+   const [form, setForm] = React.useState({
     nome: "",
     cpf: "",
     rg: "",
@@ -40,10 +48,7 @@ export default function MotoristaForm() {
     >
   ) => {
     const { id, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
+    setForm((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleCepBlur = async () => {
@@ -52,33 +57,137 @@ export default function MotoristaForm() {
     if (rawCep.length !== 8) return;
 
     try {
-      const response = await fetch(`https://viacep.com.br/ws/${rawCep}/json/`);
+      const response = await fetch(
+        `https://viacep.com.br/ws/${rawCep}/json/`
+      );
       if (!response.ok) throw new Error("Erro ao buscar CEP");
       const data = await response.json();
       if (data.erro) throw new Error("CEP não encontrado");
 
       setForm((prev) => ({
         ...prev,
-        rua: data.logradouro || "",
-        bairro: data.bairro || "",
-        cidade: data.localidade || "",
-        estado: data.uf || "",
+        rua: data.logradouro || prev.rua,
+        bairro: data.bairro || prev.bairro,
+        cidade: data.localidade || prev.cidade,
+        estado: data.uf || prev.estado,
       }));
     } catch (error) {
       console.error("Erro ao buscar CEP:", error);
+      toast.error("Não foi possível buscar CEP");
     }
   };
 
+  function resetForm() {
+    setForm({
+      nome: "",
+      cpf: "",
+      rg: "",
+      dataNascimento: "",
+      contato: "",
+      email: "",
+      cep: "",
+      numero: "",
+      rua: "",
+      complemento: "",
+      bairro: "",
+      cidade: "",
+      estado: "",
+      observacao: "",
+      numeroCnh: "",
+      categoria: "",
+      emissaocnh: "",
+      validadecnh: "",
+    });
+  }
+
+  useEffect(() => {
+    if (!edita || !dataAlteraMotorista) return;
+
+    setForm({
+      nome: "Carregando...",
+      cpf: "...",
+      rg: "...",
+      dataNascimento: "...",
+      contato: "...",
+      email: "...",
+      cep: "...",
+      numero: "...",
+      rua: "...",
+      complemento: "...",
+      bairro: "...",
+      cidade: "...",
+      estado: "...",
+      observacao: "Carregando...",
+      numeroCnh: "...",
+      categoria: "...",
+      emissaocnh: "...",
+      validadecnh: "...",
+    });
+
+    getMotoristaPorID(dataAlteraMotorista).then(({ data, error }) => {
+      if (error) {
+        console.error("Erro ao buscar motorista:", error);
+        toast.error("Falha ao carregar dados do motorista");
+        return;
+      }
+      const m = Array.isArray(data) ? data[0] : data;
+      setForm({
+        nome: m.nome || "",
+        cpf: m.cpf || "",
+        rg: m.rg || "",
+        dataNascimento: m.dataNascimento || "",
+        contato: m.contato || "",
+        email: m.email || "",
+        cep: m.cep || "",
+        numero: m.numero || "",
+        rua: m.rua || "",
+        complemento: m.complemento || "",
+        bairro: m.bairro || "",
+        cidade: m.cidade || "",
+        estado: m.estado || "",
+        observacao: m.observacao || "",
+        numeroCnh: m.numeroCnh || "",
+        categoria: m.categoria || "",
+        emissaocnh: m.emissaocnh || "",
+        validadecnh: m.validadecnh || "",
+      });
+    });
+  }, [dataAlteraMotorista, edita]);
+
+  useEffect(() => {
+    if (!isPending) resetForm();
+  }, [isPending]);
+
+async function handleAlterMotorista() {
+  if (!dataAlteraMotorista) return;
+
+  const res = await alterarMotoristaPorID(dataAlteraMotorista, form);
+  if (!res.error) {
+    toast.success(`Motorista ${form.nome} alterado com sucesso`);
+    resetForm();
+    setEdita?(false):null;
+  } else {
+    toast.error("Falha ao alterar motorista");
+  }
+}
+
+
   return (
-    <Form.Root action={formData} className="space-y-6 bg-white p-6 rounded-lg text-text-primary">
-      <h1 className="text-2xl font-bold">Cadastro de motorista</h1>
+    <Form.Root
+      id="formMotorista"
+      action={formData}
+      className="space-y-6 bg-white p-6 rounded-lg text-text-primary"
+    >
+      <h1 className="text-2xl font-bold">
+        {edita ? "Alterar motorista" : "Cadastro de motorista"}
+      </h1>
 
       <div className="flex items-center gap-2 mb-4">
         <input
           id="autoCepEnabled"
           type="checkbox"
           checked={autoCepEnabled}
-          onChange={() => setAutoCepEnabled((prev) => !prev)}
+          onChange={() => setAutoCepEnabled((p) => !p)}
           className="h-4 w-4 bg-secondary border-gray-300 rounded focus:ring-blue-500"
         />
         <label htmlFor="autoCepEnabled" className="text-gray-700">
@@ -249,18 +358,43 @@ export default function MotoristaForm() {
         />
       </div>
 
-      <div className="pt-4">
-           <PrimaryButton
-                  type="submit"
-                  text={"Cadastrar"}
-                  className={
-                    isPending
-                      ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
-                      : "w-full bg-secondary hover:bg-secondary text-white py-2 rounded mt-4"
-                  }
-                  disabled={isPending}
-                />
-                </div>
+      <div className="pt-4 space-y-2">
+        {edita ? (
+          <>
+            <PrimaryButton
+              type="button"
+              text="Alterar"
+              onClick={handleAlterMotorista}
+              className={
+                isPending
+                  ? "w-full bg-gray-300 cursor-not-allowed hover:bg-gray-400 text-white py-2 rounded"
+                  : "w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded"
+              }
+              disabled={isPending}
+            />
+            <PrimaryButton
+              type="button"
+              text="Cancelar"
+              onClick={() => {
+                resetForm();
+                setEdita?(false):(null);
+              }}
+              className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
+            />
+          </>
+        ) : (
+          <PrimaryButton
+            type="submit"
+            text="Cadastrar"
+            className={
+              isPending
+                ? "w-full bg-gray-300 cursor-not-allowed hover:bg-gray-400 text-white py-2 rounded"
+                : "w-full bg-secondary hover:bg-secondary text-white py-2 rounded"
+            }
+            disabled={isPending}
+          />
+        )}
+      </div>
     </Form.Root>
   );
 }

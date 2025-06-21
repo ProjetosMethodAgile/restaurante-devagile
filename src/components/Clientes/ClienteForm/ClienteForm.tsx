@@ -314,7 +314,7 @@ if (!res.error) {
       </div>
       {edita ? (
         <PrimaryButton
-          type="submit"
+          type="button"
           text={"Alterar"}
           onClick={handleAlterCliente}
           className={

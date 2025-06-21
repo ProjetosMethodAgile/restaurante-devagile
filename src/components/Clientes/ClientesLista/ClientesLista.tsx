@@ -47,7 +47,9 @@ export default function ClientesLista({
     setCurrentPage(page);
   };
 
-  const filteredClientes = clientes.filter((item) => {
+  const filteredClientes = 
+    clientes.filter(item => item.deletado === false)
+  clientes.filter((item) => {
     if (!searchTerm) return true;
     const onlyDigits = /^\d+$/.test(searchTerm);
     if (onlyDigits) {
@@ -67,7 +69,7 @@ export default function ClientesLista({
     if (isLoading) setIsLoading(false);
   }, [paginated, isLoading]);
 
-  async function handleAlterUser(id: string) {
+  async function handleAlteraCliente(id: string) {
     setEdita?.(true);
     if (id) {
       setDataAlteredUser(id);
@@ -142,7 +144,7 @@ export default function ClientesLista({
                         className="bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                         text="Editar"
                         onClick={(e: MouseEvent<HTMLElement>) => {
-                          handleAlterUser(item.id),
+                          handleAlteraCliente(item.id),
                             scrollToSection(e, "formulario");
                         }}
                       />

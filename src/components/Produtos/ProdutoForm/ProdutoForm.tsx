@@ -32,7 +32,7 @@ export type currentProdutoType = {
   variacoes: {
     variacao_id: string;
     nome: string;
-    preco: number;
+    variacao_preco: number
   }[];
 };
 
@@ -48,6 +48,7 @@ export default function ProdutoForm({
   editData = null,
   isEditMode = false,
 }: ProdutoFormType) {
+
   const [currentProduto, setCurrentProduto] =
     useState<currentProdutoType | null>({
       id: editData?.id || "",
@@ -65,7 +66,7 @@ export default function ProdutoForm({
           return {
             variacao_id: variacao.id,
             nome: variacao.nome,
-            preco: variacao.preco,
+            variacao_preco: variacao.preco,
           };
         }) || [],
     });
@@ -116,7 +117,7 @@ export default function ProdutoForm({
           {
             variacao_id: "",
             nome: "",
-            preco: 0,
+            variacao_preco: 0,
           },
         ],
       };

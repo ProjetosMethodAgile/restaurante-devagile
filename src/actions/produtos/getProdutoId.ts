@@ -16,7 +16,6 @@ export default async function getProdutoId(produtoId? : string ) {
             Authorization: `Bearer ${token} `,
           },
           next: {
-            revalidate: 60,
             tags: ["get-produto"],
           },
         });

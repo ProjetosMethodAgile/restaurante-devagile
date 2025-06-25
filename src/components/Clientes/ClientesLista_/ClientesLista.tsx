@@ -37,6 +37,11 @@ export default function ClientesLista({
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };
+
+
+
+
+  
   const handleSearchClick = () => {
     setIsLoading(true);
     setSearchTerm(searchInput);

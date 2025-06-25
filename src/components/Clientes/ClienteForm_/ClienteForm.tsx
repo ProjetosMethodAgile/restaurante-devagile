@@ -112,7 +112,6 @@ export default function ClienteForm({
       } else {
         cliente = data;
       }
-      console.log(cliente);
 
       try {
         setForm((prev) => ({

@@ -5,7 +5,6 @@ import GenericSelectInput from "@/src/components/UI/GenericSelectInput";
 import PrimaryButton from "@/src/components/UI/PrimaryButton";
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import { LayoutGrid, List, Plus } from "lucide-react";
-import OrdersSummary from "./OrderResume/OdersSummary";
 import OrdersList from "./Orders/List/OrdersList";
 import OrdersGrid from "./Orders/Grid/OrdersGrid";
 import { useRouter } from "next/navigation";
@@ -34,9 +33,7 @@ export default function Main() {
           />
         </div>
       </header>
-      <section className="bg-white mt-10 shadow-md rounded-xl p-8">
-        <OrdersSummary />
-      </section>
+
       <section className="my-4">
         <div className="flex items-center gap-4 justify-end *:active:translate-none *:hover:shadow-lg *:hover:-translate-y-0.5 *:transition-all  ">
           <LayoutGrid

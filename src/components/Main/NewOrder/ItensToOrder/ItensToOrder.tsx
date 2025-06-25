@@ -32,7 +32,7 @@ export default function ItensToOrder({ produtos }: ItensToOrderProps) {
           Clique em "+ Adicionar Produto" para começar
         </span>
       </div>
-      <ItensAddModal produtos={produtos} />
+     {/* <ItensAddModal produtos={produtos} /> */}
       <div className="mt-6">
         <ul className=" flex gap-4 flex-col">
           {produtosToOrder?.map((produto) => {

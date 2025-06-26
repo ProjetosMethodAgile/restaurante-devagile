@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { Form } from "../../UI/Form";
 import PrimaryButton from "../../UI/PrimaryButton";
-import { estados } from "../../Clientes/ClienteForm_/estados";
+import { estados } from "../../Clientes/ClienteForm/estados";
 import { postMotorista } from "@/src/actions/motorista/registraMotorista";
 import { alterarMotoristaPorID } from "@/src/actions/motorista/alterarMotoristaPorID";
 import { ContainerMotoristaProps } from "@/src/types/motorista/motoristaType";

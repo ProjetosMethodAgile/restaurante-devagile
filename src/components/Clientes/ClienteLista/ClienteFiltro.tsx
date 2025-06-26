@@ -28,9 +28,9 @@ export default function ClienteFiltro({
   };
 
   return (
-    <div className="flex justify-end gap-4 mb-4">
+    <div className="">
 
-        <div className="flex-1">
+        <div className="">
 
       <Form.InputText
         type="text"
@@ -44,7 +44,7 @@ export default function ClienteFiltro({
       <button
         type="button"
         onClick={handleSearchClick}
-        className="flex mb-10 mt-4 px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary/90 transition justify-self-end"
+        className="flex mb-3 mt-4 px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary/90 transition justify-self-end"
         >
         Buscar
       </button>

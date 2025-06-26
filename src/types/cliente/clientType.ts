@@ -14,6 +14,9 @@ export type ClienteBase = {
   frete: string;
   observacao?: string;
   deletado?:boolean;
+   empresas: {
+    empresa: { id: string ,razao_social:string};
+    }[];
 };
 
 

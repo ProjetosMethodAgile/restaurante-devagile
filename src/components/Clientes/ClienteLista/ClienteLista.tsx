@@ -1,26 +1,34 @@
 "use client";
 import { ClienteBase } from "@/src/types/cliente/clientType";
 import {
+  ArrowLeft,
+  ArrowRight,
   BookCheck,
   Clipboard,
   LayoutGrid,
   LayoutList,
   Package2,
   Plus,
+  Trash,
   User,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import ClienteFiltro from "./ClienteFiltro";
 import SecondaryButton from "../../UI/SecondaryButton";
+import ClienteForm from "../ClienteForm/ClienteForm";
+import ClienteDeletar from "../ClienteDeletar/ClienteDeletar";
 type ClienteListaProps = {
   clientes: ClienteBase[];
+  setOpenModalCliente:React.Dispatch<React.SetStateAction<boolean>>
 };
-export default function ClienteLista({ clientes }: ClienteListaProps) {
+export default function ClienteLista({ clientes,setOpenModalCliente }: ClienteListaProps) {
+  const [openModalDelete,setModalDelete] = useState(false)
   const [searchInput, setSearchInput] = useState("");
   const [copiadoId, setCopiadoId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
+  const [clienteTrash, setClienteTrash] = useState<ClienteBase[]>([]);
   const pageSize = 5;
   const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
     "lista"
@@ -63,13 +71,8 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
   }, [paginated, isLoading]);
 
   return (
-    <section className="w-full px-4 py-4">
-          <SecondaryButton
-                className="bg-secondary text-white justify-self-end mb-5"
-                text="Adicionar"
-                icon={Plus}
-               
-              />
+    <section className="w-full px-4 py-4 relative">
+
       <ClienteFiltro
         setSearchInput={setSearchInput}
         searchInput={searchInput}
@@ -77,11 +80,22 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
         setIsLoading={setIsLoading}
         setCurrentPage={setCurrentPage}
       />
+      <div className="flex  w-full justify-start gap-2">
+      <SecondaryButton
+        className="bg-secondary text-white justify-self-end mb-5"
+        text="Adicionar"
+        icon={Plus}
+        onClick={()=>setOpenModalCliente(true)}
+        />
       <button
         onClick={() =>
           setModoVisualizacao((prev) => (prev === "lista" ? "cards" : "lista"))
         }
-        className="flex items-center gap-2 text-sm px-4 py-2 mb-5 bg-primary cursor-pointer hover:bg-primary/90 transition-all text-white rounded-lg  justify-self-end"
+        className="flex items-center
+        gap-2 text-sm px-4 py-2 mb-5
+        bg-primary cursor-pointer
+        hover:bg-primary/90
+        transition-all text-white rounded-lg  justify-self-end"
       >
         {modoVisualizacao === "lista" ? (
           <>
@@ -95,8 +109,8 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
           </>
         )}
       </button>
-    
 
+      </div>
       {modoVisualizacao === "lista" ? (
         <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white ">
           <table className="min-w-full text-sm text-left ">
@@ -107,15 +121,17 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
                 <th className="px-4 py-3">Frete</th>
                 <th className="px-4 py-3">Endereço</th>
                 <th className="px-4 py-3">Observação</th>
+                <th className="px-4 py-3">Empresa cadastrada</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {paginated && paginated.length > 0 ? (
                 paginated.map((cliente) => (
+                  <>
                   <tr
                     key={cliente.id}
                     className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101 "
-                  >
+                    >
                     <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
                       <User className="w-4 h-4 text-blue-600" />
                       {cliente.nome}
@@ -130,14 +146,15 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
                               Copiado
                             </p>
                           </div>
-                        ) : (
+                        ) 
+                        : (
                           <div>
                             <Clipboard
                               className="w-4 h-4 text-blue-600 cursor-pointer hover:opacity-75"
                               onClick={() =>
                                 handleCopy(cliente.contato, cliente.id)
                               }
-                            />
+                              />
                           </div>
                         )}
                         {cliente.contato}
@@ -151,7 +168,19 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
                       </div>
                     </td>
                     <td className="px-4 py-3">{cliente.observacao}</td>
+                    <td className="px-4 py-3">{cliente.empresas.map((e)=>(e.empresa.razao_social))}</td>
+                    <div className="p-2 items-center flex justify-center " onClick={()=>{setModalDelete(true),setClienteTrash([cliente])}}>
+                    <Trash className="size-5 text-primary"/>
+                    </div>
                   </tr>
+                    {
+  openModalDelete&&
+  <ClienteDeletar cliente={clienteTrash} setModalDelete={setModalDelete}/>
+    
+}
+                        </>
+                  
+
                 ))
               ) : (
                 <tr>
@@ -159,7 +188,7 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
                     colSpan={5}
                     className="px-4 py-6 text-center text-gray-500"
                   >
-                    Nenhum produto cadastrado
+                    Nenhum cliente cadastrado
                   </td>
                 </tr>
               )}
@@ -188,7 +217,9 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
                 <div className="text-sm mb-1  text-gray-600 pl-4 ">
                   Bairro: {cliente.bairro}
                 </div>
-                <div className="text-sm mb-1 text-gray-600 pl-4 ">{cliente.rua}</div>
+                <div className="text-sm mb-1 text-gray-600 pl-4 ">
+                  {cliente.rua}
+                </div>
                 <div className="text-sm mb-1  text-gray-600 pl-4 ">
                   Complemento: {cliente.complemento}
                 </div>
@@ -236,6 +267,7 @@ export default function ClienteLista({ clientes }: ClienteListaProps) {
           text="Próximo"
         />
       </div>
+    
     </section>
   );
 }

@@ -1,29 +1,22 @@
 "use client";
 import { postCliente } from "@/src/actions/clientes/postCliente";
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Form } from "../../UI/Form";
 import { estados } from "./estados";
 import PrimaryButton from "../../UI/PrimaryButton";
-import getClientesPorID from "@/src/actions/clientes/getClientesPorID";
 import { ClienteBase } from "@/src/types/cliente/clientType";
-import { alterarClientePorID } from "@/src/actions/clientes/alterarClientePorID";
 import { toast } from "react-toastify";
+import { ArrowLeft } from "lucide-react";
+import { stat } from "fs";
+import { EmpresaBase } from "@/src/types/empresa/empresaType";
+type ClienteFormProps = {
+  empresas: EmpresaBase[];
+  setOpenModalCliente: React.Dispatch<React.SetStateAction<boolean>>;
+};
 export default function ClienteForm({
-  dataAlteredUser,
-  edita,
-  setEdita,
-}: {
-  dataAlteredUser: string;
-  edita?: boolean;
-  setEdita: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-  const [state, formData, isPending] = React.useActionState(postCliente, {
-    errors: [],
-    msg_success: "",
-    success: false,
-  });
-
-  const [autoCepEnabled, setAutoCepEnabled] = React.useState(false);
+  empresas,
+  setOpenModalCliente,
+}: ClienteFormProps) {
   const [form, setForm] = React.useState({
     nome: "",
     contato: "",
@@ -38,7 +31,21 @@ export default function ClienteForm({
     estado: "",
     frete: "",
     observacao: "",
+    empresaId:""
   });
+  empresas.map((empresa)=>{
+    console.log(empresa);
+    
+  })
+
+  const [state, formData, isPending] = React.useActionState(postCliente, {
+    errors: [],
+    msg_success: "",
+    success: false,
+  });
+
+  const [autoCepEnabled, setAutoCepEnabled] = React.useState(false);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -50,7 +57,36 @@ export default function ClienteForm({
       [id]: value,
     }));
   };
+  useEffect(() => {
+    resetaForms();
+  }, [isPending]);
+  function resetaForms() {
+    setForm((prev) => ({
+      ...prev,
+      nome: "",
+      contato: "",
+      email: "",
+      cpf: "",
+      cep: "",
+      numero: "",
+      rua: "",
+      complemento: "",
+      bairro: "",
+      cidade: "",
+      estado: "",
+      frete: "",
+      observacao: "",
+    }));
+  }
 
+  useEffect(() => {
+    if (state.msg_success) {
+      toast.success(state.msg_success);
+    }
+    if (state.errors.length) {
+      toast.error(state.errors);
+    }
+  }, [state]);
   const handleCepBlur = async () => {
     if (!autoCepEnabled || !form.cep) return;
     const cep = form.cep.replace(/\D/g, ""); // Remove non-numeric characters
@@ -72,128 +108,67 @@ export default function ClienteForm({
       console.error("Erro ao buscar CEP:", error);
     }
   };
-  function isArrayOfCliente(
-    x: ClienteBase | ClienteBase[]
-  ): x is ClienteBase[] {
-    return Array.isArray(x);
-  }
-
-  useEffect(() => {
-    async function pegaClientePorID(id: string) {
-
-       setForm((prev) => ({
-      ...prev,
-      nome: "Carregando............",
-      contato: "............",
-      email: "............",
-      cpf: "............",
-      cep: "............",
-      numero: "............",
-      rua: "............",
-      complemento: "............",
-      bairro: "............",
-      cidade: "............",
-      estado: "............",
-      frete: "............",
-      observacao: "Carregando............",
-    }));
-
-
-      if (!id) return;
-      const { data, error } = await getClientesPorID(id);
-      if (error) {
-        console.error("Erro ao buscar cliente:", error);
-        return;
-      }
-
-      let cliente: ClienteBase | undefined;
-      if (isArrayOfCliente(data)) {
-        cliente = data[0];
-      } else {
-        cliente = data;
-      }
-
-      try {
-        setForm((prev) => ({
-          ...prev,
-          nome: cliente.nome,
-          contato: cliente.contato ?? "",
-          email: cliente.email ?? "",
-          cpf: cliente.cpf ?? "",
-          cep: cliente.cep ?? "",
-          numero: cliente.numero ?? "",
-          rua: cliente.rua ?? "",
-          complemento: cliente.complemento ?? "",
-          bairro: cliente.bairro ?? "",
-          cidade: cliente.cidade ?? "",
-          estado: cliente.estado ?? "",
-          frete: cliente.frete ?? "",
-          observacao: cliente.observacao ?? "",
-        }));
-      } catch (error) {
-        console.error("Erro ao buscar cliente por ID:", error);
-      }
-    }
-    pegaClientePorID(dataAlteredUser);
-  }, [dataAlteredUser]);
-
-
-  useEffect(()=>{
-    resetaForms()
-  },[isPending])
-  function resetaForms() {
-    setForm((prev) => ({
-      ...prev,
-      nome: "",
-      contato: "",
-      email: "",
-      cpf: "",
-      cep: "",
-      numero: "",
-      rua: "",
-      complemento: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
-      frete: "",
-      observacao: "",
-    }));
-  }
-
-
-async function  handleAlterCliente() {
-
-  if (!form) return;
-  const res = await alterarClientePorID(dataAlteredUser,form)
-if (!res.error) {
-  toast.success(`Cliente ${form.nome} alterado com sucesso `)
-  resetaForms()
-
-}else{
-  toast.error(`Falha ao alterar dados do cliente `)
-}
-   
-}
+   const empresasList: EmpresaBase[] = React.useMemo(
+    () =>
+      Array.isArray(empresas)
+        ? empresas
+        : empresas
+        ? [empresas]
+        : [],
+    [empresas]
+  );
 
   return (
-    <Form.Root id="formulario" action={formData} className="space-y-4 bg-white p-6 rounded-lg text-text-primary">
-      <h1 className="text-xl font-semibold">
-        {edita ? "Alterar cliente" : "Cadastrar cliente"}
-      </h1>
-
-      <div className="flex items-center gap-2 mb-4">
-        <input
-          id="autoCep"
-          type="checkbox"
-          checked={autoCepEnabled}
-          onChange={() => setAutoCepEnabled((p) => !p)}
-          className="h-4 w-4 bg-secondary border-gray-300 rounded focus:ring-blue-500"
-        />
-        <label htmlFor="autoCep" className="text-gray-700">
-          Usar busca automática de CEP
-        </label>
+    <Form.Root
+      id="formulario"
+      action={formData}
+      className="space-y-4 bg-white p-6 rounded-lg text-pri"
+    >
+      <div className="flex gap-5">
+        <div
+          onClick={() => setOpenModalCliente(false)}
+          className="pl-2 text-blue-800 active:scale-105 hover:scale-102 cursor-pointer "
+        >
+          <ArrowLeft />
+        </div>
+        <h1 className="text-xl font-semibold text-gray-800">
+          Cadastrar cliente
+        </h1>
       </div>
-
+      <div className="flex justify-between text-gray-700 items-center">
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            id="autoCep"
+            type="checkbox"
+            checked={autoCepEnabled}
+            onChange={() => setAutoCepEnabled((p) => !p)}
+            className="h-4 w-4 bg-secondary border-gray-300 rounded focus:ring-blue-500"
+          />
+          <label htmlFor="autoCep" className="text-gray-700">
+            Usar busca automática de CEP
+          </label>
+        </div>
+       <div className="col-span-1 flex flex-col">
+  <label htmlFor="empresa" className="text-gray-700 mb-1">
+    Selecione a empresa
+  </label>
+  <select
+   id="empresaId"
+    name="empresaId"
+    value={form.empresaId}
+    onChange={handleChange}
+    className="w-full border rounded px-3 py-2 bg-white"
+    required
+  >
+    <option value="" disabled>-- escolha --</option>
+    {empresasList.map(e => (
+      <option key={e.id} value={e.id}>
+        {e.razao_social}
+      </option>
+    ))}
+  </select>
+</div>
+      </div>
       <div className="grid grid-cols-3 gap-4">
         <Form.InputText
           id="nome"
@@ -311,40 +286,17 @@ if (!res.error) {
           name="observacao"
         />
       </div>
-      {edita ? (
-        <PrimaryButton
-          type="button"
-          text={"Alterar"}
-          onClick={handleAlterCliente}
-          className={
-            isPending
-              ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2  mt-4"
-              : "w-full bg-secondary hover:bg-secondary/80 text-white py-2  mt-4"
-          }
-          disabled={isPending}
-        />
-      ) : (
-        <PrimaryButton
-          type="submit"
-          text={"Cadastrar"}
-          className={
-            isPending
-              ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
-              : "w-full bg-secondary hover:bg-secondary text-white py-2 rounded mt-4"
 
-          }
-          disabled={isPending}
-        />
-      )}
-
-      {edita === true && (
-        <PrimaryButton
-          type="button"
-          text="Cancelar"
-          className="w-full mt-2 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
-          onClick={() => {setEdita(false),resetaForms()}}
-        />
-      )}
+      <PrimaryButton
+        type="submit"
+        text={"Cadastrar"}
+        className={
+          isPending
+            ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
+            : "w-full bg-secondary hover:bg-secondary text-white py-2 rounded mt-4"
+        }
+        disabled={isPending}
+      />
     </Form.Root>
   );
 }

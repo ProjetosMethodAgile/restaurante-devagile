@@ -8,7 +8,10 @@ import {
   LayoutGrid,
   LayoutList,
   Package2,
+  Pen,
+  Pencil,
   Plus,
+  Settings,
   Trash,
   User,
 } from "lucide-react";
@@ -16,19 +19,26 @@ import { SetStateAction, useEffect, useState } from "react";
 import ClienteFiltro from "./ClienteFiltro";
 import SecondaryButton from "../../UI/SecondaryButton";
 import ClienteForm from "../ClienteForm/ClienteForm";
-import ClienteDeletar from "../ClienteDeletar/ClienteDeletar";
+import ClienteDeletar from "../ClienteAcao/ClienteAcao";
+import ClienteAcoes from "../ClienteAcao/ClienteAcao";
 type ClienteListaProps = {
   clientes: ClienteBase[];
-  setOpenModalCliente:React.Dispatch<React.SetStateAction<boolean>>
+  setOpenModalCliente: React.Dispatch<SetStateAction<boolean>>;
+  setModalEdit: React.Dispatch<SetStateAction<boolean>>;
+  setClienteEdit: React.Dispatch<SetStateAction<ClienteBase | undefined>>;
 };
-export default function ClienteLista({ clientes,setOpenModalCliente }: ClienteListaProps) {
-  const [openModalDelete,setModalDelete] = useState(false)
+export default function ClienteLista({
+  clientes,
+  setOpenModalCliente,
+  setClienteEdit,
+  setModalEdit
+}: ClienteListaProps) {
   const [searchInput, setSearchInput] = useState("");
   const [copiadoId, setCopiadoId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [clienteTrash, setClienteTrash] = useState<ClienteBase[]>([]);
+
   const pageSize = 5;
   const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
     "lista"
@@ -71,8 +81,7 @@ export default function ClienteLista({ clientes,setOpenModalCliente }: ClienteLi
   }, [paginated, isLoading]);
 
   return (
-    <section className="w-full px-4 py-4 relative">
-
+    <section className="w-full px-4 py-4 relative ">
       <ClienteFiltro
         setSearchInput={setSearchInput}
         searchInput={searchInput}
@@ -81,35 +90,36 @@ export default function ClienteLista({ clientes,setOpenModalCliente }: ClienteLi
         setCurrentPage={setCurrentPage}
       />
       <div className="flex  w-full justify-start gap-2">
-      <SecondaryButton
-        className="bg-secondary text-white justify-self-end mb-5"
-        text="Adicionar"
-        icon={Plus}
-        onClick={()=>setOpenModalCliente(true)}
+        <SecondaryButton
+          className="bg-secondary text-white justify-self-end mb-5"
+          text="Adicionar"
+          icon={Plus}
+          onClick={() => setOpenModalCliente(true)}
         />
-      <button
-        onClick={() =>
-          setModoVisualizacao((prev) => (prev === "lista" ? "cards" : "lista"))
-        }
-        className="flex items-center
+        <button
+          onClick={() =>
+            setModoVisualizacao((prev) =>
+              prev === "lista" ? "cards" : "lista"
+            )
+          }
+          className="flex items-center
         gap-2 text-sm px-4 py-2 mb-5
         bg-primary cursor-pointer
         hover:bg-primary/90
         transition-all text-white rounded-lg  justify-self-end"
-      >
-        {modoVisualizacao === "lista" ? (
-          <>
-            <LayoutGrid size={16} />
-            Visualizar em cards
-          </>
-        ) : (
-          <>
-            <LayoutList size={16} />
-            Visualizar em lista
-          </>
-        )}
-      </button>
-
+        >
+          {modoVisualizacao === "lista" ? (
+            <>
+              <LayoutGrid size={16} />
+              Visualizar em cards
+            </>
+          ) : (
+            <>
+              <LayoutList size={16} />
+              Visualizar em lista
+            </>
+          )}
+        </button>
       </div>
       {modoVisualizacao === "lista" ? (
         <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white ">
@@ -122,65 +132,69 @@ export default function ClienteLista({ clientes,setOpenModalCliente }: ClienteLi
                 <th className="px-4 py-3">Endereço</th>
                 <th className="px-4 py-3">Observação</th>
                 <th className="px-4 py-3">Empresa cadastrada</th>
+                <th className="px-4 py-3">
+                  <Settings />
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {paginated && paginated.length > 0 ? (
                 paginated.map((cliente) => (
                   <>
-                  <tr
-                    key={cliente.id}
-                    className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101 "
+                    <tr
+                      key={cliente.id}
+                      className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s "
                     >
-                    <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
-                      <User className="w-4 h-4 text-blue-600" />
-                      {cliente.nome}
-                    </td>
+                      <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
+                        <User className="w-4 h-4 text-blue-600" />
+                        {cliente.nome}
+                      </td>
 
-                    <td className="px-4 py-3">
-                      <div className="flex gap-2">
-                        {copiadoId === cliente.id ? (
-                          <div className="relative">
-                            <BookCheck className="w-4 h-4 text-green-500" />
-                            <p className="absolute -left-10 text-[10px]">
-                              Copiado
-                            </p>
-                          </div>
-                        ) 
-                        : (
-                          <div>
-                            <Clipboard
-                              className="w-4 h-4 text-blue-600 cursor-pointer hover:opacity-75"
-                              onClick={() =>
-                                handleCopy(cliente.contato, cliente.id)
-                              }
+                      <td className="px-4 py-3">
+                        <div className="flex gap-2">
+                          {copiadoId === cliente.id ? (
+                            <div className="relative">
+                              <BookCheck className="w-4 h-4 text-green-500" />
+                              <p className="absolute -left-10 text-[10px]">
+                                Copiado
+                              </p>
+                            </div>
+                          ) : (
+                            <div>
+                              <Clipboard
+                                className="w-4 h-4 text-blue-600 cursor-pointer hover:opacity-75"
+                                onClick={() =>
+                                  handleCopy(cliente.contato, cliente.id)
+                                }
                               />
-                          </div>
-                        )}
-                        {cliente.contato}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">{cliente.frete}</td>
-                    <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
-                      <div className="flex flex-col">
-                        <p>{cliente.cep}</p>
-                        <p>{cliente.rua}</p>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">{cliente.observacao}</td>
-                    <td className="px-4 py-3">{cliente.empresas.map((e)=>(e.empresa.razao_social))}</td>
-                    <div className="p-2 items-center flex justify-center " onClick={()=>{setModalDelete(true),setClienteTrash([cliente])}}>
-                    <Trash className="size-5 text-primary"/>
-                    </div>
-                  </tr>
-                    {
-  openModalDelete&&
-  <ClienteDeletar cliente={clienteTrash} setModalDelete={setModalDelete}/>
-    
-}
-                        </>
-                  
-
+                            </div>
+                          )}
+                          {cliente.contato}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">{cliente.frete}</td>
+                      <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
+                        <div className="flex flex-col">
+                          <p>{cliente.cep}</p>
+                          <p>{cliente.rua}</p>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">{cliente.observacao}</td>
+                      <td className="px-4 py-3">
+                        {cliente.empresas.map((e) => e.empresa.razao_social)}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div
+                          className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
+                          onClick={() => {
+                            setModalEdit(true), setClienteEdit(cliente);
+                          }}
+                        >
+                          <Pencil className="size-5 text-white" />
+                        </div>
+                      </td>
+                    </tr>
+                  </>
                 ))
               ) : (
                 <tr>
@@ -267,7 +281,6 @@ export default function ClienteLista({ clientes,setOpenModalCliente }: ClienteLi
           text="Próximo"
         />
       </div>
-    
     </section>
   );
 }

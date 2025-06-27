@@ -38,6 +38,20 @@ export default function ProdutoFormVariacoes({
         ...novasVariacoes[idx],
         [name]: value, // name pode ser 'id' ou 'preco'
       };
+      
+      return {
+        ...prev,
+        variacoes: novasVariacoes,
+      };
+    });
+  }
+
+  function deletaVariacao(idx: number) {
+    setCurrentProduto((prev) => {
+      if (!prev) return prev;
+
+      const novasVariacoes = [...prev.variacoes];
+      novasVariacoes.splice(idx, 1);
 
       return {
         ...prev,
@@ -54,6 +68,7 @@ export default function ProdutoFormVariacoes({
             <SecondaryTitle title="Variações" />
           </li>
           {currentProduto?.variacoes.map((variacao, idx) => {
+            console.log("variacao", variacao);
             return (
               <li
                 key={idx}
@@ -62,7 +77,8 @@ export default function ProdutoFormVariacoes({
                 <span className="text-slate-700 text-sm "># {idx + 1}</span>
                 <Form.InputOptions
                   label="Variação"
-                  options={variacoes.map((variacao) => {
+                  options={
+                    variacoes.map((variacao) => {
                     return { label: variacao.nome, value: variacao.id };
                   })}
                   className="bg-white"
@@ -74,12 +90,12 @@ export default function ProdutoFormVariacoes({
                   label="Preço"
                   type="text"
                   placeholder="R$"
-                  name="preco"
+                  name="variacao_preco"
                   className="bg-white"
-                  value={currentProduto?.variacoes[idx].preco || ""}
+                  value={currentProduto?.variacoes[idx].variacao_preco || ""}
                   onChange={(e) => handleVariacaoChange(idx, e.target)}
                 />
-                <Trash2Icon className="mt-4 cursor-pointer hover:scale-102 transition-all text-primary" />
+                <Trash2Icon onClick={()=> deletaVariacao(idx)} className="mt-4 cursor-pointer hover:scale-102 transition-all text-primary" />
               </li>
             );
           })}

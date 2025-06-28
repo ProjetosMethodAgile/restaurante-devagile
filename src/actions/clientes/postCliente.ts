@@ -26,6 +26,8 @@ export async function postCliente(
     const estado = formData.get("estado") as string;
     const frete = formData.get("frete") as string;
     const observacao = formData.get("observacao") as string;
+    const empresaId = formData.get("empresaId") as string;
+
   
 
     if (!nome || !contato || !numero || !rua || !cidade || !estado || !frete) {  
@@ -46,10 +48,9 @@ export async function postCliente(
     }
     
     const user = jwt.decode(token) as tokenUserAuth;
-    const empresas = user.empresas ? JSON.stringify(user.empresas) : "[]";
-    const empresaIds = JSON.parse(empresas || "[]") as string[];
+  
     
-    if (empresaIds.length === 0) {
+    if (empresaId.length === 0) {
       return {
         errors: ["Nenhuma empresa selecionada."],
         msg_success: "",
@@ -88,11 +89,11 @@ export async function postCliente(
         estado,
         frete,
         observacao,
-        empresaIds: empresaIds
+        empresaIds: [empresaId]
       }),
     });
 
-   console.log("Response status:", response);
+   
    
     if (response.ok) {
       revalidateTag("clientes");

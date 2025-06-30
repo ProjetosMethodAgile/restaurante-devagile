@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ClientInfo from "./SelectClient/SelectClient";
+import ClientInfo from "../../Pedidos/SelectClient/SelectClient";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { ClienteBase } from "@/src/types/cliente/clientType";

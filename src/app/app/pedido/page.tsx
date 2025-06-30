@@ -1,8 +1,7 @@
 import getClientes from "@/src/actions/clientes/getClientes";
 import getProdutos from "@/src/actions/produtos/getProdutos";
-import SelectClient from "@/src/components/Main/NewPedido/SelectClient/SelectClient";
-import StepPedido from "@/src/components/Main/NewPedido/StepPedido/StepPedido";
-import { Form } from "@/src/components/UI/Form";
+import SelectClient from "@/src/components/Pedidos/SelectClient/SelectClient";
+import StepPedido from "@/src/components/Pedidos/StepPedido/StepPedido";
 
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import { ArrowLeft } from "lucide-react";

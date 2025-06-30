@@ -20,8 +20,8 @@ export default async function getClientes() {
         Authorization: `Bearer ${token}`,
       },
       next: {
-        tags:['clientes'],
-         revalidate: 60,
+        tags: ["clientes"],
+        revalidate: 60,
       },
     });
 
@@ -34,14 +34,15 @@ export default async function getClientes() {
     const { data: user } = await getUserId();
     const cookieStore = cookies();
     const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
-    const encontrada = user?.empresas.find((e) => e.empresa.id === empresaCookie);
+    const encontrada = user?.empresas.find(
+      (e) => e.empresa.id === empresaCookie
+    );
     const empresaid = encontrada?.empresa.id;
-    console.log(clientes);
-    
-const clientesFiltrados = clientes.filter(c =>
- c.empresas.some(e => e.empresa.id === empresaid)
-);
-    
+
+    const clientesFiltrados = clientes.filter((c) =>
+      c.empresas.some((e) => e.empresa.id === empresaid)
+    );
+
     return { data: clientesFiltrados };
   } catch (error) {
     console.log(error);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ClientInfo from "./ClienteInfos/ClienteInfo";
+import ClientInfo from "../../Pedidos/SelectClient/SelectClient";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { ClienteBase } from "@/src/types/cliente/clientType";
@@ -32,8 +32,8 @@ export default function NewOrderForm({
             transition={{ duration: 0.3 }}
             className="grid grid-cols-3 gap-4 py-4"
           >
-            <ClientInfo clientes={clientes} />
-            <ItensToOrder produtos={produtos} />
+            {/* <ClientInfo clientes={clientes} /> */}
+            {/* <ItensToOrder produtos={produtos} /> */}
           </motion.div>
         ) : (
           <motion.div

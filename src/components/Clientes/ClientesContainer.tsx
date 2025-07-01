@@ -36,7 +36,7 @@ export default function ClientesContainer({
         />
       </div>
       {openModalCliente && (
-        <div className=" flex backdrop-blur-xs absolute -top-20  h-[120vh] w-full justify-center items-start pt-25 ">
+        <div className=" flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[120vh] w-full justify-center items-start pt-25 z-999 ">
           <ClienteForm
             setOpenModalCliente={setOpenModalCliente}
             empresas={empresas}
@@ -44,7 +44,7 @@ export default function ClientesContainer({
         </div>
       )}
       {openModalEdit && (
-        <div className=" flex absolute -top-20  h-[120vh] w-full justify-center items-start pt-25 ">
+        <div className=" flex absolute -top-22   h-[120vh] w-full justify-center items-start pt-25  ">
           <ClienteAcoes cliente={clienteEdit} setModalEdit={setModalEdit} />
         </div>
       )}

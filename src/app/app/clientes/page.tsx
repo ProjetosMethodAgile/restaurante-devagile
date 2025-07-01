@@ -11,12 +11,15 @@ export default async function ClientePage() {
 
  const empresasVinculadasAoUsuario: EmpresaBase[] =
     user?.empresas?.map(e => e.empresa) ?? [];
+  const cookieStore = cookies();
+  const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
 
-
-    
+  const filterEmpresaNaoLogada = empresasVinculadasAoUsuario.filter((empresa)=>empresa.id !== empresaCookie )
+ 
+   
   return (
     <div className="relative" >
-      <ClientesContainer clientes={data} empresas={empresasVinculadasAoUsuario}/>
+      <ClientesContainer clientes={data} empresas={filterEmpresaNaoLogada}/>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 import { tokenUserAuth } from "../user/type/authType";
 import jwt from "jsonwebtoken";
+import { EmpresaBase } from "@/src/types/empresa/empresaType";
 
 
 export async function postCliente(
@@ -47,17 +48,11 @@ export async function postCliente(
       };
     }
     
-    const user = jwt.decode(token) as tokenUserAuth;
+
+
+  const cookieStore = cookies();
+  const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
   
-    
-    if (empresaId.length === 0) {
-      return {
-        errors: ["Nenhuma empresa selecionada."],
-        msg_success: "",
-        success: false,
-      };
-      
-    }
 
     if (!token) {
       return {
@@ -89,7 +84,7 @@ export async function postCliente(
         estado,
         frete,
         observacao,
-        empresaIds: [empresaId]
+        empresaIds: [empresaCookie,empresaId]
       }),
     });
 

@@ -1,6 +1,6 @@
 // src/components/Clientes/ComponenteClientes.tsx
 "use client";
-import ContainerClientes from "./ClientesLista_/ClientesLista";
+
 import React, { useState } from "react";
 import { ClienteBase } from "@/src/types/cliente/clientType";
 import ClienteForm from "./ClienteForm/ClienteForm";

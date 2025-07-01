@@ -140,7 +140,7 @@ export default function ClienteLista({
             <tbody className="divide-y divide-slate-100">
               {paginated && paginated.length > 0 ? (
                 paginated.map((cliente) => (
-                  <>
+                 
                     <tr
                       key={cliente.id}
                       className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s "
@@ -202,7 +202,7 @@ export default function ClienteLista({
                         </div>
                       </td>
                     </tr>
-                  </>
+                 
                 ))
               ) : (
                 <tr>

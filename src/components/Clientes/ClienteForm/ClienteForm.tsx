@@ -13,11 +13,28 @@ type ClienteFormProps = {
   empresas: EmpresaBase[];
   setOpenModalCliente: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+type ClienteForms = {
+  nome: string;
+  contato: string;
+  email: string;
+  cpf: string;
+  cep: string;
+  numero: string;
+  rua: string;
+  complemento: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  frete: string;
+  observacao: string;
+  empresaId: string[];
+};
 export default function ClienteForm({
   empresas,
   setOpenModalCliente,
 }: ClienteFormProps) {
-  const [form, setForm] = React.useState({
+  const [form, setForm] = React.useState<ClienteForms>({
     nome: "",
     contato: "",
     email: "",
@@ -31,12 +48,11 @@ export default function ClienteForm({
     estado: "",
     frete: "",
     observacao: "",
-    empresaId:""
+    empresaId: [],
   });
-  empresas.map((empresa)=>{
+  empresas.map((empresa) => {
     console.log(empresa);
-    
-  })
+  });
 
   const [state, formData, isPending] = React.useActionState(postCliente, {
     errors: [],
@@ -87,6 +103,17 @@ export default function ClienteForm({
       toast.error(state.errors);
     }
   }, [state]);
+
+ const handleEmpresaCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { value, checked } = e.currentTarget;
+  setForm(prev => ({
+    ...prev,
+    empresaId: checked
+      ? [...prev.empresaId, value]
+      : prev.empresaId.filter(id => id !== value),
+  }));
+};
+
   const handleCepBlur = async () => {
     if (!autoCepEnabled || !form.cep) return;
     const cep = form.cep.replace(/\D/g, ""); // Remove non-numeric characters
@@ -108,13 +135,8 @@ export default function ClienteForm({
       console.error("Erro ao buscar CEP:", error);
     }
   };
-   const empresasList: EmpresaBase[] = React.useMemo(
-    () =>
-      Array.isArray(empresas)
-        ? empresas
-        : empresas
-        ? [empresas]
-        : [],
+  const empresasList: EmpresaBase[] = React.useMemo(
+    () => (Array.isArray(empresas) ? empresas : empresas ? [empresas] : []),
     [empresas]
   );
 
@@ -148,26 +170,26 @@ export default function ClienteForm({
             Usar busca automática de CEP
           </label>
         </div>
-       <div className="col-span-1 flex flex-col">
-  <label htmlFor="empresa" className="text-gray-700 mb-1">
-    Quer cadastrar em outra empresa ?
+        <div className="col-span-1 flex flex-col ">
+          <label htmlFor="empresa" className="text-gray-700 mb-1 self-end">
+            Quer cadastrar em outra empresa ?
+          </label>
+          <div className="self-end overflow-y-scroll h-12">
+            {empresasList.map(emp => (
+  <label key={emp.id} className="flex items-center space-x-2">
+    <input
+     name="empresaIds" 
+      type="checkbox"
+      value={emp.id}
+      checked={form.empresaId.includes(emp.id)}
+      onChange={handleEmpresaCheck}
+      className="h-4 w-4 bg-secondary border-gray-300 rounded focus:ring-blue-500"
+    />
+    <span>{emp.razao_social}</span>
   </label>
-  <select
-   id="empresaId"
-    name="empresaId"
-    value={form.empresaId}
-    onChange={handleChange}
-    className="w-full border rounded px-3 py-2 bg-white"
-    
-  >
-    <option value="" disabled>-- escolha --</option>
-    {empresasList.map(e => (
-      <option key={e.id} value={e.id}>
-        {e.razao_social}
-      </option>
-    ))}
-  </select>
-</div>
+))}
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-3 gap-4">
         <Form.InputText

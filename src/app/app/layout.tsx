@@ -34,7 +34,7 @@ export default async function ProtectLayout({
   // 2) Verificar cookie "empresaStorage"
   const cookieStore = cookies();
   const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
-  console.log("aqui",empresaCookie);
+
   
   if (!empresaCookie) {
     redirect("/select-empresa");

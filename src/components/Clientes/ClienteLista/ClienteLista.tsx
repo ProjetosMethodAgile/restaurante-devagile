@@ -183,7 +183,11 @@ export default function ClienteLista({
                       <td className="px-4 py-3">
                         <ul className="list-disc list-inside overflow-y-auto flex justify-center flex-col">
                           {cliente.empresas.map((e) => (
-                            <li key={e.empresa.id}>{e.empresa.razao_social}</li>
+                            <li key={e.empresa.id}>
+                              {e.empresa.razao_social.length > 22
+                                ? e.empresa.razao_social.slice(0, 22) + "..."
+                                : e.empresa.razao_social}
+                            </li>
                           ))}
                         </ul>
                       </td>

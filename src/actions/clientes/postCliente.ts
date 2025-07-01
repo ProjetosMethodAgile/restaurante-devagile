@@ -2,10 +2,6 @@
 import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { tokenUserAuth } from "../user/type/authType";
-import jwt from "jsonwebtoken";
-import { EmpresaBase } from "@/src/types/empresa/empresaType";
-
 
 export async function postCliente(
   state:
@@ -14,10 +10,11 @@ export async function postCliente(
   formData: FormData
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   try {
+
     const nome = formData.get("nome") as string;
     const email = formData.get("email") as string;
     const contato = formData.get("contato") as string;
-    const cpf = formData.get("cpf") as string;  
+    const cpf = formData.get("cpf") as string;
     const cep = formData.get("cep") as string;
     const numero = formData.get("numero") as string;
     const rua = formData.get("rua") as string;
@@ -27,11 +24,11 @@ export async function postCliente(
     const estado = formData.get("estado") as string;
     const frete = formData.get("frete") as string;
     const observacao = formData.get("observacao") as string;
-    const empresaId = formData.get("empresaId") as string;
 
-  
+    const empresaIdsForm = formData.getAll("empresaIds") as string[]; 
 
-    if (!nome || !contato || !numero || !rua || !cidade || !estado || !frete) {  
+ 
+    if (!nome || !contato || !numero || !rua || !cidade || !estado || !frete) {
       return {
         errors: ["Preencha todos os campos obrigatórios."],
         msg_success: "",
@@ -39,6 +36,7 @@ export async function postCliente(
       };
     }
 
+   
     const token = (await cookies()).get("token")?.value;
     if (!token) {
       return {
@@ -47,29 +45,25 @@ export async function postCliente(
         success: false,
       };
     }
+
+    // empresa do cookie
+    const cookieStore = cookies();
+    const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
+
     
+    const empresaIds = [
+      empresaCookie,
+      ...empresaIdsForm,
+    ].filter((id): id is string => !!id);
 
 
-  const cookieStore = cookies();
-  const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
-  
-
-    if (!token) {
-      return {
-        errors: ["Usuário não autenticado"],
-        msg_success: "",
-        success: false,
-      };
-    }
-
-    const url = "http://localhost:3001/";
-    const response = await fetch(url + "cliente", {
+    const url = "http://localhost:3001/cliente";
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      
       body: JSON.stringify({
         nome,
         email,
@@ -84,12 +78,10 @@ export async function postCliente(
         estado,
         frete,
         observacao,
-        empresaIds: [empresaCookie,empresaId]
+        empresaIds,  
       }),
     });
 
-   
-   
     if (response.ok) {
       revalidateTag("clientes");
       return {

@@ -54,7 +54,7 @@ export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
         <div className="flex items-center gap-2">
           <BookOpen className="bg-primary p-2 text-white rounded-full size-10" />
           <h1 className="font-semibold text-2xl text-slate-900 whitespace-nowrap">
-            Bikeline {empresa && ` - ${empresa.razao_social}`}
+            Amalfis {empresa && ` - ${empresa.razao_social}`}
           </h1>
         </div>
 

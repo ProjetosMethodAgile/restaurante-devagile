@@ -31,7 +31,7 @@ export default function ClienteLista({
   clientes,
   setOpenModalCliente,
   setClienteEdit,
-  setModalEdit
+  setModalEdit,
 }: ClienteListaProps) {
   const [searchInput, setSearchInput] = useState("");
   const [copiadoId, setCopiadoId] = useState<string | null>(null);
@@ -181,7 +181,11 @@ export default function ClienteLista({
                       </td>
                       <td className="px-4 py-3">{cliente.observacao}</td>
                       <td className="px-4 py-3">
-                        {cliente.empresas.map((e) => e.empresa.razao_social)}
+                        <ul className="list-disc list-inside overflow-y-auto flex justify-center flex-col">
+                          {cliente.empresas.map((e) => (
+                            <li key={e.empresa.id}>{e.empresa.razao_social}</li>
+                          ))}
+                        </ul>
                       </td>
                       <td className="px-4 py-3">
                         <div

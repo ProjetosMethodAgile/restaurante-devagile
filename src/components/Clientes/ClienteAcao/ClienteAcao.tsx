@@ -115,7 +115,7 @@ async function handleAlteraCliente(id: string) {
   
 
   return (
-    <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-start pt-20 z-50 overflow-y-auto">
+    <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-start pt-20 z-50 overflow-y-auto   bg-black/70 ">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6">
         <div className="flex items-center mb-4">
           <div onClick={() => setModalEdit(false)} className="mr-4 cursor-pointer text-blue-800">

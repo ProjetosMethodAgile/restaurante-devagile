@@ -1,9 +1,8 @@
 import getClientes from "@/src/actions/clientes/getClientes";
 import getProdutos from "@/src/actions/produtos/getProdutos";
 import getUserId from "@/src/actions/user/getUserId";
-import SelectClient from "@/src/components/Pedidos/SelectClient/SelectClient";
-import StepPedido from "@/src/components/Pedidos/StepPedido/StepPedido";
-
+import PedidoWrapper from "@/src/components/Pedidos/PedidoWrapper";
+import { StepProvider } from "@/src/components/Pedidos/StepPedido/StepContext";
 import PrimaryTitle from "@/src/components/UI/PrimaryTitle";
 import { EmpresaBase } from "@/src/types/empresa/empresaType";
 import { ArrowLeft } from "lucide-react";
@@ -27,11 +26,13 @@ export default async function PedidoPage() {
         </Link>
         <PrimaryTitle title="Novo Pedido" />
       </div>
-      <div className="bg-white flex flex-col gap-6 p-6 rounded-xl shadow-md items-center lg:w-250 md:w-200 sm:w-100 m-auto">
-        <StepPedido currentStep={0} />
-        <SelectClient clientes={clientes} userEmpresas={userEmpresas} />
-        {/* <NewOrderForm clientes={clientes} produtos={produtos} /> */}
-      </div>
+
+      <StepProvider>
+        <div className="bg-white flex flex-col gap-6 p-6 rounded-xl shadow-md items-center lg:w-250 md:w-200 sm:w-100 m-auto">
+          <PedidoWrapper clientes={clientes} userEmpresas={userEmpresas} />
+          {/* <NewOrderForm clientes={clientes} produtos={produtos} /> */}
+        </div>
+      </StepProvider>
     </section>
   );
 }

@@ -6,6 +6,8 @@ import { PlusCircle, Search, X } from "lucide-react";
 import PrimaryButton from "../../UI/PrimaryButton";
 import ClienteForm from "../../Clientes/ClienteForm/ClienteForm";
 import { EmpresaBase } from "@/src/types/empresa/empresaType";
+import { useStep } from "../StepPedido/StepContext";
+import { motion } from "framer-motion";
 
 type ClientInfoProps = {
   clientes: ClienteBase[];
@@ -22,6 +24,7 @@ export default function SelectClient({
   const [currentClient, setCurrentClient] = useState<ClienteBase | null>(null);
   const [searchList, setSearchList] = useState<boolean>(false);
   const [openModalCliente, setOpenModalCliente] = useState(false);
+  const { setCurrentStep } = useStep();
 
   function buscaCliente(value: string) {
     setSearchTerm(value);
@@ -50,14 +53,23 @@ export default function SelectClient({
   }
 
   return (
-    <div className="lg:w-200 flex flex-col gap-4 relative">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      // className="w-full"
+      className="lg:w-200 flex flex-col gap-4 relative"
+    >
       <h3 className=" text-2xl font-semibold text-center text-black/80">
         Informe o Cliente
       </h3>
 
       <div className="relative">
         {searchTerm && (
-          <button
+          <motion.div
+            initial={{ opacity: 0, x: -2 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
             title="apagar texto"
             onClick={() => {
               setCurrentClient(null);
@@ -67,7 +79,7 @@ export default function SelectClient({
             className="text-primary absolute left-[-25] bottom-[7] cursor-pointer hover:text-700 hover:scale-110 transition-all duration-150"
           >
             <X />
-          </button>
+          </motion.div>
         )}
         <Form.InputText
           id="busca-cliente"
@@ -80,7 +92,11 @@ export default function SelectClient({
           onChange={(e) => buscaCliente(e.target.value)}
         />
         {searchList && (
-          <div className="absolute top-full mt-1 max-h-60 w-full overflow-y-auto rounded-lg bg-white shadow-md z-30">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-full mt-1 max-h-60 w-full overflow-y-auto rounded-lg bg-white shadow-md z-30"
+          >
             <ul>
               {filteredClientes.length > 0 ? (
                 filteredClientes.map((c) => (
@@ -117,7 +133,7 @@ export default function SelectClient({
                 </li>
               )}
             </ul>
-          </div>
+          </motion.div>
         )}
       </div>
 
@@ -126,7 +142,10 @@ export default function SelectClient({
         className="mt-4 p-4 bg-slate-50 rounded-lg shadow-md transition-opacity duration-500 ease-in-out"
       >
         {currentClient ? (
-          <>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
             <h4 className="mb-2 text-lg font-medium text-black/80">
               Detalhes do Cliente
             </h4>
@@ -151,13 +170,13 @@ export default function SelectClient({
             <p>
               <strong>Cep:</strong> {currentClient.cep}
             </p>
-          </>
+          </motion.div>
         ) : (
           <button
             className="cursor-pointer flex gap-1 ring-1 ring-inset  text-primary rounded-lg p-2 hover:ring-2 active:scale-95 transition-all duration-150 justify-self-center"
             onClick={() => setOpenModalCliente(true)}
           >
-            <PlusCircle className="" /> adicionar novo Cliente
+            <PlusCircle className="" /> Cadastrar novo Cliente
           </button>
         )}
       </div>
@@ -168,6 +187,7 @@ export default function SelectClient({
           !currentClient &&
           "bg-gray-400 cursor-not-allowed hover:bg-gray-400 active:scale-100"
         }`}
+        onClick={currentClient ? () => setCurrentStep(1) : undefined}
       />
       {openModalCliente && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
@@ -179,6 +199,6 @@ export default function SelectClient({
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

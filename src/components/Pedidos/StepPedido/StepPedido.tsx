@@ -1,14 +1,15 @@
 import React from "react";
+import { useStep } from "./StepContext";
 
-export type StepPedidoProps = React.ComponentProps<"div"> & {
-  currentStep: number;
-};
-
-export default function StepPedido({ currentStep }: StepPedidoProps) {
+export default function StepPedido() {
+  const { currentStep, setCurrentStep } = useStep();
   const steps = ["Cliente", "Produto", "Concluído"];
 
+  function changeStep(i: number) {
+    currentStep >= i && setCurrentStep(i);
+  }
   return (
-    <div className="flex flex-wrap gap-10 items-center mb-4 lg:w-125">
+    <div className="flex flex-wrap gap-10 items-center justify-center mb-4 ">
       {steps.map((label, i) => {
         const active = i <= currentStep;
         const completed = i < currentStep;
@@ -16,8 +17,11 @@ export default function StepPedido({ currentStep }: StepPedidoProps) {
           <React.Fragment key={i}>
             <div
               className={`w-8 h-8 flex items-center justify-center rounded-full text-sm font-bold ${
-                active ? "bg-primary text-white" : "bg-gray-200 text-gray-600"
+                active
+                  ? "bg-primary text-white cursor-pointer hover:scale-110 transition-all duration-200 "
+                  : "bg-gray-200 text-gray-600 cursor-default"
               }`}
+              onClick={() => changeStep(i)}
             >
               {i + 1}
             </div>

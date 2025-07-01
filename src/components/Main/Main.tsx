@@ -9,6 +9,7 @@ import OrdersList from "./Orders/List/OrdersList";
 import OrdersGrid from "./Orders/Grid/OrdersGrid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 export default function Main() {
   const [isGrid, setIsGrid] = useState(true);
   const router = useRouter();
@@ -33,7 +34,6 @@ export default function Main() {
           />
         </div>
       </header>
-
       <section className="my-4">
         <div className="flex items-center gap-4 justify-end *:active:translate-none *:hover:shadow-lg *:hover:-translate-y-0.5 *:transition-all  ">
           <LayoutGrid

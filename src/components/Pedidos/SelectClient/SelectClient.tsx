@@ -170,11 +170,13 @@ export default function SelectClient({
         }`}
       />
       {openModalCliente && (
-        <div className=" h-dvh backdrop-blur-xs absolute w-full justify-center items-start">
-          <ClienteForm
-            setOpenModalCliente={setOpenModalCliente}
-            empresas={userEmpresas}
-          />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-auto p-6">
+            <ClienteForm
+              setOpenModalCliente={setOpenModalCliente}
+              empresas={userEmpresas}
+            />
+          </div>
         </div>
       )}
     </div>

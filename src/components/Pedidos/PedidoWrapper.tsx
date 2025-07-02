@@ -17,12 +17,26 @@ export default function PedidoWrapper({
 }) {
   const { currentStep, setCurrentStep } = useStep();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0, scale: 0.8 }, // evite valores negativos em scale
+  };
   return (
     <div>
       <StepPedido />
       <AnimatePresence mode="wait">
         {currentStep === 0 && (
-          <SelectClient clientes={clientes} userEmpresas={userEmpresas} />
+          <motion.div
+            key="step-0"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            <SelectClient clientes={clientes} userEmpresas={userEmpresas} />
+          </motion.div>
         )}
         {currentStep === 1 && <AddProdutosPed />}
       </AnimatePresence>

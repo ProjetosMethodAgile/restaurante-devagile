@@ -21,10 +21,9 @@ export default function SelectClient({
   const [filteredClientes, setFilteredClientes] =
     useState<ClienteBase[]>(clientes);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [currentClient, setCurrentClient] = useState<ClienteBase | null>(null);
   const [searchList, setSearchList] = useState<boolean>(false);
   const [openModalCliente, setOpenModalCliente] = useState(false);
-  const { setCurrentStep } = useStep();
+  const { setCurrentStep, currentClient, setCurrentClient } = useStep();
 
   function buscaCliente(value: string) {
     setSearchTerm(value);
@@ -65,7 +64,7 @@ export default function SelectClient({
       </h3>
 
       <div className="relative">
-        {searchTerm && (
+        {(searchTerm || currentClient) && (
           <motion.div
             initial={{ opacity: 0, x: -2 }}
             animate={{ opacity: 1, x: 0 }}

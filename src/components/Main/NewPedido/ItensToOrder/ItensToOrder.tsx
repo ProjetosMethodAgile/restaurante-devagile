@@ -12,32 +12,20 @@ type ItensToOrderProps = {
 export default function ItensToOrder({ produtos }: ItensToOrderProps) {
   if (!produtos) return;
 
-  const [produtosToOrder, setProdutosToOrder] =
-    useState<ProdutoBase[]>(produtos);
+  const [produtosToOrder, setProdutosToOrder] = useState<ProdutoBase[]>();
 
   return (
     <section className="col-span-2">
-      <div className="flex items-center justify-between">
-        <SecondaryTitle title="Produtos" />
-        <SecondaryButton
-          text="Adicionar Produto"
-          icon={Plus}
-          className="bg-secondary text-white"
-        />
-      </div>
-      <div className="border-2 text-slate-500 mt-4 flex items-center flex-col justify-center border-slate-300 h-44 rounded-xl border-dotted">
-        <ShoppingBag />
-        <p className="text-sm">Nenhum produto adicionado ao pedido</p>
-        <span className="text-xs">
-          Clique em "+ Adicionar Produto" para começar
-        </span>
-      </div>
-     {/* <ItensAddModal produtos={produtos} /> */}
+      <div className="flex items-center justify-between"></div>
+      {/* <ItensAddModal produtos={produtos} />  */}
       <div className="mt-6">
         <ul className=" flex gap-4 flex-col">
-          {produtosToOrder?.map((produto) => {
+          {produtosToOrder?.map((produto, index) => {
             return (
-              <li className="text-sm grid rounded-xl grid-cols-2 justify-center border-[1px] border-slate-100 px-4 py-4">
+              <li
+                key={index}
+                className="text-sm grid rounded-xl grid-cols-2 justify-center border-[1px] border-slate-100 px-4 py-4"
+              >
                 <div className="flex flex-col">
                   <p className="font-medium">{produto.nome}</p>
                   <span className="text-slate-500 text-xs">

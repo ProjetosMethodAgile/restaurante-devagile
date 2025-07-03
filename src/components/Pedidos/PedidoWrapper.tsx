@@ -6,40 +6,27 @@ import SelectClient from "./SelectClient/SelectClient";
 import { useStep } from "./StepPedido/StepContext";
 import type { ClienteBase } from "@/src/types/cliente/clientType";
 import type { EmpresaBase } from "@/src/types/empresa/empresaType";
-import AddProdutosPed from "./AddProdutosPed/AddProdutosPed";
+import CraftPed from "./CraftPed/CraftPed";
+import { ProdutoBase } from "@/src/types/produto/produtoType";
 
 export default function PedidoWrapper({
   clientes,
   userEmpresas,
+  produtos,
 }: {
   clientes: ClienteBase[];
   userEmpresas: EmpresaBase[];
+  produtos: ProdutoBase[] | null;
 }) {
-  const { currentStep, setCurrentStep } = useStep();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    exit: { opacity: 0, scale: 0.8 }, // evite valores negativos em scale
-  };
   return (
-    <div>
-      <StepPedido />
-      <AnimatePresence mode="wait">
-        {currentStep === 0 && (
-          <motion.div
-            key="step-0"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={{ duration: 0.3 }}
-          >
-            <SelectClient clientes={clientes} userEmpresas={userEmpresas} />
-          </motion.div>
-        )}
-        {currentStep === 1 && <AddProdutosPed />}
-      </AnimatePresence>
+    <div className="mx-2">
+      <div className="bg-white flex flex-col gap-6 p-10 rounded-xl shadow-md container-global">
+        <div className="lg:w-200 m-auto">
+          <StepPedido />
+          <SelectClient clientes={clientes} userEmpresas={userEmpresas} />
+          {produtos && <CraftPed produtos={produtos} />}
+        </div>
+      </div>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import InfoCurrentClient from "./InfoCurrentClient/InfoCurrentClient";
 import ContainerCreateClient from "./ContainerCreateClient/ContainerCreateClient";
 import SearchClientInput from "./SearchClientInput/SearchClientInput";
+import PrimaryTitle from "../../UI/PrimaryTitle";
 
 type ClientInfoProps = {
   clientes: ClienteBase[];
@@ -34,9 +35,10 @@ export default function SelectClient({
           transition={{ duration: 0.3 }}
           className="flex flex-col gap-4 relative"
         >
-          <h3 className=" text-2xl font-semibold text-center text-black/80">
-            Informe o Cliente
-          </h3>
+          <PrimaryTitle
+            title="Informe o Cliente"
+            className=" text-2xl font-semibold text-center text-black/80"
+          />
           <SearchClientInput
             clientes={clientes}
             setOpenModalCreateCliente={setOpenModalCreateCliente}

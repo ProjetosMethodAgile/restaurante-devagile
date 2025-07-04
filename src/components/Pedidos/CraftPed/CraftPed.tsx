@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useStep } from "../StepPedido/StepContext";
 import InfoCurrentClient from "../SelectClient/InfoCurrentClient/InfoCurrentClient";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, ShoppingCart } from "lucide-react";
 import ItensToOrder from "../../Main/NewPedido/ItensToOrder/ItensToOrder";
 import { ProdutoBase } from "@/src/types/produto/produtoType";
 import { useState } from "react";
 import ModalAddItemsPed from "./ModalAddItemsPed/ModalAddItemsPed";
+import PrimaryTitle from "../../UI/PrimaryTitle";
 
 export type CraftPedProps = {
   produtos: ProdutoBase[] | null;
@@ -56,15 +57,24 @@ export default function CraftPed({ produtos }: CraftPedProps) {
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-slate-50 p-6 rounded shadow-md flex flex-col"
+              className="bg-slate-50 p-6 rounded shadow-md flex flex-col gap-4"
             >
-              <h1>Produtos</h1>
-              <button
-                className="self-center cursor-pointer flex gap-1 ring-1 ring-inset  text-primary rounded-lg p-2 hover:ring-2 active:scale-95 transition-all duration-150"
-                onClick={() => setopenAddProdModal(true)}
-              >
-                <PlusCircle className="" /> Adicionar items ao pedido
-              </button>
+              <div className="flex justify-between items-center">
+                <PrimaryTitle title="Produtos" className="mb-2 text-lg" />
+
+                <button
+                  className="self-center cursor-pointer flex gap-1 ring-1 ring-inset  text-primary rounded-lg p-2 hover:ring-2 active:scale-95 transition-all duration-150"
+                  onClick={() => setopenAddProdModal(true)}
+                >
+                  <PlusCircle className="" /> Adicionar items
+                </button>
+              </div>
+              <div className="bg-slate-100 rounded-md p-2">
+                <div className="flex flex-col justify-center items-center  p-2">
+                  <ShoppingCart className="size-10 text-gray-400" />
+                  <p className="text-gray-400">Nenhum item adicionado</p>
+                </div>
+              </div>
               <ItensToOrder produtos={produtos} />
               {/* adicionarei o itensOrder quando terminar a parte de inserir q é o modal */}
             </motion.div>
@@ -72,7 +82,10 @@ export default function CraftPed({ produtos }: CraftPedProps) {
         )}
       </AnimatePresence>
       {openAddProdModal && (
-        <ModalAddItemsPed setopenAddProdModal={setopenAddProdModal} />
+        <ModalAddItemsPed
+          setopenAddProdModal={setopenAddProdModal}
+          produtos={produtos}
+        />
       )}
     </>
   );

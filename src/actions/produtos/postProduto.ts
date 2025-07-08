@@ -21,6 +21,13 @@ export async function postProduto(
     const variacoesPrecos = formData.getAll("variacao_preco") as string[];
     let variacoes = [];
 
+    function parsePreco(preco: string): number {
+      if (!preco) return 0;
+      const clean = preco.replace(/[R$\s.]/g, "").replace(",", ".");
+      return parseFloat(clean) || 0;
+    }
+
+
     if (tipoProduto === "unico") {
       if (precoBase === "0" || precoBase === "") {
         return {
@@ -31,7 +38,7 @@ export async function postProduto(
       }
       variacoes.push({
         variacao_id: "587893e5-f7f9-43a2-865e-7ba84ba519a3",
-        preco: +precoBase || 0,
+        preco: parsePreco(precoBase)
       });
     }
 
@@ -39,7 +46,7 @@ export async function postProduto(
       const variacoesObj = variacoesIds.map((id, index) => {
         return {
           variacao_id: id,
-          preco: +variacoesPrecos[index] || 0,
+          preco: parsePreco(variacoesPrecos[index]) || 0,
         };
       });
       variacoes = variacoesObj;

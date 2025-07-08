@@ -4,14 +4,16 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Form } from "../../UI/Form";
 import SecondaryTitle from "../../UI/SecondaryTitle";
 import { CategoriaBase } from "@/src/types/categoria/categoriaType";
-import { ProdutoBase } from "@/src/types/produto/produtoType";
 import { currentProdutoType } from "./ProdutoForm";
+import { NumericFormat } from "react-number-format";
 
 type ProdutoInfoFormProps = {
   categorias: CategoriaBase[] | [];
   currentProduto: currentProdutoType | null;
   setCurrentProduto: Dispatch<SetStateAction<currentProdutoType | null>>;
 };
+
+
 
 export default function ProdutoInfoForm({
   categorias,
@@ -21,6 +23,8 @@ export default function ProdutoInfoForm({
   const isTipoProduto = (tipo: any): tipo is "unico" | "variavel" => {
     return tipo === "unico" || tipo === "variavel";
   };
+
+
   return (
     <div className="border-b border-slate-200 py-4">
       <SecondaryTitle title="Informações Basicas" />
@@ -49,16 +53,28 @@ export default function ProdutoInfoForm({
           }}
         />
 
-        <Form.InputText
-          label="Preço Base"
-          type="text"
-          placeholder="R$"
+        <NumericFormat
+          label={`Preço ${currentProduto?.tipo_produto === 'variavel' ? '*Defina nas variações' : ''}`}
+          customInput={Form.InputText}
           name="preco_base"
+          placeholder="R$ 0,00"
+          thousandSeparator="."
+          decimalSeparator=","
+          prefix="R$ "
+          decimalScale={2}
+          fixedDecimalScale
+          allowNegative={false}
           value={currentProduto?.preco || ""}
-          onChange={(e) => {
+          onValueChange={(values) => {
             if (!currentProduto) return;
-            setCurrentProduto({ ...currentProduto, preco: e.target.value });
+
+            setCurrentProduto({
+              ...currentProduto,
+              preco: values.value,
+            });
+            console.log(currentProduto)
           }}
+          disabled={currentProduto?.tipo_produto === 'variavel'}
         />
 
         <Form.InputOptions

@@ -11,8 +11,8 @@ import ProdutoInfoForm from "./ProdutoInfoForm";
 import ProdutoFormVariacoes from "./ProdutoFormVariacoes";
 import { ProdutoFormSubmit } from "./ProdutoFormSubmit";
 import { ProdutoBase } from "@/src/types/produto/produtoType";
-import { EmpresaBase } from "@/src/types/empresa/empresaType";
 import { patchProduto } from "@/src/actions/produtos/patchProduto";
+import { NumericFormat } from 'react-number-format';
 
 type ProdutoFormType = {
   categorias: CategoriaBase[] | [];
@@ -26,7 +26,9 @@ export type currentProdutoType = {
   nome: string;
   descricao: string;
   preco: string;
-  categoria_id: string;
+  categorias: {
+    categoria: CategoriaBase
+  }[];
   tipo_produto: "unico" | "variavel";
   id: string;
   variacoes: {
@@ -54,7 +56,10 @@ export default function ProdutoForm({
       id: editData?.id || "",
       nome: editData?.nome || "",
       descricao: editData?.descricao || "",
-      categoria_id: editData?.categorias?.[0]?.id || "",
+      categorias:
+        editData?.categorias?.map((categoria) => ({
+          categoria: categoria,
+        })) || [],
       tipo_produto: isTipoProduto(editData?.tipo) ? editData!.tipo : "unico",
       codigo: editData?.codigo || "",
       preco:

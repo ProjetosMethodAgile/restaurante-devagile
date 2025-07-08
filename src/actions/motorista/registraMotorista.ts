@@ -2,8 +2,6 @@
 import apiError from "../errors/apiError";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { tokenUserAuth } from "../user/type/authType";
-import jwt from "jsonwebtoken";
 
 export async function postMotorista(
   state:
@@ -12,16 +10,13 @@ export async function postMotorista(
   formData: FormData
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   try {
+    // 1) Extrai todos os campos do FormData
     const nome = formData.get("nome") as string;
-    const email = formData.get("email") as string;
-    const contato = formData.get("contato") as string;
     const cpf = formData.get("cpf") as string;
     const rg = formData.get("rg") as string;
     const dataNascimento = formData.get("dataNascimento") as string;
-    const numeroCnh = formData.get("numeroCnh") as string;
-    const categoriaCnh = formData.get("categoria") as string;
-    const dataEmissaoCnh = formData.get("emissaocnh") as string;
-    const dataValidadeCnh = formData.get("validadecnh") as string;
+    const contato = formData.get("contato") as string;
+    const email = formData.get("email") as string;
     const cep = formData.get("cep") as string;
     const numero = formData.get("numero") as string;
     const rua = formData.get("rua") as string;
@@ -29,10 +24,16 @@ export async function postMotorista(
     const bairro = formData.get("bairro") as string;
     const cidade = formData.get("cidade") as string;
     const estado = formData.get("estado") as string;
-    const frete = formData.get("frete") as string;
     const observacao = formData.get("observacao") as string;
+    const numeroCnh = formData.get("numeroCnh") as string;
+    const categoria = formData.get("categoria") as string;
+    const emissaocnh = formData.get("emissaocnh") as string;
+    const validadecnh = formData.get("validadecnh") as string;
+    const logradouro = formData.get("logradouro") as string;
 
-    if (!nome || !contato || !numero || !rua || !cidade || !estado || !frete) {
+    if (
+      !nome
+    ) {
       return {
         errors: ["Preencha todos os campos obrigatórios."],
         msg_success: "",
@@ -40,76 +41,70 @@ export async function postMotorista(
       };
     }
 
-    const token = (await cookies()).get("token")?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
     if (!token) {
       return {
-        errors: ["Usuário não autenticado"],
+        errors: ["Usuário não autenticado."],
         msg_success: "",
         success: false,
       };
     }
+    const empresaCookie = cookieStore.get("empresaStorage")?.value;
+console.log(empresaCookie);
+   const empresaIds = [
+      empresaCookie,
+    ].filter((id): id is string => !!id);
 
-    const user = jwt.decode(token) as tokenUserAuth;
-    const empresas = user.empresas ? JSON.stringify(user.empresas) : "[]";
-    const empresaIds = JSON.parse(empresas || "[]") as string[];
-    if (empresaIds.length === 0) {
-      return {
-        errors: ["Nenhuma empresa selecionada."],
-        msg_success: "",
-        success: false,
-      };
-    }
+console.log(empresaIds);
 
-    const url = "http://localhost:3001/";
-    const response = await fetch(url + "cliente", {
+    const response = await fetch("http://localhost:3001/motorista", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nomeCompleto: nome,
-        email,
-        telefone: contato,
+        nome,
         cpf,
         rg,
         dataNascimento,
-        numeroCNH: numeroCnh,
-        categoriaCNH: categoriaCnh,
-        dataEmissaoCNH: dataEmissaoCnh,
-        dataValidadeCNH: dataValidadeCnh,
-        endereco: {
-          logradouro: rua,
-          numero,
-          complemento,
-          bairro,
-          cidade,
-          estado,
-          cep,
-        },
-        frete: Number(frete),
+        contato,
+        email,
+        cep,
+        numero,
+        rua,
+        complemento,
+        bairro,
+        cidade,
+        estado,
         observacao,
+        numeroCnh,
+        categoria,
+        emissaocnh,
+        validadecnh,
+        logradouro,
         empresaIds,
       }),
     });
 
-    console.log("Response status:", response.status);
+
     if (response.ok) {
-      revalidateTag("clientes");
+      revalidateTag("motorista");
       return {
         success: true,
         errors: [],
-        msg_success: "Cliente cadastrado com sucesso.",
+        msg_success: "Motorista cadastrado com sucesso.",
       };
     } else {
       return {
         success: false,
-        errors: ["Erro ao cadastrar cliente."],
+        errors: ["Erro ao cadastrar motorista."],
         msg_success: "",
       };
     }
   } catch (error) {
     apiError(error);
-    throw new Error("Ocorreu um erro, tente novamente.");
+    throw new Error("Ocorreu um erro inesperado, tente novamente.");
   }
 }

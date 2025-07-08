@@ -26,6 +26,8 @@ export type ContainerMotoristaProps = {
   motoristas: MotoristaBase[];
   setAlteraMotorista: React.Dispatch<React.SetStateAction<string>>;
   setEdita?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenModalMotorista: React.Dispatch<React.SetStateAction<boolean>>;
+
   edita?: boolean;
 dataAlteraMotorista?: string;
 };

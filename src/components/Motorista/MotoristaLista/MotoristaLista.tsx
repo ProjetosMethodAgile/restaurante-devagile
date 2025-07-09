@@ -1,4 +1,5 @@
 import { SetStateAction, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import GenericSearch from "../../UI/GenericSearch";
 import { MotoristaBase } from "@/src/types/motorista/motoristaType";
 import {
@@ -37,7 +38,15 @@ export default function MotoristaLista({
   const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
     "lista"
   );
+  const motionProps = {
+    containerVariants: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+      exit: { opacity: 0 },
+    }
 
+
+  }
   const filteredmotoristas = motoristas
 
     .filter((item) => !item.deletado)
@@ -260,7 +269,14 @@ export default function MotoristaLista({
         </div>
       ) : (
         // Modo em cards
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+        <motion.div
+         key="card"
+        variants={motionProps.containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        transition={{ when: "beforeChildren", staggerChildren: 0.2 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {paginated && paginated.length > 0 ? (
             paginated.map((motorista) => (
               <div
@@ -308,7 +324,7 @@ export default function MotoristaLista({
               Nenhum motorista cadastrado
             </div>
           )}
-        </div>
+        </motion.div>
       )}
       <div className="flex justify-center items-center space-x-2 mt-4">
         <SecondaryButton

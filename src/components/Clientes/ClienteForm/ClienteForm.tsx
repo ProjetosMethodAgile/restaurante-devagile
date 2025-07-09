@@ -77,19 +77,14 @@ export default function ClienteForm({
     resetaForms();
   }, [isPending]);
 
-
-  
   useEffect(() => {
-    if(state.success){
-      toast.success("Cadastro realizado com sucesso")
+    if (state.success) {
+      toast.success("Cadastro realizado com sucesso");
     }
-    if(state.errors){
-      toast.error("Erro ao cadastrar o motorista")
+    if (state.errors.length) {
+      toast.error("Erro ao cadastrar o motorista");
     }
   }, [state]);
-
-
-
 
   function resetaForms() {
     setForm((prev) => ({
@@ -110,24 +105,15 @@ export default function ClienteForm({
     }));
   }
 
-  useEffect(() => {
-    if (state.msg_success) {
-      toast.success(state.msg_success);
-    }
-    if (state.errors.length) {
-      toast.error(state.errors);
-    }
-  }, [state]);
-
- const handleEmpresaCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { value, checked } = e.currentTarget;
-  setForm(prev => ({
-    ...prev,
-    empresaId: checked
-      ? [...prev.empresaId, value]
-      : prev.empresaId.filter(id => id !== value),
-  }));
-};
+  const handleEmpresaCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.currentTarget;
+    setForm((prev) => ({
+      ...prev,
+      empresaId: checked
+        ? [...prev.empresaId, value]
+        : prev.empresaId.filter((id) => id !== value),
+    }));
+  };
 
   const handleCepBlur = async () => {
     if (!autoCepEnabled || !form.cep) return;
@@ -190,19 +176,19 @@ export default function ClienteForm({
             Quer cadastrar em outra empresa ?
           </label>
           <div className="self-end overflow-y-scroll h-12">
-            {empresasList.map(emp => (
-  <label key={emp.id} className="flex items-center space-x-2">
-    <input
-     name="empresaIds" 
-      type="checkbox"
-      value={emp.id}
-      checked={form.empresaId.includes(emp.id)}
-      onChange={handleEmpresaCheck}
-      className="h-4 w-4 bg-secondary border-gray-300 rounded focus:ring-blue-500"
-    />
-    <span>{emp.razao_social}</span>
-  </label>
-))}
+            {empresasList.map((emp) => (
+              <label key={emp.id} className="flex items-center space-x-2">
+                <input
+                  name="empresaIds"
+                  type="checkbox"
+                  value={emp.id}
+                  checked={form.empresaId.includes(emp.id)}
+                  onChange={handleEmpresaCheck}
+                  className="h-4 w-4 bg-secondary border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span>{emp.razao_social}</span>
+              </label>
+            ))}
           </div>
         </div>
       </div>

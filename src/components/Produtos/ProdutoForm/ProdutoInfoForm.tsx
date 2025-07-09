@@ -6,14 +6,13 @@ import SecondaryTitle from "../../UI/SecondaryTitle";
 import { CategoriaBase } from "@/src/types/categoria/categoriaType";
 import { currentProdutoType } from "./ProdutoForm";
 import { NumericFormat } from "react-number-format";
+import { X } from "lucide-react";
 
 type ProdutoInfoFormProps = {
   categorias: CategoriaBase[] | [];
   currentProduto: currentProdutoType | null;
   setCurrentProduto: Dispatch<SetStateAction<currentProdutoType | null>>;
 };
-
-
 
 export default function ProdutoInfoForm({
   categorias,
@@ -23,7 +22,6 @@ export default function ProdutoInfoForm({
   const isTipoProduto = (tipo: any): tipo is "unico" | "variavel" => {
     return tipo === "unico" || tipo === "variavel";
   };
-
 
   return (
     <div className="border-b border-slate-200 py-4">
@@ -54,7 +52,11 @@ export default function ProdutoInfoForm({
         />
 
         <NumericFormat
-          label={`Preço ${currentProduto?.tipo_produto === 'variavel' ? '*Defina nas variações' : ''}`}
+          label={`Preço ${
+            currentProduto?.tipo_produto === "variavel"
+              ? "*Defina nas variações"
+              : ""
+          }`}
           customInput={Form.InputText}
           name="preco_base"
           placeholder="R$ 0,00"
@@ -72,26 +74,21 @@ export default function ProdutoInfoForm({
               ...currentProduto,
               preco: values.value,
             });
-            console.log(currentProduto)
+            console.log(currentProduto);
           }}
-          disabled={currentProduto?.tipo_produto === 'variavel'}
+          disabled={currentProduto?.tipo_produto === "variavel"}
         />
 
-        <Form.InputOptions
-          label="Categoria"
-          name="categoria"
-          options={categorias.map((categoria) => {
-            return { label: categoria.nome, value: categoria.id };
+        <div className="flex items-start gap-2">
+          {categorias.map((cat) => {
+            return (
+              <span className="bg-green-300 border-green-400 border-1 font-medium flex rounded-2xl gap-2 items-center py-1 px-2">
+                <X className="size-5 cursor-pointer border-1 border-green-200 hover:scale-103 rounded-full bg-green-900 text-white p-1" />{" "}
+                {cat.nome}
+              </span>
+            );
           })}
-          onChange={(e) => {
-            if (!currentProduto) return;
-            setCurrentProduto({
-              ...currentProduto,
-              categoria_id: e.target.value,
-            });
-          }}
-          value={currentProduto?.categoria_id || ""}
-        />
+        </div>
 
         <Form.InputText
           label={`Descrição do produto (${currentProduto?.descricao.length}/80)`}

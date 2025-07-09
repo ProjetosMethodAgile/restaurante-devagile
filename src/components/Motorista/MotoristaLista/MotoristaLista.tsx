@@ -9,9 +9,12 @@ import {
   Pencil,
   Plus,
   Settings,
+  TriangleAlert,
   User,
 } from "lucide-react";
 import SecondaryButton from "../../UI/SecondaryButton";
+import { isExpired } from "../MotoristaAcoes/contract/verificaValidade";
+import { formatDateToView } from "@/src/utils/ConverteData";
 type MotoristaProps = {
   motoristas: MotoristaBase[];
   setOpenModalMotorista: React.Dispatch<SetStateAction<boolean>>;
@@ -34,6 +37,7 @@ export default function MotoristaLista({
   const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
     "lista"
   );
+
   const filteredmotoristas = motoristas
 
     .filter((item) => !item.deletado)
@@ -119,16 +123,17 @@ export default function MotoristaLista({
         </button>
       </div>
       {modoVisualizacao === "lista" ? (
-        <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white ">
+        <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white   ">
           <table className="min-w-full text-sm text-left ">
-            <thead className="bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider">
+            <thead className="bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider  ">
               <tr>
                 <th className="px-4 py-3">Nome</th>
-                <th className="px-4 py-3">Contato</th>
+                <th className="px-4 py-5">Contato</th>
+                <th className="px-4 py-3">Email</th>
                 <th className="px-4 py-3">CNH</th>
+                <th className="px-4 py-3">Validade CNH</th>
                 <th className="px-4 py-3">Endereço</th>
                 <th className="px-4 py-3">Observação</th>
-                <th className="px-4 py-3">Empresa cadastrada</th>
                 <th className="px-4 py-3">Data de Nascimento</th>
                 <th className="px-4 py-3">
                   <Settings />
@@ -140,15 +145,30 @@ export default function MotoristaLista({
                 paginated.map((motorista) => (
                   <tr
                     key={motorista.id}
-                    className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s "
+                    className={`${
+                      isExpired(motorista.validadecnh)
+                        ? "bg-red-50 text-red-900 "
+                        : ""
+                    }hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s`}
                   >
-                    <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap" onClick={()=>handleActiveEdit(motorista)}>
-                      <User className="w-4 h-4 text-blue-600" />
-                      {motorista.nome}
+                    <td
+                      className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap relative"
+                      onClick={() => handleActiveEdit(motorista)}
+                    >
+                      <>
+                        {isExpired(motorista.validadecnh) ? (
+                          <TriangleAlert className=" animate-pulse text-red-900 " />
+                        ) : (
+                         
+                        <User className="w-4 h-4 text-blue-600" />
+                        )}
+
+                      </>
+                        {motorista.nome.length> 20?motorista.nome.slice(0,20)+"...":motorista.nome}
                     </td>
 
                     <td className="px-4 py-3">
-                      <div className="flex gap-2">
+                      <div className="flex flex-nowrap whitespace-nowrap gap-2">
                         {copiadoId === motorista.id ? (
                           <div className="relative">
                             <BookCheck className="w-4 h-4 text-green-500" />
@@ -159,27 +179,60 @@ export default function MotoristaLista({
                         ) : (
                           <div>
                             <Clipboard
-                              className="w-4 h-4 text-blue-600 cursor-pointer hover:opacity-75"
+                              className="w-4 h-4  text-blue-600 cursor-pointer hover:opacity-75"
                               onClick={() =>
                                 handleCopy(motorista.contato, motorista.id)
                               }
                             />
                           </div>
                         )}
-
-                        {motorista.contato}
+                        <p className="text-[12px]">{motorista.contato}</p>
                       </div>
                     </td>
-                    <td className="px-4 py-3">{motorista.numeroCnh}</td>
+
+                    <td
+                      className="px-4 py-3"
+                      onClick={() => handleActiveEdit(motorista)}
+                    >
+                      {motorista.email.length > 20
+                        ? motorista.email.slice(0, 20)+"..."
+                        : motorista.email}
+                    </td>
                     <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
                       <div className="flex flex-col">
-                        <p>{motorista.cep}</p>
-                        <p>{motorista.rua}</p>
+                        <p className="flex flex-col ">
+                          <strong>Numero CNH</strong>
+                          {motorista.numeroCnh}
+                        </p>
                       </div>
                     </td>
-                    <td className="px-4 py-3">{motorista.observacao}</td>
-                    <td className="px-4 py-3">{motorista.observacao}</td>
-                    <td className="px-4 py-3">{motorista.dataNascimento}</td>
+                    <td
+                      className={`relative  px-4 py-3`}
+                      onClick={() => handleActiveEdit(motorista)}
+                    >
+                      {formatDateToView(motorista.validadecnh)}
+                      <br></br>
+                      {isExpired(motorista.validadecnh) ? <p>Renovação</p> : ""}
+                    </td>
+                    <td
+                      className="px-4 py-3"
+                      onClick={() => handleActiveEdit(motorista)}
+                    >
+                      {motorista.logradouro}
+                    </td>
+                    <td className="px-4 py-3 ">
+                      <div className="w-35">
+                        {motorista.observacao.length > 50
+                          ? motorista.observacao.slice(0, 20)+"..."
+                          : motorista.observacao}
+                      </div>
+                    </td>
+                    <td
+                      className="px-4 py-3"
+                      onClick={() => handleActiveEdit(motorista)}
+                    >
+                      {formatDateToView(motorista.dataNascimento)}
+                    </td>
                     <td className="px-4 py-3">
                       <div
                         className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
@@ -212,14 +265,23 @@ export default function MotoristaLista({
             paginated.map((motorista) => (
               <div
                 key={motorista.id}
-                className="bg-white  rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:scale-101 cursor-pointer"
+                className={` rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:scale-101 cursor-pointer ${
+                  isExpired(motorista.validadecnh) ? "bg-red-50 " : "bg-white "
+                }`}
+                onClick={() => handleActiveEdit(motorista)}
               >
-                <div className="flex items-center p-3 gap-2 mb-2 font-semibold text-base bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider">
-                  <User className="text-blue-600 w-5 h-5" />
+                <div className={`flex items-center p-3 gap-2 mb-2 font-semibold text-base ${isExpired(motorista.validadecnh)?"bg-red-100":"bg-slate-50"}  border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider`}>
+                 {isExpired(motorista.validadecnh)? <TriangleAlert className="animate-pulse text-red-900"/>:<User className="text-blue-600 w-5 h-5" />}
                   {motorista.nome}
                 </div>
-                <div className="text-sm mb-1  text-gray-600 pl-4 ">
-                  {motorista.contato}
+                <div className="text-sm mb-1  text-gray-600 pl-4">
+                  Contato: {motorista.contato}
+                </div>
+                <div className="text-sm mb-1  text-gray-600 pl-4">
+                  CNH: {motorista.numeroCnh}
+                </div>
+                <div className={`text-sm mb-1  text-gray-600 pl-4  ${isExpired(motorista.validadecnh)?"text-red-800":""}`}>
+                  Validade: {formatDateToView(motorista.validadecnh)}
                 </div>
                 <div className="text-sm mb-1  text-gray-600 pl-4 ">
                   Cep: {motorista.cep}
@@ -233,7 +295,7 @@ export default function MotoristaLista({
                 <div className="text-sm mb-1  text-gray-600 pl-4 ">
                   Complemento: {motorista.complemento}
                 </div>
-                <div className="text-sm mb-1  text-gray-600 pl-4 ">Frete:</div>
+                <div className="text-sm mb-1  text-gray-600 pl-4 "></div>
                 <div className="text-sm text-gray-600 mb-2 pl-4">
                   Observação: {motorista.observacao}
                 </div>

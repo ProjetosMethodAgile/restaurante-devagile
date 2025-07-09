@@ -15,8 +15,7 @@ export default function MotoristaContainer({ motoristas }: MotoristaProps) {
   const [motoristaEdit, setMotoristaEdit] = useState<MotoristaBase>();
   const [openModalEdit, setModalEdit] = useState<boolean>(false);
 
-
-  
+const motoristaAtivo = motoristas.filter((motorista)=> motorista.deletado === false)   
   return (
     <section className="">
       <div className="flex items-center gap-4 container-global m-4 ">
@@ -24,7 +23,7 @@ export default function MotoristaContainer({ motoristas }: MotoristaProps) {
       </div>
       <div className="m-4 bg-white flex min-h-[100vh] flex-col gap-6 p-6 rounded-xl container-global shadow-md overflow- ">
         <MotoristaLista
-          motoristas={motoristas}
+          motoristas={motoristaAtivo}
           setOpenModalMotorista={setOpenModalMotorista}
           setMotoristaEdit={setMotoristaEdit}
           setModalEdit={setModalEdit}

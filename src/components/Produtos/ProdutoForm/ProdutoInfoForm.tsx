@@ -4,8 +4,10 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Form } from "../../UI/Form";
 import SecondaryTitle from "../../UI/SecondaryTitle";
 import { CategoriaBase } from "@/src/types/categoria/categoriaType";
-import { ProdutoBase } from "@/src/types/produto/produtoType";
 import { currentProdutoType } from "./ProdutoForm";
+import { NumericFormat } from "react-number-format";
+import { X } from "lucide-react";
+import ProdutoCategoriaForm from "./ProdutoCategoriaForm";
 
 type ProdutoInfoFormProps = {
   categorias: CategoriaBase[] | [];
@@ -21,6 +23,7 @@ export default function ProdutoInfoForm({
   const isTipoProduto = (tipo: any): tipo is "unico" | "variavel" => {
     return tipo === "unico" || tipo === "variavel";
   };
+
   return (
     <div className="border-b border-slate-200 py-4">
       <SecondaryTitle title="Informações Basicas" />
@@ -49,33 +52,31 @@ export default function ProdutoInfoForm({
           }}
         />
 
-        <Form.InputText
-          label="Preço Base"
-          type="text"
-          placeholder="R$"
+        <NumericFormat
+          label={`Preço ${currentProduto?.tipo_produto === "variavel"
+            ? "*Defina nas variações"
+            : ""
+            }`}
+          customInput={Form.InputText}
           name="preco_base"
+          placeholder="R$ 0,00"
+          thousandSeparator="."
+          decimalSeparator=","
+          prefix="R$ "
+          decimalScale={2}
+          fixedDecimalScale
+          allowNegative={false}
           value={currentProduto?.preco || ""}
-          onChange={(e) => {
-            if (!currentProduto) return;
-            setCurrentProduto({ ...currentProduto, preco: e.target.value });
-          }}
-        />
-
-        <Form.InputOptions
-          label="Categoria"
-          name="categoria"
-          options={categorias.map((categoria) => {
-            return { label: categoria.nome, value: categoria.id };
-          })}
-          onChange={(e) => {
+          onValueChange={(values) => {
             if (!currentProduto) return;
             setCurrentProduto({
               ...currentProduto,
-              categoria_id: e.target.value,
+              preco: values.value,
             });
           }}
-          value={currentProduto?.categoria_id || ""}
+          disabled={currentProduto?.tipo_produto === "variavel"}
         />
+
 
         <Form.InputText
           label={`Descrição do produto (${currentProduto?.descricao.length}/80)`}
@@ -106,6 +107,7 @@ export default function ProdutoInfoForm({
             });
           }}
         />
+        <ProdutoCategoriaForm currentProduto={currentProduto} categorias={categorias} setCurrentProduto={setCurrentProduto} />
       </div>
     </div>
   );

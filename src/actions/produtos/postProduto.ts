@@ -12,7 +12,7 @@ export async function postProduto(
   try {
     const nome = formData.get("nome") as string;
     const descricao = formData.get("descricao") as string;
-    const categoria = formData.get("categoria") as string;
+    const categorias = formData.get("categorias") as string;
     const empresas = formData.get("empresaIds") as string;
     const empresaIds = JSON.parse(empresas || "[]") as string[];
     const tipoProduto = formData.get("tipo_produto") as string;
@@ -20,6 +20,14 @@ export async function postProduto(
     const variacoesIds = formData.getAll("variacao_id") as string[];
     const variacoesPrecos = formData.getAll("variacao_preco") as string[];
     let variacoes = [];
+    const categoriaIds: string[] = JSON.parse(categorias);
+
+    function parsePreco(preco: string): number {
+      if (!preco) return 0;
+      const clean = preco.replace(/[R$\s.]/g, "").replace(",", ".");
+      return parseFloat(clean) || 0;
+    }
+
 
     if (tipoProduto === "unico") {
       if (precoBase === "0" || precoBase === "") {
@@ -31,7 +39,7 @@ export async function postProduto(
       }
       variacoes.push({
         variacao_id: "587893e5-f7f9-43a2-865e-7ba84ba519a3",
-        preco: +precoBase || 0,
+        preco: parsePreco(precoBase)
       });
     }
 
@@ -39,7 +47,7 @@ export async function postProduto(
       const variacoesObj = variacoesIds.map((id, index) => {
         return {
           variacao_id: id,
-          preco: +variacoesPrecos[index] || 0,
+          preco: parsePreco(variacoesPrecos[index]) || 0,
         };
       });
       variacoes = variacoesObj;
@@ -85,7 +93,7 @@ export async function postProduto(
         nome,
         descricao,
         empresaIds,
-        categoryIds: [categoria],
+        categoryIds: categoriaIds,
         variacoes,
         tipo: tipoProduto,
       }),

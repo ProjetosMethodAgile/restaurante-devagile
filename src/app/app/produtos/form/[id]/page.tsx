@@ -16,7 +16,7 @@ export default async function ProdutoFormUpdatePage({params}: AtualizarProdutosP
   const produto = await (await getProdutoId((await params).id)).data; 
   if (!categorias) return <p className="text-red-500">Não foi possivel obter os categorias</p>;
   if (!variacoes) return <p className="text-red-500">Não foi possivel obter os variacoes</p>;
- 
+  
   return (
     <section>
       <div className="flex items-center gap-4 container-global m-4">

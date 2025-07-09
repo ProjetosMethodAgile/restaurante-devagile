@@ -11,7 +11,6 @@ import ProdutoInfoForm from "./ProdutoInfoForm";
 import ProdutoFormVariacoes from "./ProdutoFormVariacoes";
 import { ProdutoFormSubmit } from "./ProdutoFormSubmit";
 import { ProdutoBase } from "@/src/types/produto/produtoType";
-import { EmpresaBase } from "@/src/types/empresa/empresaType";
 import { patchProduto } from "@/src/actions/produtos/patchProduto";
 
 type ProdutoFormType = {
@@ -26,7 +25,7 @@ export type currentProdutoType = {
   nome: string;
   descricao: string;
   preco: string;
-  categoria_id: string;
+  categorias: CategoriaBase[];
   tipo_produto: "unico" | "variavel";
   id: string;
   variacoes: {
@@ -48,13 +47,14 @@ export default function ProdutoForm({
   editData = null,
   isEditMode = false,
 }: ProdutoFormType) {
+  console.log(editData)
 
   const [currentProduto, setCurrentProduto] =
     useState<currentProdutoType | null>({
       id: editData?.id || "",
       nome: editData?.nome || "",
       descricao: editData?.descricao || "",
-      categoria_id: editData?.categorias?.[0]?.id || "",
+      categorias: editData?.categorias || [],
       tipo_produto: isTipoProduto(editData?.tipo) ? editData!.tipo : "unico",
       codigo: editData?.codigo || "",
       preco:
@@ -70,6 +70,7 @@ export default function ProdutoForm({
           };
         }) || [],
     });
+
   const [variacoesData, setVariacoesData] = useState<VariacaoState[] | []>([
     {
       variacao_preco: "",
@@ -175,6 +176,11 @@ export default function ProdutoForm({
 
       <input type="hidden" name="default_variacao_id" value={""} />
       <input type="hidden" name="produto_id" value={editData?.id} />
+      <input
+        type="hidden"
+        name="categorias"
+        value={JSON.stringify(currentProduto?.categorias.map((c) => c.id) ?? [])}
+      />
     </Form.Root>
   );
 }

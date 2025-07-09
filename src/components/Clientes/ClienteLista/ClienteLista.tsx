@@ -1,14 +1,11 @@
 "use client";
 import { ClienteBase } from "@/src/types/cliente/clientType";
 import {
-  ArrowLeft,
-  ArrowRight,
   BookCheck,
   Clipboard,
   LayoutGrid,
   LayoutList,
-  Package2,
-  Pen,
+
   Pencil,
   Plus,
   Settings,
@@ -16,11 +13,8 @@ import {
   User,
 } from "lucide-react";
 import { SetStateAction, useEffect, useState } from "react";
-import ClienteFiltro from "./ClienteFiltro";
 import SecondaryButton from "../../UI/SecondaryButton";
-import ClienteForm from "../ClienteForm/ClienteForm";
-import ClienteDeletar from "../ClienteAcao/ClienteAcao";
-import ClienteAcoes from "../ClienteAcao/ClienteAcao";
+import GenericSearch from "../../UI/GenericSearch";
 type ClienteListaProps = {
   clientes: ClienteBase[];
   setOpenModalCliente: React.Dispatch<SetStateAction<boolean>>;
@@ -82,7 +76,7 @@ export default function ClienteLista({
 
   return (
     <section className="w-full px-4 py-4 relative ">
-      <ClienteFiltro
+      <GenericSearch
         setSearchInput={setSearchInput}
         searchInput={searchInput}
         setSearchTerm={setSearchTerm}

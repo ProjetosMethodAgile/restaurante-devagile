@@ -1,252 +1,280 @@
-
-"use client";
-import { Form } from "@/src/components/UI/Form";
-import { useState, useEffect,  MouseEvent } from "react";
-import { Search } from "lucide-react";
-import SecondaryButton from "../../UI/SecondaryButton";
-import { deletaClientePorID } from "@/src/actions/clientes/deletaClientePorID";
-import { toast } from "react-toastify";
-import { scrollToSection } from "@/src/utils/ScrollFocus";
+import { SetStateAction, useEffect, useState } from "react";
+import GenericSearch from "../../UI/GenericSearch";
 import { MotoristaBase } from "@/src/types/motorista/motoristaType";
-import { ContainerMotoristaProps } from "@/src/types/motorista/motoristaType";
-
-export type ComponenteClientesState = MotoristaBase & {
-  status: boolean;
-  __editIdx?: number;
+import {
+  BookCheck,
+  Clipboard,
+  LayoutGrid,
+  LayoutList,
+  Pencil,
+  Plus,
+  Settings,
+  User,
+} from "lucide-react";
+import SecondaryButton from "../../UI/SecondaryButton";
+type MotoristaProps = {
+  motoristas: MotoristaBase[];
+  setOpenModalMotorista: React.Dispatch<SetStateAction<boolean>>;
+  setModalEdit: React.Dispatch<SetStateAction<boolean>>;
+  setMotoristaEdit: React.Dispatch<SetStateAction<MotoristaBase | undefined>>;
 };
-
-
 export default function MotoristaLista({
- setAlteraMotorista,
-  setEdita,
   motoristas,
-}: ContainerMotoristaProps) {
-  const [searchInput, setSearchInput] = useState("");
+  setOpenModalMotorista,
+  setModalEdit,
+  setMotoristaEdit,
+}: MotoristaProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<MotoristaBase | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const pageSize = 5;
+  const [copiadoId, setCopiadoId] = useState<string | null>(null);
+  const [searchInput, setSearchInput] = useState("");
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value);
-  };
-  const handleSearchClick = () => {
-    setIsLoading(true);
-    setSearchTerm(searchInput);
-    setCurrentPage(0);
-  };
+  const pageSize = 5;
+  const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
+    "lista"
+  );
+  const filteredmotoristas = motoristas
+
+    .filter((item) => !item.deletado)
+
+    .filter((item) => {
+      if (!searchTerm) return true;
+      const onlyDigits = /^\d+$/.test(searchTerm);
+      if (onlyDigits) {
+        const phone = (item.contato ?? "").replace(/\D/g, "");
+        return phone.includes(searchTerm);
+      }
+      return item.nome.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
+  const totalPages = Math.ceil(filteredmotoristas.length / pageSize);
+  const paginated = filteredmotoristas.slice(
+    currentPage * pageSize,
+    currentPage * pageSize + pageSize
+  );
+  async function handleCopy(contato: string, id: string) {
+    try {
+      await navigator.clipboard.writeText(contato);
+      setCopiadoId(id);
+      setTimeout(() => setCopiadoId(null), 1500);
+    } catch (err) {
+      console.error("Erro ao copiar:", err);
+    }
+  }
   const goToPage = (page: number) => {
     setIsLoading(true);
     setCurrentPage(page);
   };
 
-  const filtraMotorista = 
-    motoristas.filter(item => item.deletado === false)
-  motoristas.filter((item) => {
-    if (!searchTerm) return true;
-    const onlyDigits = /^\d+$/.test(searchTerm);
-    if (onlyDigits) {
-      const phone = (item.contato ?? "").replace(/\D/g, "");
-      return phone.includes(searchTerm);
-    }
-    return item.nome.toLowerCase().includes(searchTerm.toLowerCase());
-  });
-
-  const totalPages = Math.ceil(filtraMotorista.length / pageSize);
-  const paginated = filtraMotorista.slice(
-    currentPage * pageSize,
-    currentPage * pageSize + pageSize
-  );
-
   useEffect(() => {
     if (isLoading) setIsLoading(false);
   }, [paginated, isLoading]);
+  console.log(paginated);
 
-  async function handleAlterMotorista(id: string) {
-    setEdita?.(true);
-    if (id) {
-      setAlteraMotorista(id);
-    }
+  function handleActiveEdit(motorista: MotoristaBase) {
+    setModalEdit(true);
+    setMotoristaEdit(motorista);
   }
-
-  async function confirmDelete() {
-    if (!deleteTarget) return;
-    setIsDeleting(true);
-    try {
-      await deletaClientePorID(deleteTarget.id);
-      toast.success(`Motorista ${deleteTarget.nome} deletado com sucesso`);
-      setDeleteTarget(null);
-    } catch (error) {
-      toast.error("Falha ao deletar motorista. Tente novamente.");
-    } finally {
-      setIsDeleting(false);
-    }
-  }
-
   return (
-    <section className="flex flex-col h-full">
-      <div className="flex flex-col md:flex-row items-center gap-2 p-4 bg-white sticky top-0 z-10">
-        <Form.InputText
-          type="text"
-          placeholder="Buscar por nome ou telefone"
-          id="search"
-          value={searchInput}
-          onChange={handleSearchInputChange}
-          icon={Search}
-          className="w-full md:flex-1"
+    <section className="w-full px-4 py-4 relative ">
+      <GenericSearch
+        setSearchInput={setSearchInput}
+        searchInput={searchInput}
+        setSearchTerm={setSearchTerm}
+        setIsLoading={setIsLoading}
+        setCurrentPage={setCurrentPage}
+      />
+
+      <div className="flex  w-full justify-start gap-2">
+        <SecondaryButton
+          className="bg-secondary text-white justify-self-end mb-5"
+          text="Adicionar"
+          icon={Plus}
+          onClick={() => setOpenModalMotorista(true)}
         />
         <button
-          type="button"
-          onClick={handleSearchClick}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          onClick={() =>
+            setModoVisualizacao((prev) =>
+              prev === "lista" ? "cards" : "lista"
+            )
+          }
+          className="flex items-center
+        gap-2 text-sm px-4 py-2 mb-5
+        bg-primary cursor-pointer
+        hover:bg-primary/90
+        transition-all text-white rounded-lg  justify-self-end"
         >
-          Buscar
+          {modoVisualizacao === "lista" ? (
+            <>
+              <LayoutGrid size={16} />
+              Visualizar em cards
+            </>
+          ) : (
+            <>
+              <LayoutList size={16} />
+              Visualizar em lista
+            </>
+          )}
         </button>
       </div>
+      {modoVisualizacao === "lista" ? (
+        <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white ">
+          <table className="min-w-full text-sm text-left ">
+            <thead className="bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider">
+              <tr>
+                <th className="px-4 py-3">Nome</th>
+                <th className="px-4 py-3">Contato</th>
+                <th className="px-4 py-3">CNH</th>
+                <th className="px-4 py-3">Endereço</th>
+                <th className="px-4 py-3">Observação</th>
+                <th className="px-4 py-3">Empresa cadastrada</th>
+                <th className="px-4 py-3">Data de Nascimento</th>
+                <th className="px-4 py-3">
+                  <Settings />
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {paginated && paginated.length > 0 ? (
+                paginated.map((motorista) => (
+                  <tr
+                    key={motorista.id}
+                    className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s "
+                  >
+                    <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap" onClick={()=>handleActiveEdit(motorista)}>
+                      <User className="w-4 h-4 text-blue-600" />
+                      {motorista.nome}
+                    </td>
 
-      <p className="px-4 py-2 text-text-primary">
-        Motoristas cadastrados: {filtraMotorista.length}
-      </p>
+                    <td className="px-4 py-3">
+                      <div className="flex gap-2">
+                        {copiadoId === motorista.id ? (
+                          <div className="relative">
+                            <BookCheck className="w-4 h-4 text-green-500" />
+                            <p className="absolute -left-10 text-[10px]">
+                              Copiado
+                            </p>
+                          </div>
+                        ) : (
+                          <div>
+                            <Clipboard
+                              className="w-4 h-4 text-blue-600 cursor-pointer hover:opacity-75"
+                              onClick={() =>
+                                handleCopy(motorista.contato, motorista.id)
+                              }
+                            />
+                          </div>
+                        )}
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
-        {isLoading ? (
-          <div className="flex justify-center py-8">
-            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : (
-          <>
-            <ul className="space-y-3">
-              {paginated.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="bg-white rounded border border-gray-200 overflow-hidden"
-                >
-                  <div className="flex justify-between items-center bg-gray-100 px-4 py-2">
-                    <div>
-                      <span className="font-medium text-gray-800">
-                        {item.nome}
-                      </span>
-                      {item.contato && (
-                        <span className="block text-sm text-gray-600">
-                          Contato: {item.contato}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex space-x-2">
-                      <SecondaryButton
-                        className="bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                        text="Editar"
-                        onClick={(e: MouseEvent<HTMLElement>) => {
-                          handleAlterMotorista(item.id),
-                            scrollToSection(e, "formulario");
+                        {motorista.contato}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">{motorista.numeroCnh}</td>
+                    <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
+                      <div className="flex flex-col">
+                        <p>{motorista.cep}</p>
+                        <p>{motorista.rua}</p>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">{motorista.observacao}</td>
+                    <td className="px-4 py-3">{motorista.observacao}</td>
+                    <td className="px-4 py-3">{motorista.dataNascimento}</td>
+                    <td className="px-4 py-3">
+                      <div
+                        className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
+                        onClick={() => {
+                          setModalEdit(true), setMotoristaEdit(motorista);
                         }}
-                      />
-                      <SecondaryButton
-                        className="bg-red-500 text-white rounded hover:bg-red-600 transition"
-                        text="Excluir"
-                        onClick={(e: MouseEvent<HTMLElement>) => {
-                          setDeleteTarget(item);
-                          scrollToSection(e, "formulario");
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="px-4 py-3 space-y-1">
-                    <p className="text-sm text-gray-700">
-                      Endereço: {item.rua}, {item.numero}{" "}
-                      {item.complemento && `- ${item.complemento}`},{" "}
-                      {item.bairro}
-                    </p>
-                    <p className="text-sm text-gray-700">
-                      Cidade/Estado: {item.cidade}/{item.estado}
-                    </p>
-                    <p className="text-sm text-gray-700">CEP: {item.cep}</p>
-                    <p className="text-sm text-gray-700">
-                      Frete: R$ 
-                    </p>
-                    {item.email && (
-                      <p className="text-sm text-gray-700">
-                        Email: {item.email}
-                      </p>
-                    )}
-                    {item.cpf && (
-                      <p className="text-sm text-gray-700">CPF: {item.cpf}</p>
-                    )}
-                    {item.observacao && (
-                      <p className="text-sm text-gray-700">
-                        Observação: {item.observacao}
-                      </p>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex justify-center items-center space-x-2 mt-4">
-              <SecondaryButton
-                disabled={currentPage === 0}
-                onClick={() => goToPage(currentPage - 1)}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                text="Anterior"
-              />
-
-              {Array.from({ length: totalPages }).map((_, page) => (
-                <button
-                  key={page}
-                  onClick={() => goToPage(page)}
-                  className={`px-3 py-1 rounded ${
-                    page === currentPage
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-100"
-                  }`}
-                >
-                  {page + 1}
-                </button>
-              ))}
-
-              <SecondaryButton
-                disabled={currentPage === totalPages - 1}
-                onClick={() => goToPage(currentPage + 1)}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                text="Próximo"
-              />
-            </div>
-          </>
-        )}
-      </div>
-
-      {deleteTarget && (
-        <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-9999 ">
-          <div className="bg-white rounded-lg p-6 w-80">
-            <h2 className="text-lg font-semibold mb-4">Confirmação</h2>
-            <p className="mb-6">
-              Tem certeza que deseja excluir{" "}
-              <strong>{deleteTarget.nome}</strong>?
-            </p>
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={() => setDeleteTarget(null)}
-                disabled={isDeleting}
-                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition disabled:opacity-50"
+                      >
+                        <Pencil className="size-5 text-white" />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-4 py-6 text-center text-gray-500"
+                  >
+                    Nenhum motorista cadastrado
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        // Modo em cards
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+          {paginated && paginated.length > 0 ? (
+            paginated.map((motorista) => (
+              <div
+                key={motorista.id}
+                className="bg-white  rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all hover:scale-101 cursor-pointer"
               >
-                Cancelar
-              </button>
-              <button
-                onClick={() => confirmDelete()}
-                disabled={isDeleting}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition disabled:opacity-50 flex items-center"
-              >
-                {isDeleting && (
-                  <span className="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4" />
-                )}
-                Confirmar
-              </button>
+                <div className="flex items-center p-3 gap-2 mb-2 font-semibold text-base bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider">
+                  <User className="text-blue-600 w-5 h-5" />
+                  {motorista.nome}
+                </div>
+                <div className="text-sm mb-1  text-gray-600 pl-4 ">
+                  {motorista.contato}
+                </div>
+                <div className="text-sm mb-1  text-gray-600 pl-4 ">
+                  Cep: {motorista.cep}
+                </div>
+                <div className="text-sm mb-1  text-gray-600 pl-4 ">
+                  Bairro: {motorista.bairro}
+                </div>
+                <div className="text-sm mb-1 text-gray-600 pl-4 ">
+                  {motorista.rua}
+                </div>
+                <div className="text-sm mb-1  text-gray-600 pl-4 ">
+                  Complemento: {motorista.complemento}
+                </div>
+                <div className="text-sm mb-1  text-gray-600 pl-4 ">Frete:</div>
+                <div className="text-sm text-gray-600 mb-2 pl-4">
+                  Observação: {motorista.observacao}
+                </div>
+
+                <div className="flex flex-col gap-1 mt-2"></div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500">
+              Nenhum motorista cadastrado
             </div>
-          </div>
+          )}
         </div>
       )}
+      <div className="flex justify-center items-center space-x-2 mt-4">
+        <SecondaryButton
+          disabled={currentPage === 0}
+          onClick={() => goToPage(currentPage - 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          text="Anterior"
+        />
+
+        {Array.from({ length: totalPages }).map((_, page) => (
+          <button
+            key={page}
+            onClick={() => goToPage(page)}
+            className={`px-3 py-1 rounded ${
+              page === currentPage ? "bg-blue-500 text-white" : "bg-gray-100"
+            }`}
+          >
+            {page + 1}
+          </button>
+        ))}
+
+        <SecondaryButton
+          disabled={currentPage === totalPages - 1}
+          onClick={() => goToPage(currentPage + 1)}
+          className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+          text="Próximo"
+        />
+      </div>
     </section>
   );
 }

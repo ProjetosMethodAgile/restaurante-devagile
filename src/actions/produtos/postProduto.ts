@@ -12,7 +12,7 @@ export async function postProduto(
   try {
     const nome = formData.get("nome") as string;
     const descricao = formData.get("descricao") as string;
-    const categoria = formData.get("categoria") as string;
+    const categorias = formData.get("categorias") as string;
     const empresas = formData.get("empresaIds") as string;
     const empresaIds = JSON.parse(empresas || "[]") as string[];
     const tipoProduto = formData.get("tipo_produto") as string;
@@ -20,6 +20,7 @@ export async function postProduto(
     const variacoesIds = formData.getAll("variacao_id") as string[];
     const variacoesPrecos = formData.getAll("variacao_preco") as string[];
     let variacoes = [];
+    const categoriaIds: string[] = JSON.parse(categorias);
 
     function parsePreco(preco: string): number {
       if (!preco) return 0;
@@ -92,7 +93,7 @@ export async function postProduto(
         nome,
         descricao,
         empresaIds,
-        categoryIds: [categoria],
+        categoryIds: categoriaIds,
         variacoes,
         tipo: tipoProduto,
       }),

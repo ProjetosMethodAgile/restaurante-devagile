@@ -7,6 +7,7 @@ import { CategoriaBase } from "@/src/types/categoria/categoriaType";
 import { currentProdutoType } from "./ProdutoForm";
 import { NumericFormat } from "react-number-format";
 import { X } from "lucide-react";
+import ProdutoCategoriaForm from "./ProdutoCategoriaForm";
 
 type ProdutoInfoFormProps = {
   categorias: CategoriaBase[] | [];
@@ -52,11 +53,10 @@ export default function ProdutoInfoForm({
         />
 
         <NumericFormat
-          label={`Preço ${
-            currentProduto?.tipo_produto === "variavel"
-              ? "*Defina nas variações"
-              : ""
-          }`}
+          label={`Preço ${currentProduto?.tipo_produto === "variavel"
+            ? "*Defina nas variações"
+            : ""
+            }`}
           customInput={Form.InputText}
           name="preco_base"
           placeholder="R$ 0,00"
@@ -69,26 +69,14 @@ export default function ProdutoInfoForm({
           value={currentProduto?.preco || ""}
           onValueChange={(values) => {
             if (!currentProduto) return;
-
             setCurrentProduto({
               ...currentProduto,
               preco: values.value,
             });
-            console.log(currentProduto);
           }}
           disabled={currentProduto?.tipo_produto === "variavel"}
         />
 
-        <div className="flex items-start gap-2">
-          {categorias.map((cat) => {
-            return (
-              <span className="bg-green-300 border-green-400 border-1 font-medium flex rounded-2xl gap-2 items-center py-1 px-2">
-                <X className="size-5 cursor-pointer border-1 border-green-200 hover:scale-103 rounded-full bg-green-900 text-white p-1" />{" "}
-                {cat.nome}
-              </span>
-            );
-          })}
-        </div>
 
         <Form.InputText
           label={`Descrição do produto (${currentProduto?.descricao.length}/80)`}
@@ -119,6 +107,7 @@ export default function ProdutoInfoForm({
             });
           }}
         />
+        <ProdutoCategoriaForm currentProduto={currentProduto} categorias={categorias} setCurrentProduto={setCurrentProduto} />
       </div>
     </div>
   );

@@ -70,6 +70,7 @@ export default function ProdutoForm({
           };
         }) || [],
     });
+
   const [variacoesData, setVariacoesData] = useState<VariacaoState[] | []>([
     {
       variacao_preco: "",
@@ -175,6 +176,11 @@ export default function ProdutoForm({
 
       <input type="hidden" name="default_variacao_id" value={""} />
       <input type="hidden" name="produto_id" value={editData?.id} />
+      <input
+        type="hidden"
+        name="categorias"
+        value={JSON.stringify(currentProduto?.categorias.map((c) => c.id) ?? [])}
+      />
     </Form.Root>
   );
 }

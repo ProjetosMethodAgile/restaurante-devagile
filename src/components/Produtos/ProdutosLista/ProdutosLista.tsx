@@ -60,7 +60,7 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
               <tr>
                 <th className="px-4 py-3">Produto</th>
                 <th className="px-4 py-3">Código</th>
-                <th className="px-4 py-3">Tipo</th>
+                <th className="px-4 py-3">Categorias</th>
                 <th className="px-4 py-3">Descrição</th>
                 <th className="px-4 py-3">Variações</th>
               </tr>
@@ -80,19 +80,10 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
                     <td className="px-4 py-3 text-gray-500">
                       {produto.codigo}
                     </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={clsx(
-                          "inline-block px-2 py-1 text-xs font-semibold rounded-full",
-                          produto.tipo === "ativo"
-                            ? "bg-green-100 text-green-800"
-                            : produto.tipo === "inativo"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-gray-100 text-gray-700"
-                        )}
-                      >
-                        {produto.tipo}
-                      </span>
+                    <td className="px-4 py-3 text-xs flex gap-2 flex-wrap">
+                      {produto.categorias.map((c) => {
+                        return <span className="py-1 font-medium text-slate-800 px-2 rounded-xl" style={{ backgroundColor: c.cor_hex }}>{c.nome}</span>
+                      })}
                     </td>
                     <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
                       {produto.descricao || (
@@ -161,8 +152,8 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
                       produto.tipo === "ativo"
                         ? "bg-green-100 text-green-800"
                         : produto.tipo === "inativo"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-gray-100 text-gray-700"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-gray-100 text-gray-700"
                     )}
                   >
                     {produto.tipo}

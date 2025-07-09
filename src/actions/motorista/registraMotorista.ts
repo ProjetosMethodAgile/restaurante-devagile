@@ -56,7 +56,7 @@ console.log(empresaCookie);
       empresaCookie,
     ].filter((id): id is string => !!id);
 
-console.log(empresaIds);
+
 
     const response = await fetch("http://localhost:3001/motorista", {
       method: "POST",

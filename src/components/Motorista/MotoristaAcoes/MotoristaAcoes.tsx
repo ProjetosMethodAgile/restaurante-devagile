@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   AtSign,
   Blocks,
+  BookCheck,
   Building2,
   FileDigit,
   IdCard,
@@ -13,6 +14,7 @@ import {
   PenLine,
   Phone,
   Radar,
+  TriangleAlert,
   User,
 } from "lucide-react";
 import React, { useState } from "react";
@@ -22,6 +24,10 @@ import { deletaMotoristaPorID } from "@/src/actions/motorista/deletaMotoristaPor
 import { validaAlteracao } from "./contract/validaCampo";
 import { alterarMotoristaPorID } from "@/src/actions/motorista/alterarMotoristaPorID";
 import { MotoristaBase } from "@/src/types/motorista/motoristaType";
+import { isExpired } from "./contract/verificaValidade";
+import { formatDateToView } from "@/src/utils/ConverteData";
+import { formatCNH, formatCPF } from "@/src/utils/FormataVisualizacaoDoc";
+import { formatRG } from './../../../utils/FormataVisualizacaoDoc';
 
 // Recebe um único motorista
 interface motoristaAcoesProps {
@@ -37,9 +43,9 @@ export default function MotoristaAcoes({
   const [disableBtn, setdisableBtn] = useState(false);
   const [form, setForm] = React.useState({
     nome: motorista.nome || "",
-    cpf: motorista.cpf || "",
-    rg: motorista.rg || "",
-    dataNascimento: motorista.dataNascimento || "",
+    cpf: formatCPF(motorista.cpf) || "",
+    rg: formatRG(motorista.rg) || "",
+    dataNascimento: formatDateToView(motorista.dataNascimento) || "",
     contato: motorista.contato || "",
     email: motorista.email || "",
     cep: motorista.cep || "",
@@ -50,10 +56,10 @@ export default function MotoristaAcoes({
     cidade: motorista.cidade || "",
     estado: motorista.estado || "",
     observacao: motorista.observacao || "",
-    numeroCnh: motorista.numeroCnh || "",
     categoria: motorista.categoria || "",
-    emissaocnh: motorista.emissaocnh || "",
-    validadecnh: motorista.validadecnh || "",
+    emissaocnh:formatDateToView(motorista.emissaocnh) || "",
+    numeroCnh: formatCNH(motorista.numeroCnh) || "",
+    validadecnh: formatDateToView(motorista.validadecnh) || "",
     logradouro: motorista.logradouro || "",
   });
 
@@ -141,8 +147,7 @@ export default function MotoristaAcoes({
           className="col-span-4 w-full"
           onChange={handleChange}
         />
-        {/* Nome */}
-        {/* CPF, RG, Data de nascimento */}
+    
         <Form.InputText
           id="cpf"
           name="cpf"
@@ -197,8 +202,9 @@ export default function MotoristaAcoes({
           id="validadecnh"
           name="validadecnh"
           value={form.validadecnh}
+          icon={isExpired(form.validadecnh)?TriangleAlert:BookCheck }
           placeholder="Validade CNH"
-          className="col-span-1"
+          className={`${isExpired(form.validadecnh)?" bg-red-100 rounded-[5px] text-red-900 animate-pulse    outline-red-900":""}col-span-1 `}
           onChange={handleChange}
         />
 
@@ -277,7 +283,17 @@ export default function MotoristaAcoes({
           className="col-span-1"
           onChange={handleChange}
         />
+        
+    {/* Observação */}
+    <Form.InputText
+      id="observacao" name="observacao"
+      value={form.observacao}
+      placeholder="Observação (opcional)"
+      className="col-span-3"
+      onChange={handleChange}
+    />
       </Form.Root>
+      
       <div className="mt-6 flex justify-end gap-4">
         <button
           className={`px-6 py-2 rounded ${

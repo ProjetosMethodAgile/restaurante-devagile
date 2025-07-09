@@ -51,7 +51,7 @@ export async function deletaMotoristaPorID(id: string) {
 
 
 // 
-    const response = await fetch(url + `motorista/${id}`, {
+    const response = await fetch(url + `motorista/${id}/desactivate`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -65,16 +65,16 @@ export async function deletaMotoristaPorID(id: string) {
 
    
     if (response.ok) {
-      revalidateTag("clientes");
+      revalidateTag("motorista");
       return {
         success: true,
         errors: [],
-        msg_success: "Cliente deletado com sucesso.",
+        msg_success: "Motorista deletado com sucesso.",
       };
     } else {
       return {
         success: false,
-        errors: ["Erro ao deletar cliente."],
+        errors: ["Erro ao deletar motorista."],
         msg_success: "",
       };
     }

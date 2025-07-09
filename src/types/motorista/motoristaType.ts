@@ -20,6 +20,11 @@ export type MotoristaBase = {
   validadecnh: string;
   logradouro:string;
   deletado:boolean;
+  empresas: [{empresa:{
+    id:string,
+razao_social:string
+  }
+  }]
 };
 
 export type ContainerMotoristaProps = {

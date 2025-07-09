@@ -1,8 +1,8 @@
-import React from "react";
-import { Form } from "../../UI/Form";
 import { Search } from "lucide-react";
+import { Form } from "./Form";
 
-type PropsFiltroClientes = {
+
+type PropsFiltroBusca = {
   searchInput: string;
   setSearchInput: React.Dispatch<React.SetStateAction<string>>;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
@@ -10,13 +10,13 @@ type PropsFiltroClientes = {
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function ClienteFiltro({
+export default function GenericSearch({
   setSearchInput,
   searchInput,
   setSearchTerm,
   setIsLoading,
   setCurrentPage,
-}: PropsFiltroClientes) {
+}: PropsFiltroBusca) {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
   };

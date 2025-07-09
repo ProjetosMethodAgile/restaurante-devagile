@@ -20,12 +20,19 @@ export type MotoristaBase = {
   validadecnh: string;
   logradouro:string;
   deletado:boolean;
+  empresas: [{empresa:{
+    id:string,
+razao_social:string
+  }
+  }]
 };
 
 export type ContainerMotoristaProps = {
   motoristas: MotoristaBase[];
   setAlteraMotorista: React.Dispatch<React.SetStateAction<string>>;
   setEdita?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenModalMotorista: React.Dispatch<React.SetStateAction<boolean>>;
+
   edita?: boolean;
 dataAlteraMotorista?: string;
 };

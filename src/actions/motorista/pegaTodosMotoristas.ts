@@ -38,11 +38,17 @@ export default async function getMotoristas() {
       const message = await res.text();
       return { data: [], error: `Erro ao buscar Motorista: ${message}` };
     }
-    const produtos = (await res.json()) as MotoristaBase[];
-    if (produtos.length < 1)
+    const motoristas = (await res.json()) as MotoristaBase[];
+    if (motoristas.length < 1)
       return { data: [], error: "Motorista não encontrados" };
 
-    return { data: produtos, error: "" };
+    const motoristasFiltrados = motoristas.filter(m =>
+      m.empresas.some(e => e.empresa.id === empresaId)
+    );
+   
+
+
+    return { data: motoristasFiltrados, error: "" };
   } catch (error) {
     return { data: [], error: "Erro inesperado." };
   }

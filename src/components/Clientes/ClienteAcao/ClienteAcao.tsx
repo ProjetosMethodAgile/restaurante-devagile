@@ -116,15 +116,15 @@ async function handleAlteraCliente(id: string) {
 
   return (
     <div className="fixed inset-0 backdrop-blur-xs flex justify-center items-start pt-20 z-50 overflow-y-auto   bg-black/70 ">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 ">
         <div className="flex items-center mb-4">
-          <div onClick={() => setModalEdit(false)} className="mr-4 cursor-pointer text-blue-800">
+          <div onClick={() => setModalEdit(false)} className="mr-4 cursor-pointer text-blue-800 ">
             <ArrowLeft size={24} />
           </div>
           <h1 className="text-2xl font-semibold">Configurações do cliente</h1>
         </div>
 
-        <Form.Root className="grid grid-cols-4 gap-4">
+        <Form.Root className="grid grid-cols-4 gap-4 ">
           <h2 className="col-span-4 text-lg font-medium">Dados pessoais</h2>
           <Form.InputText
             id="nome"

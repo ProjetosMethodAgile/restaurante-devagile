@@ -6,8 +6,6 @@ import MotoristaContainer from "@/src/components/Motorista/MotoristaContainer/Mo
 export default async function MotoristaPage() {
  const { data } = await getMotoristas();
 const motoristasArray = data?? [];
-console.log(data);
-
   return (
     <section>
         <MotoristaContainer motoristas={motoristasArray} />

@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { Form } from "../../UI/Form";
 import { validaAlteracao } from './contract/validaCampo';
 import { alterarClientePorID } from "@/src/actions/clientes/alterarClientePorID";
+import { formatCPF } from '@/src/utils/FormataVisualizacaoDoc';
 
 // Recebe um único cliente
 interface ClienteAcoesProps {
@@ -35,7 +36,7 @@ export default function ClienteAcoes({ setModalEdit, cliente }: ClienteAcoesProp
     nome: cliente.nome || "",
     contato: cliente.contato || "",
     email: cliente.email || "",
-    cpf: cliente.cpf || "",
+    cpf: formatCPF(cliente.cpf) || "",
     cep: cliente.cep || "",
     numero: cliente.numero || "",
     rua: cliente.rua || "",

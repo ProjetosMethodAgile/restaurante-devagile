@@ -145,19 +145,10 @@ export default function ProdutosLista({ produtos }: ProdutosListaProps) {
                   Código: <span className="font-medium">{produto.codigo}</span>
                 </div>
                 <div className="text-sm mb-1">
-                  Tipo:{" "}
-                  <span
-                    className={clsx(
-                      "inline-block px-2 py-1 text-xs font-semibold rounded-full",
-                      produto.tipo === "ativo"
-                        ? "bg-green-100 text-green-800"
-                        : produto.tipo === "inativo"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-gray-100 text-gray-700"
-                    )}
-                  >
-                    {produto.tipo}
-                  </span>
+                  Categorias:{" "}
+                  {produto.categorias.map((c) => {
+                    return <span className="py-1 font-medium text-slate-800 px-2 rounded-xl" style={{ backgroundColor: c.cor_hex }}>{c.nome}</span>
+                  })}
                 </div>
                 <div className="text-sm text-gray-600 mb-2">
                   {produto.descricao || (

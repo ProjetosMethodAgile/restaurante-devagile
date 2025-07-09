@@ -5,8 +5,7 @@ import {
   Clipboard,
   LayoutGrid,
   LayoutList,
-  Package2,
-  Pen,
+
   Pencil,
   Plus,
   Settings,

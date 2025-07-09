@@ -111,9 +111,9 @@ export default function MotoristaForm({
     if (state.msg_success) {
       toast.success(state.msg_success);
     }
-    if (state.errors.length) {
-      toast.error(state.errors);
-    }
+ if (state.errors.length) {
+  toast.error(state.errors.join(" • "));
+}
   }, [state]);
 
   const handleCepBlur = async () => {
@@ -138,12 +138,13 @@ export default function MotoristaForm({
     }
   };
   return (
-    <Form.Root
-      id="formulario"
-      action={formData}
-      className="space-y-4 bg-white p-6 rounded-lg text-pri"
-    >
-      <div className="flex gap-5">
+   <Form.Root
+  id="formulario"
+ 
+  action={formData}
+  className="space-y-4 bg-white p-6 rounded-lg overflow-y-scroll h-150 mt-10"
+>
+<div className="flex gap-5">
         <div
           onClick={() => setOpenModalMotorista(false)}
           className="pl-2 text-blue-800 active:scale-105 hover:scale-102 cursor-pointer "
@@ -169,140 +170,58 @@ export default function MotoristaForm({
         </div>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        <Form.InputText
-          id="nome"
-          value={form.nome}
-          placeholder="Nome completo"
-          className="col-span-3"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="cpf"
-          value={form.cpf}
-          placeholder="CPF"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="rg"
-          value={form.rg}
-          placeholder="RG"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="dataNascimento"
-          value={form.dataNascimento}
-          placeholder="Data de nascimento"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="numeroCnh"
-          value={form.numeroCnh}
-          placeholder="Número da CNH"
-          className="col-span-3"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="categoria"
-          value={form.categoria}
-          placeholder="Categoria (A, B, C, D, E)"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="emissaocnh"
-          value={form.emissaocnh}
-          placeholder="Data de emissão"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="validadecnh"
-          value={form.validadecnh}
-          placeholder="Data de validade"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="contato"
-          value={form.contato}
-          placeholder="Telefone"
-          className="col-span-2"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="email"
-          value={form.email}
-          placeholder="E-mail"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="cep"
-          value={form.cep}
-          placeholder="CEP"
-          className="col-span-3"
-          onChange={handleChange}
-          onBlur={handleCepBlur}
-        />
-        <Form.InputText
-          id="rua"
-          value={form.rua}
-          placeholder="Logradouro"
-          className="col-span-3"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="estado"
-          name="estado"
-          value={form.estado}
-          placeholder="Estado (UF)"
-          className="col-span-1"
-          onChange={handleChange}
-        />
+    {/* Nome */}
+    <Form.InputText
+      id="nome" name="nome"
+      value={form.nome}
+      placeholder="Nome completo"
+      className="col-span-3"
+      onChange={handleChange}
+    />
 
-        <Form.InputText
-          id="numero"
-          value={form.numero}
-          placeholder="Número"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="complemento"
-          value={form.complemento}
-          placeholder="Complemento"
-          className="col-span-2"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="bairro"
-          value={form.bairro}
-          placeholder="Bairro"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-        <Form.InputText
-          id="cidade"
-          value={form.cidade}
-          placeholder="Cidade"
-          className="col-span-1"
-          onChange={handleChange}
-        />
-      </div>
+    {/* CPF, RG, Data de nascimento */}
+    <Form.InputText id="cpf" name="cpf" value={form.cpf} placeholder="CPF" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="rg"  name="rg"  value={form.rg}  placeholder="RG"  className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="dataNascimento" name="dataNascimento" value={form.dataNascimento} placeholder="Data de nascimento" className="col-span-1" onChange={handleChange}/>
 
-      <PrimaryButton
-        type="submit"
-        text={"Cadastrar"}
-        className={
-          isPending
-            ? "w-full bg-gray-300 cursor-no-drop hover:bg-gray-400 text-white py-2 rounded mt-4"
-            : "w-full bg-secondary hover:bg-secondary text-white py-2 rounded mt-4"
-        }
-        disabled={isPending}
-      />
-    </Form.Root>
+    {/* CNH */}
+    <Form.InputText id="numeroCnh" name="numeroCnh" value={form.numeroCnh} placeholder="Número da CNH" className="col-span-3" onChange={handleChange}/>
+    <Form.InputText id="categoria" name="categoria" value={form.categoria} placeholder="Categoria" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="emissaocnh" name="emissaocnh" value={form.emissaocnh} placeholder="Emissão CNH" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="validadecnh" name="validadecnh" value={form.validadecnh} placeholder="Validade CNH" className="col-span-1" onChange={handleChange}/>
+
+    {/* Contato e e-mail */}
+    <Form.InputText id="contato" name="contato" value={form.contato} placeholder="Telefone" className="col-span-2" onChange={handleChange}/>
+    <Form.InputText id="email"   name="email"   value={form.email}   placeholder="E-mail"    className="col-span-1" onChange={handleChange}/>
+
+    {/* Endereço */}
+    <Form.InputText id="cep"     name="cep"     value={form.cep}     placeholder="CEP" className="col-span-3" onChange={handleChange} onBlur={handleCepBlur}/>
+    <Form.InputText id="rua"     name="rua"     value={form.rua}     placeholder="Logradouro" className="col-span-3" onChange={handleChange}/>
+    <Form.InputText id="numero"  name="numero"  value={form.numero}  placeholder="Número" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="complemento" name="complemento" value={form.complemento} placeholder="Complemento" className="col-span-2" onChange={handleChange}/>
+    <Form.InputText id="bairro"  name="bairro"  value={form.bairro}  placeholder="Bairro" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="cidade"  name="cidade"  value={form.cidade}  placeholder="Cidade" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="estado"  name="estado"  value={form.estado}  placeholder="Estado (UF)" className="col-span-1" onChange={handleChange}/>
+
+    {/* Observação */}
+    <textarea
+      id="observacao" name="observacao"
+      value={form.observacao}
+      placeholder="Observação (opcional)"
+      className="col-span-3"
+      onChange={handleChange}
+    />
+  </div>
+
+  <PrimaryButton
+    type="submit"
+    text="Cadastrar"
+    className={isPending
+      ? "w-full bg-gray-300 cursor-no-drop py-2 rounded mt-4"
+      : "w-full bg-secondary hover:bg-secondary py-2 rounded mt-4"
+    }
+    disabled={isPending}
+  />
+</Form.Root>
   );
 }

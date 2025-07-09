@@ -76,6 +76,21 @@ export default function ClienteForm({
   useEffect(() => {
     resetaForms();
   }, [isPending]);
+
+
+  
+  useEffect(() => {
+    if(state.success){
+      toast.success("Cadastro realizado com sucesso")
+    }
+    if(state.errors){
+      toast.error("Erro ao cadastrar o motorista")
+    }
+  }, [state]);
+
+
+
+
   function resetaForms() {
     setForm((prev) => ({
       ...prev,
@@ -144,7 +159,7 @@ export default function ClienteForm({
     <Form.Root
       id="formulario"
       action={formData}
-      className="space-y-4 bg-white p-6 rounded-lg text-pri"
+      className="space-y-4 bg-white p-6 rounded-lg"
     >
       <div className="flex gap-5">
         <div

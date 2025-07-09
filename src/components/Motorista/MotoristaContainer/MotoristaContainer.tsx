@@ -1,17 +1,22 @@
 "use client";
 import React, { useState } from "react";
-import { MotoristaBase } from "@/src/types/motorista/motoristaType";
 import PrimaryTitle from "../../UI/PrimaryTitle";
 import MotoristaLista from "../MotoristaLista/MotoristaLista";
 import MotoristaForm from "../MotoristaForm/MotoristaForm";
+import MotoristaAcoes from "../MotoristaAcoes/MotoristaAcoes";
+import { MotoristaBase } from "@/src/types/motorista/motoristaType";
 export type MotoristaProps = {
   motoristas: MotoristaBase[];
 };
+
 
 export default function MotoristaContainer({ motoristas }: MotoristaProps) {
   const [openModalMotorista, setOpenModalMotorista] = useState<boolean>(false);
   const [motoristaEdit, setMotoristaEdit] = useState<MotoristaBase>();
   const [openModalEdit, setModalEdit] = useState<boolean>(false);
+
+
+  
   return (
     <section className="">
       <div className="flex items-center gap-4 container-global m-4 ">
@@ -26,9 +31,18 @@ export default function MotoristaContainer({ motoristas }: MotoristaProps) {
         />
       </div>
  {openModalMotorista && (
-        <div className=" flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[120vh] w-full justify-center items-start pt-25 z-999 ">
+        <div className=" flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[150vh] w-full justify-center items-start pt-25 z-999">
           <MotoristaForm
             setOpenModalMotorista={setOpenModalMotorista}
+          />
+        </div>
+      )}
+
+    { openModalEdit && (
+        <div className="flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[150vh] w-full justify-center items-start pt-25 z-999">
+          <MotoristaAcoes
+            motorista={motoristaEdit}
+            setModalEdit={setModalEdit}
           />
         </div>
       )}

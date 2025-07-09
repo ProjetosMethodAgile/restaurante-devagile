@@ -16,13 +16,13 @@ type MotoristaProps = {
   motoristas: MotoristaBase[];
   setOpenModalMotorista: React.Dispatch<SetStateAction<boolean>>;
   setModalEdit: React.Dispatch<SetStateAction<boolean>>;
-  setMotoristaEdit: React.Dispatch<SetStateAction<MotoristaBase| undefined>>;
+  setMotoristaEdit: React.Dispatch<SetStateAction<MotoristaBase | undefined>>;
 };
 export default function MotoristaLista({
   motoristas,
   setOpenModalMotorista,
   setModalEdit,
-  setMotoristaEdit
+  setMotoristaEdit,
 }: MotoristaProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,7 +70,12 @@ export default function MotoristaLista({
   useEffect(() => {
     if (isLoading) setIsLoading(false);
   }, [paginated, isLoading]);
+  console.log(paginated);
 
+  function handleActiveEdit(motorista: MotoristaBase) {
+    setModalEdit(true);
+    setMotoristaEdit(motorista);
+  }
   return (
     <section className="w-full px-4 py-4 relative ">
       <GenericSearch
@@ -137,7 +142,7 @@ export default function MotoristaLista({
                     key={motorista.id}
                     className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s "
                   >
-                    <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
+                    <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap" onClick={()=>handleActiveEdit(motorista)}>
                       <User className="w-4 h-4 text-blue-600" />
                       {motorista.nome}
                     </td>
@@ -161,6 +166,7 @@ export default function MotoristaLista({
                             />
                           </div>
                         )}
+
                         {motorista.contato}
                       </div>
                     </td>
@@ -172,6 +178,8 @@ export default function MotoristaLista({
                       </div>
                     </td>
                     <td className="px-4 py-3">{motorista.observacao}</td>
+                    <td className="px-4 py-3">{motorista.observacao}</td>
+                    <td className="px-4 py-3">{motorista.dataNascimento}</td>
                     <td className="px-4 py-3">
                       <div
                         className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
@@ -225,9 +233,7 @@ export default function MotoristaLista({
                 <div className="text-sm mb-1  text-gray-600 pl-4 ">
                   Complemento: {motorista.complemento}
                 </div>
-                <div className="text-sm mb-1  text-gray-600 pl-4 ">
-                  Frete:
-                </div>
+                <div className="text-sm mb-1  text-gray-600 pl-4 ">Frete:</div>
                 <div className="text-sm text-gray-600 mb-2 pl-4">
                   Observação: {motorista.observacao}
                 </div>

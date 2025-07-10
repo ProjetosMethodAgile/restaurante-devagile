@@ -67,7 +67,7 @@ export async function alterarMotoristaPorID(
 
   console.log(payload);
 
-  const response = await fetch(`${urlBase}/motorista/${id}`, {
+  const response = await fetch(`${url}/motorista/${id}`, {
     method: "PATCH", // <-- PATCH em vez de PUT
     headers: {
       "Content-Type": "application/json",

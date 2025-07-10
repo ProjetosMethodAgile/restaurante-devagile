@@ -35,6 +35,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/restaurante-devagile
-            docker pull feljohnny/restaurante-devagile-<tipo>:latest
+            cd /home/ubuntu/repositorios/restaurante-devagile
+            docker pull feljohnny/restaurante-devagile-front:latest
             docker-compose up -d

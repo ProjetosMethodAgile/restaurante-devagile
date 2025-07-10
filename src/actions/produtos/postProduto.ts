@@ -19,8 +19,11 @@ export async function postProduto(
     const precoBase = formData.get("preco_base") as string;
     const variacoesIds = formData.getAll("variacao_id") as string[];
     const variacoesPrecos = formData.getAll("variacao_preco") as string[];
+    const ativoCheckbox = formData.get('status')
     let variacoes = [];
     const categoriaIds: string[] = JSON.parse(categorias);
+    const statusProduto = ativoCheckbox ? true : false
+
 
     function parsePreco(preco: string): number {
       if (!preco) return 0;
@@ -96,6 +99,7 @@ export async function postProduto(
         categoryIds: categoriaIds,
         variacoes,
         tipo: tipoProduto,
+        ativo: statusProduto
       }),
     });
 

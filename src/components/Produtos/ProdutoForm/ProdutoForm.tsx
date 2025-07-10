@@ -27,6 +27,7 @@ export type currentProdutoType = {
   preco: string;
   categorias: CategoriaBase[];
   tipo_produto: "unico" | "variavel";
+  ativo: boolean;
   id: string;
   variacoes: {
     variacao_id: string;
@@ -47,7 +48,6 @@ export default function ProdutoForm({
   editData = null,
   isEditMode = false,
 }: ProdutoFormType) {
-  console.log(editData)
 
   const [currentProduto, setCurrentProduto] =
     useState<currentProdutoType | null>({
@@ -56,6 +56,7 @@ export default function ProdutoForm({
       descricao: editData?.descricao || "",
       categorias: editData?.categorias || [],
       tipo_produto: isTipoProduto(editData?.tipo) ? editData!.tipo : "unico",
+      ativo: editData?.ativo || true,
       codigo: editData?.codigo || "",
       preco:
         editData?.variacoes.length === 1
@@ -173,7 +174,7 @@ export default function ProdutoForm({
         name="empresaIds"
         value={JSON.stringify(user?.empresas.map((e) => e.empresa.id))}
       />
-
+     
       <input type="hidden" name="default_variacao_id" value={""} />
       <input type="hidden" name="produto_id" value={editData?.id} />
       <input

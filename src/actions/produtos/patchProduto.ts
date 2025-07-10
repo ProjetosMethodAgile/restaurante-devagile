@@ -18,10 +18,12 @@ export async function patchProduto(
     const empresaIds = JSON.parse(empresas || "[]") as string[];
     const tipoProduto = formData.get("tipo_produto") as string;
     const precoBase = formData.get("preco_base") as string;
+    const ativoCheckbox = formData.get('status')
     const variacoesIds = formData.getAll("variacao_id") as string[];
     const variacoesPrecos = formData.getAll("variacao_preco") as string[];
     let variacoes = [];
    const categoriaIds: string[] = JSON.parse(categorias);
+   const statusProduto = ativoCheckbox ? true : false
 
     function parsePreco(preco: string): number {
       if (!preco) return 0;
@@ -96,8 +98,18 @@ export async function patchProduto(
         categoryIds: categoriaIds,
         variacoes,
         tipo: tipoProduto,
+        ativo: statusProduto
       }),
     });
+    console.log({
+        nome,
+        descricao,
+        empresaIds,
+        categoryIds: categoriaIds,
+        variacoes,
+        tipo: tipoProduto,
+        ativo: statusProduto
+      })
 
     if (response.ok) {
       revalidateTag("update-product");

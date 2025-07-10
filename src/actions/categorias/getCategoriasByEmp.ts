@@ -17,7 +17,7 @@ export default async function getCategoriasByEmp() {
     return { data: null, error: "Empresa não encontrada." };
   }
 
-  const url = process.env.API_URL || "http://localhost:3001";
+  const url = process.env.URL_API || "http://localhost:3001";
 
   try {
     const res = await fetch(`${url}/categoria`, {

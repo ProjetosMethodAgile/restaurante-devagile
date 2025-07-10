@@ -3,10 +3,7 @@
 import { MotoristaBase } from "@/src/types/motorista/motoristaType";
 import { cookies } from "next/headers";
 
-
 export default async function getMotoristas() {
-
-  
   const token = (await cookies()).get("token")?.value;
   const empresaId = (await cookies()).get("empresaStorage")?.value;
 
@@ -18,7 +15,7 @@ export default async function getMotoristas() {
     return { data: null, error: "Empresa não encontrada." };
   }
 
-  const url = process.env.API_URL || "http://localhost:3001";
+  const url = process.env.URL_API || "http://localhost:3001";
 
   try {
     const res = await fetch(`${url}/motorista`, {
@@ -30,9 +27,6 @@ export default async function getMotoristas() {
         tags: ["motorista"],
       },
     });
-
-
-    
 
     if (!res.ok) {
       const message = await res.text();

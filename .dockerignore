@@ -1,0 +1,15 @@
+.next
+node_modules
+*.log
+build
+dist
+.vscode
+.idea
+.DS_Store
+*.env
+coverage
+*.test.js
+*.spec.js
+*.local
+.git
+.gitignore

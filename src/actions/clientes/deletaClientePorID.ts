@@ -7,8 +7,7 @@ import jwt from "jsonwebtoken";
 
 export async function deletaClientePorID(id: string) {
   try {
-    
-    if (!id) {  
+    if (!id) {
       return {
         errors: ["Id invalido."],
         msg_success: "",
@@ -24,18 +23,17 @@ export async function deletaClientePorID(id: string) {
         success: false,
       };
     }
-    
+
     const user = jwt.decode(token) as tokenUserAuth;
     const empresas = user.empresas ? JSON.stringify(user.empresas) : "[]";
     const empresaIds = JSON.parse(empresas || "[]") as string[];
-    
+
     if (empresaIds.length === 0) {
       return {
         errors: ["Nenhuma empresa selecionada."],
         msg_success: "",
         success: false,
       };
-      
     }
 
     if (!token) {
@@ -46,24 +44,20 @@ export async function deletaClientePorID(id: string) {
       };
     }
 
-    const url = "http://localhost:3001/";
+    const url = process.env.URL_API || "http://localhost:3001";
 
-
-
-// 
-    const response = await fetch(url + `cliente/${id}/deactivate`, {
+    const response = await fetch(url + `/cliente/${id}/deactivate`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      
+
       // body: JSON.stringify({
       //   empresaIds: empresaIds
       // }),
     });
 
-   
     if (response.ok) {
       revalidateTag("clientes");
       return {
@@ -83,9 +77,3 @@ export async function deletaClientePorID(id: string) {
     throw new Error("Ocorreu um erro, tente novamente.");
   }
 }
-
-
-
-
-
-

@@ -121,7 +121,7 @@ export default function UsuarioForm({
             isPending ? "Salvando..." : isEditMode ? "Atualizar" : "Cadastrar"
           }
           className="bg-secondary rounded-xl hover:bg-secondary/90"
-          icon={isPending ? LoaderCircle : Check }
+          icon={isPending ? LoaderCircle : Check}
           type="submit"
           disabled={isPending}
           isPending
@@ -142,7 +142,7 @@ export default function UsuarioForm({
       <input
         type="hidden"
         name="telaIds"
-        value={JSON.stringify(currentUser.telas.map((t) => t.tela.id))}
+        value={JSON.stringify(currentUser.telas.map((t) => t.tela))}
       />
     </Form.Root>
   );

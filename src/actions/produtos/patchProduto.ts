@@ -84,7 +84,8 @@ export async function patchProduto(
       };
     }
 
-    const url = "http://localhost:3001/";
+    const url = process.env.URL_API || "http://localhost:3001";
+
     const response = await fetch(url + "produto" + `/${produto_id}`, {
       method: "PATCH",
       headers: {

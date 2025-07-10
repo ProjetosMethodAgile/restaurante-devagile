@@ -11,7 +11,7 @@ export default async function getClientes() {
     return { data: [], error: "Token não encontrado." };
   }
 
-  const url = process.env.API_URL || "http://localhost:3001";
+  const url = process.env.URL_API || "http://localhost:3001";
 
   try {
     const res = await fetch(`${url}/cliente/`, {

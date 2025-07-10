@@ -1,24 +1,31 @@
 // src/actions/clientes/alterCustomerForID.ts
 "use server";
+import { formatDateToISO } from "@/src/utils/ConverteData";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export async function alterarMotoristaPorID(
   id: string,
   data: {
-    contato?: string;
     nome: string;
-    email?: string;
-    cpf?: string;
-    rua?: string;
-    numero?: string;
-    bairro?: string;
-    cep?: string;
-    cidade?: string;
-    estado?: string;
+    cpf: string;
+    rg: string;
+    dataNascimento: string;
+    contato: string;
+    email: string;
+    cep: string;
+    numero: string;
+    rua: string;
     complemento?: string;
-    frete?: string;
-    observacao?: string;
+    bairro: string;
+    cidade: string;
+    estado: string;
+    observacao: string;
+    numeroCnh: string;
+    categoria: string;
+    emissaocnh: string;
+    validadecnh: string;
+    logradouro: string;
   }
 ) {
   const url = process.env.URL_API || "http://localhost:3001";
@@ -27,31 +34,40 @@ export async function alterarMotoristaPorID(
     console.error("URL_API não está definida");
     throw new Error("Configuração de ambiente inválida");
   }
-
   // obtém token
   const cookieStore = await cookies();
   const tokenCookie = cookieStore.get("token");
   if (!tokenCookie) throw new Error("Usuário não autenticado");
   const token = tokenCookie.value;
+  const empresaCookie = cookieStore.get("empresaStorage")?.value;
+  const empresaIds = [empresaCookie].filter((id): id is string => !!id);
 
   const payload = {
     nome: data.nome.trim(),
+    cpf: data.cpf?.replace(/\D/g, "") ?? null,
+    rg: data.rg?.trim() ?? null,
+    dataNascimento: formatDateToISO(data.dataNascimento?.trim()) ?? null,
     contato: data.contato?.trim() ?? null,
     email: data.email?.trim() ?? null,
-    cpf: data.cpf?.replace(/\D/g, "") ?? null,
-    rua: data.rua?.trim() ?? null,
-    numero: data.numero?.trim() ?? null,
-    bairro: data.bairro?.trim() ?? null,
     cep: data.cep?.replace(/\D/g, "") ?? null,
-    cidade: data.cidade?.trim() ?? null,
-    estado: data.estado ?? null,
+    numero: data.numero?.trim() ?? null,
+    rua: data.rua?.trim() ?? null,
     complemento: data.complemento?.trim() ?? null,
-    frete: data.frete?.trim() ?? null,
+    bairro: data.bairro?.trim() ?? null,
+    cidade: data.cidade?.trim() ?? null,
+    estado: data.estado?.trim() ?? null,
     observacao: data.observacao?.trim() ?? null,
+    numeroCnh: data.numeroCnh?.trim() ?? null,
+    categoria: data.categoria?.trim() ?? null,
+    emissaocnh: formatDateToISO(data.emissaocnh?.trim()) ?? null,
+    validadecnh: formatDateToISO(data.validadecnh?.trim()) ?? null,
+    logradouro: data.logradouro?.trim() ?? null,
+    empresaIds: empresaIds ?? null,
   };
+
   console.log(payload);
 
-  const response = await fetch(`${url}/cliente/${id}`, {
+  const response = await fetch(`${urlBase}/motorista/${id}`, {
     method: "PATCH", // <-- PATCH em vez de PUT
     headers: {
       "Content-Type": "application/json",
@@ -61,10 +77,12 @@ export async function alterarMotoristaPorID(
   });
   if (!response.ok) {
     const errText = await response.text();
-    console.error(`Erro ao atualizar cliente: ${response.status} - ${errText}`);
+    console.error(
+      `Erro ao atualizar motorista: ${response.status} - ${errText}`
+    );
     throw new Error(`Erro na requisição: ${response.status}`);
   }
-  revalidateTag("clientes");
+  revalidateTag("motorista");
 
   return {
     data: response.json(),

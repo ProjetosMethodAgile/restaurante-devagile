@@ -11,5 +11,5 @@ export type ProdutoBase = {
   empresas: EmpresaBase[];
   categorias: CategoriaBase[];
   variacoes: VariacaoBase[];
-
+  ativo: boolean;
 };

@@ -14,7 +14,7 @@ export function ProdutoFormSubmit({
     <div className="flex justify-end mt-4">
       <PrimaryButton
         text={
-          isPending ? "Salvando..." : !isEditMode ? "Atualizar" : "Cadastrar"
+          isPending ? "Salvando..." : isEditMode ? "Atualizar" : "Cadastrar"
         }
         className="bg-secondary rounded-xl hover:bg-secondary/90"
         icon={isPending ? LoaderCircle : Check}

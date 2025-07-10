@@ -37,4 +37,4 @@ jobs:
           script: |
             cd /home/ubuntu/repositorios/restaurante-devagile
             docker pull feljohnny/restaurante-devagile-front:latest
-            docker-compose up -d
+            docker compose up -d

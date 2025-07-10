@@ -46,7 +46,7 @@ export async function login(
     } else {
       return {
         success: false,
-        message: "Erro interno no sistema",
+        message: "Erro interno no sistemaa",
       };
     }
   } catch (error) {

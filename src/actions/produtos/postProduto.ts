@@ -74,7 +74,8 @@ export async function postProduto(
       };
     }
 
-    const url = "http://localhost:3001/";
+    const url = process.env.URL_API || "http://localhost:3001";
+
     const response = await fetch(url + "produto", {
       method: "POST",
       headers: {

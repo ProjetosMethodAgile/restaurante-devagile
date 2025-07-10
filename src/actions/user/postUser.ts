@@ -28,7 +28,7 @@ export async function postUser(
     const empresaIds = JSON.parse(empresas || "[]") as string[];
     const telaIds = JSON.parse(telas || "[]") as string[];
 
-      if (empresaIds.length === 0) {
+    if (empresaIds.length === 0) {
       return {
         errors: ["Atribua pelo menos uma empresa ao usuario."],
         msg_success: "",
@@ -46,7 +46,8 @@ export async function postUser(
       };
     }
 
-    const url = "http://localhost:3001/";
+    const url = process.env.URL_API || "http://localhost:3001";
+
     const response = await fetch(url + "usuario/register", {
       method: "POST",
       headers: {

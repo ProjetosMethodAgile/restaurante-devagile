@@ -60,7 +60,8 @@ export async function postMotorista(
       };
     }
 
-    const url = "http://localhost:3001/";
+    const url = process.env.URL_API || "http://localhost:3001";
+
     const response = await fetch(url + "cliente", {
       method: "POST",
       headers: {

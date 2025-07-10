@@ -2,13 +2,13 @@
 
 import { cookies } from "next/headers";
 import { ProdutoBase } from "@/src/types/produto/produtoType";
-export default async function getProdutoId(produtoId? : string ) {
+export default async function getProdutoId(produtoId?: string) {
   try {
     const token = (await cookies()).get("token")?.value;
 
     if (token) {
- 
-      const url = 'http://localhost:3001';
+      const url = process.env.URL_API || "http://localhost:3001";
+
       if (url) {
         const res = await fetch(`${url}/produto/${produtoId}`, {
           method: "GET",
@@ -29,7 +29,6 @@ export default async function getProdutoId(produtoId? : string ) {
       return { data: null };
     }
   } catch (error) {
-
     return { data: null };
   }
 }

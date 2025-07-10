@@ -46,7 +46,8 @@ export async function patchUser(
       };
     }
 
-    const url = "http://localhost:3001/";
+    const url = process.env.URL_API || "http://localhost:3001";
+
     const response = await fetch(url + `usuario/${userId}`, {
       method: "PATCH",
       headers: {
@@ -58,11 +59,9 @@ export async function patchUser(
         email,
         role_Id: roleId,
         empresaIds,
-        telaIds
+        telaIds,
       }),
     });
-
-   
 
     if (response.ok) {
       revalidateTag("auth");

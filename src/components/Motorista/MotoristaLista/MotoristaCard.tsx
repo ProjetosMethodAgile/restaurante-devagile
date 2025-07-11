@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { isExpired } from "../MotoristaAcoes/contract/verificaValidade";
 import { TriangleAlert, User } from "lucide-react";
 import { formatDateToView } from "@/src/utils/ConverteData";
-import { Dispatch, SetStateAction } from "react";
 import { MotoristaBase } from "@/src/types/motorista/motoristaType";
 
 type MotoristaCardProps ={
@@ -18,8 +17,6 @@ export default function MotoristaCard({handleActiveEdit,paginated}:MotoristaCard
       visible: { opacity: 1 },
       exit: { opacity: 0 },
     }
-
-
   }
     return(
        // Modo em cards

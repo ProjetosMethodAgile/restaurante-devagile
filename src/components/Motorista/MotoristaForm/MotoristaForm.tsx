@@ -64,7 +64,7 @@ export default function MotoristaForm({
     success: false,
   });
 
-  const [autoCepEnabled, setAutoCepEnabled] = React.useState(false);
+  const [autoCepEnabled, setAutoCepEnabled] = React.useState(true);
 
   const handleChange = (
     e: React.ChangeEvent<

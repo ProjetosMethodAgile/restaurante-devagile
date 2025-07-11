@@ -13,20 +13,20 @@ type MotoristaSheetsProps ={
 }
 export default function MotoristaSheets({paginated,handleActiveEdit,copiadoId,handleCopy,setModalEdit,setMotoristaEdit}:MotoristaSheetsProps){
     return(
-         <table className="min-w-full text-sm text-left ">
-            <thead className="bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider  ">
+         <table className="min-w-full table-auto text-sm text-left whitespace-nowrap ">
+            <thead className="bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider " >
               <tr>
+                <th className="px-4 py-3">
+                  <Settings />
+                </th>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-5">Contato</th>
                 <th className="px-4 py-3">Email</th>
                 <th className="px-4 py-3">CNH</th>
                 <th className="px-4 py-3">Validade CNH</th>
                 <th className="px-4 py-3">Endereço</th>
-                <th className="px-4 py-3">Observação</th>
                 <th className="px-4 py-3">Data de Nascimento</th>
-                <th className="px-4 py-3">
-                  <Settings />
-                </th>
+                <th className="px-4 py-3">Observação</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -40,6 +40,16 @@ export default function MotoristaSheets({paginated,handleActiveEdit,copiadoId,ha
                         : ""
                     }hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s`}
                   >
+                    <td className="px-4 py-3">
+                      <div
+                        className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
+                        onClick={() => {
+                          setModalEdit(true), setMotoristaEdit(motorista);
+                        }}
+                      >
+                        <Pencil className="size-5 text-white" />
+                      </div>
+                    </td>
                     <td
                       className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap relative"
                       onClick={() => handleActiveEdit(motorista)}
@@ -109,8 +119,8 @@ export default function MotoristaSheets({paginated,handleActiveEdit,copiadoId,ha
                     >
                       {motorista.logradouro}
                     </td>
-                    <td className="px-4 py-3 ">
-                      <div className="w-35">
+                    <td className="w-20 ">
+                      <div className="flex-wrap ">
                         {motorista.observacao.length > 50
                           ? motorista.observacao.slice(0, 20)+"..."
                           : motorista.observacao}
@@ -122,16 +132,7 @@ export default function MotoristaSheets({paginated,handleActiveEdit,copiadoId,ha
                     >
                       {formatDateToView(motorista.dataNascimento)}
                     </td>
-                    <td className="px-4 py-3">
-                      <div
-                        className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
-                        onClick={() => {
-                          setModalEdit(true), setMotoristaEdit(motorista);
-                        }}
-                      >
-                        <Pencil className="size-5 text-white" />
-                      </div>
-                    </td>
+                    
                   </tr>
                 ))
               ) : (

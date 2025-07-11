@@ -8,18 +8,16 @@ type ClienteSheetsProps ={
 }
 export default function ClienteSheets({paginated,handleActiveEdit,copiadoId,handleCopy}:ClienteSheetsProps){
     return(
-           <table className="min-w-full text-sm text-left ">
-            <thead className="bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider">
-              <tr>
+         <table className="min-w-full table-auto text-sm text-left whitespace-nowrap ">
+            <thead className="bg-slate-50 border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider "> 
+               <tr>
+                <th className="px-4 py-3"><Settings /></th>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-3">Contato</th>
                 <th className="px-4 py-3">Frete</th>
                 <th className="px-4 py-3">Endereço</th>
                 <th className="px-4 py-3">Observação</th>
                 <th className="px-4 py-3">Empresa cadastrada</th>
-                <th className="px-4 py-3">
-                  <Settings />
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -29,6 +27,16 @@ export default function ClienteSheets({paginated,handleActiveEdit,copiadoId,hand
                     key={cliente.id}
                     className="hover:bg-slate-50 transition-colors cursor-pointer hover:scale-101s "
                   >
+                      <td className="px-4 py-3">
+                      <div
+                        className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
+                        onClick={() => {
+                          handleActiveEdit(cliente);
+                        }}
+                      >
+                        <Pencil className="size-5 text-white" />
+                      </div>
+                    </td>
                     <td className="px-4 py-3 flex items-center gap-2 text-gray-800 font-medium whitespace-nowrap">
                       <User
                         className="w-4 h-4 text-blue-600"
@@ -99,16 +107,7 @@ export default function ClienteSheets({paginated,handleActiveEdit,copiadoId,hand
                         ))}
                       </ul>
                     </td>
-                    <td className="px-4 py-3">
-                      <div
-                        className=" items-center flex justify-center bg-secondary size-10 rounded-[15px] cursor-pointer "
-                        onClick={() => {
-                          handleActiveEdit(cliente);
-                        }}
-                      >
-                        <Pencil className="size-5 text-white" />
-                      </div>
-                    </td>
+                  
                   </tr>
                 ))
               ) : (

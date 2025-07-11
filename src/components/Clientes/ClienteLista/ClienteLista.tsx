@@ -128,7 +128,7 @@ export default function ClienteLista({
         </button>
       </div>
       {modoVisualizacao === "lista" ? (
-        <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white ">
+        <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white w-full overflow-x-auto  ">
        <ClienteSheets
              paginated={paginated}
          handleActiveEdit={handleActiveEdit}

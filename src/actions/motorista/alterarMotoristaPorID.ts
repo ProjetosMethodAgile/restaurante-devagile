@@ -42,41 +42,36 @@ export async function alterarMotoristaPorID(
   const empresaCookie = cookieStore.get("empresaStorage")?.value;
   const empresaIds = [empresaCookie].filter((id): id is string => !!id);
 
+  const payload = {
+    nome: data.nome.trim(),
+    cpf: data.cpf?.replace(/\D/g, "") ?? null,
+    rg: data.rg?.trim() ?? null,
+    dataNascimento: formatDateToISO(data.dataNascimento?.trim()) ?? null,
+    contato: data.contato?.trim() ?? null,
+    email: data.email?.trim() ?? null,
+    cep: data.cep?.replace(/\D/g, "") ?? null,
+    numero: data.numero?.trim() ?? null,
+    rua: data.rua?.trim() ?? null,
+    complemento: data.complemento?.trim() ?? null,
+    bairro: data.bairro?.trim() ?? null,
+    cidade: data.cidade?.trim() ?? null,
+    estado: data.estado?.trim() ?? null,
+    observacao: data.observacao?.trim() ?? null,
+    numeroCnh: data.numeroCnh?.trim().replace(/\D/g, "") ?? null,
+    categoria: data.categoria?.trim() ?? null,
+    emissaocnh: formatDateToISO(data.emissaocnh?.trim()) ?? null,
+    validadecnh: formatDateToISO(data.validadecnh?.trim()) ?? null,
+    empresaIds: empresaIds ?? null,
+  };
 
-const payload = {
-  nome: data.nome.trim(),
-  cpf: data.cpf?.replace(/\D/g, '') ?? null,
-  rg: data.rg?.trim() ?? null,
-  dataNascimento: formatDateToISO(data.dataNascimento?.trim()) ?? null,
-  contato: data.contato?.trim() ?? null,
-  email: data.email?.trim() ?? null,
-  cep: data.cep?.replace(/\D/g, '') ?? null,
-  numero: data.numero?.trim() ?? null,
-  rua: data.rua?.trim() ?? null,
-  complemento: data.complemento?.trim() ?? null,
-  bairro: data.bairro?.trim() ?? null,
-  cidade: data.cidade?.trim() ?? null,
-  estado: data.estado?.trim() ?? null,
-  observacao: data.observacao?.trim() ?? null,
-  numeroCnh: data.numeroCnh?.trim().replace(/\D/g, "") ?? null,
-  categoria: data.categoria?.trim() ?? null,
-  emissaocnh: formatDateToISO(data.emissaocnh?.trim()) ?? null,
-  validadecnh: formatDateToISO(data.validadecnh?.trim()) ?? null,
-  empresaIds: empresaIds ?? null,
-};
-
-
-  const response = await fetch(
-    `${urlBase}/motorista/${id}`,
-    {
-      method: 'PATCH',                // <-- PATCH em vez de PUT
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    }
-  );
+  const response = await fetch(`${url}/motorista/${id}`, {
+    method: "PATCH", // <-- PATCH em vez de PUT
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
 
   if (!response.ok) {
     const errText = await response.text();

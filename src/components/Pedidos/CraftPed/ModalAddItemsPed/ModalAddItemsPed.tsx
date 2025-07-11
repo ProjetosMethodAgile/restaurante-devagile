@@ -6,6 +6,7 @@ import React from "react";
 import type { ProdutoBase } from "@/src/types/produto/produtoType";
 import { VariacaoBase } from "@/src/types/variacoes/variacoesType";
 import FormInput from "@/src/components/UI/Form/FormInput";
+import PrimaryButton from "@/src/components/UI/PrimaryButton";
 
 export type ModalAddItemsPedProps = React.ComponentProps<"div"> & {
   setopenAddProdModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +22,10 @@ export default function ModalAddItemsPed({
     React.useState<ProdutoBase | null>(null);
   const [currentVariable, setCurrentVariable] =
     React.useState<VariacaoBase | null>(null);
+  const [currentQuantity, setCurrentQuantity] = React.useState("");
+
+  const [produtoObservacao, setProdutoObservacao] =
+    React.useState<[{ index: string; observacao: string }]>();
 
   return (
     <div
@@ -47,11 +52,13 @@ export default function ModalAddItemsPed({
         <SearchProductInput
           produtos={produtos ?? []}
           setCurrentProduto={setCurrentProduto}
+          setCurrentQuantity={setCurrentQuantity}
         />
         {currentProduto && (
           <SearchVariabeInput
             currentProduto={currentProduto}
             setCurrentVariable={setCurrentVariable}
+            setCurrentQuantity={setCurrentQuantity}
           />
         )}
         {currentVariable && currentProduto && (
@@ -59,8 +66,45 @@ export default function ModalAddItemsPed({
             type="number"
             label="Quantidade"
             placeholder="informe a quantidade"
+            min={1}
+            value={currentQuantity}
+            onChange={(e) => setCurrentQuantity(e.currentTarget.value)}
           />
         )}
+        <motion.div className="overflow-auto max-h-50 mt-5">
+          {currentQuantity &&
+            Array.from({ length: +currentQuantity }).map((_, index) => (
+              <>
+                <label className="text-text-secondary  text-sm ">
+                  item {index + 1} observação:
+                </label>
+                <textarea
+                  key={index + 1}
+                  className="resize-none flex py-2 px-4 items-center transition justify-between border rounded-lg text-sm sm:text-base text-text-secondary ease-out hover:border-primary/70 z-10 active:ring-2 ring-red-200 active:border-primary itens-center gap-2 focus:ring-red-200 focus:outline-none focus:ring-2  w-full border-gray-300"
+                  id=""
+                />
+              </>
+            ))}
+        </motion.div>
+
+        <div className="flex justify-self-end mt-2 gap-2">
+          <PrimaryButton
+            text="Adicionar +"
+            className={`${
+              !currentQuantity || !currentProduto || !currentVariable
+                ? "bg-gray-400 disabled cursor-not-allowed hover:bg-gray-400"
+                : "bg-blue-500  hover:bg-blue-700"
+            }  `}
+          />
+          <PrimaryButton
+            text="Finalizar"
+            className={`${
+              !currentQuantity || !currentProduto || !currentVariable
+                ? "bg-gray-400 disabled cursor-not-allowed hover:bg-gray-400"
+                : "bg-green-500 hover:bg-green-700"
+            } `}
+          />
+        </div>
       </motion.div>
     </div>
   );

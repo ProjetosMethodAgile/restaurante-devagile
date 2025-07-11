@@ -8,11 +8,13 @@ import { ProdutoBase } from "@/src/types/produto/produtoType";
 export type SearchProductInputProps = React.ComponentProps<"div"> & {
   produtos: ProdutoBase[] | [];
   setCurrentProduto: React.Dispatch<React.SetStateAction<ProdutoBase | null>>;
+  setCurrentQuantity: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function SearchProductInput({
   produtos,
   setCurrentProduto,
+  setCurrentQuantity,
 }: SearchProductInputProps) {
   const [filteredproduto, setFilteredProduto] =
     React.useState<ProdutoBase[]>(produtos);
@@ -52,6 +54,7 @@ export default function SearchProductInput({
             setSearchTerm("");
             setSearchList(false);
             buscaProduto("");
+            setCurrentQuantity("");
           }}
           className="text-primary absolute left-[-25] bottom-[7] cursor-pointer hover:text-700 hover:scale-110 transition-all duration-150"
         >

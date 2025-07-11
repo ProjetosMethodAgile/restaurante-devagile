@@ -4,10 +4,8 @@ import React, { useEffect } from "react";
 import { Form } from "../../UI/Form";
 import { estados } from "./estados";
 import PrimaryButton from "../../UI/PrimaryButton";
-import { ClienteBase } from "@/src/types/cliente/clientType";
 import { toast } from "react-toastify";
 import { ArrowLeft } from "lucide-react";
-import { stat } from "fs";
 import { EmpresaBase } from "@/src/types/empresa/empresaType";
 type ClienteFormProps = {
   empresas: EmpresaBase[];

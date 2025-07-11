@@ -29,7 +29,6 @@ export async function postMotorista(
     const categoria = formData.get("categoria") as string;
     const emissaocnh = formData.get("emissaocnh") as string;
     const validadecnh = formData.get("validadecnh") as string;
-    const logradouro = formData.get("logradouro") as string;
 
     if (
       !nome
@@ -83,7 +82,7 @@ console.log(empresaCookie);
         categoria,
         emissaocnh,
         validadecnh,
-        logradouro,
+        logradouro: `${rua},${numero}`,
         empresaIds,
       }),
     });

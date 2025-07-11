@@ -133,7 +133,7 @@ async function handleAlteraCliente(id: string) {
             onChange={handleChange}
             icon={User}
             label="Nome do Cliente"
-            className="col-span-3"
+            className="md:col-span-3 col-span-4 "
           />
           <Form.InputText
             id="cpf"
@@ -141,7 +141,7 @@ async function handleAlteraCliente(id: string) {
             onChange={handleChange}
             icon={IdCard}
             label="CPF"
-            className="col-span-1"
+            className="md:col-span-2 col-span-4"
           />
           <Form.InputText
             id="email"
@@ -149,17 +149,17 @@ async function handleAlteraCliente(id: string) {
             onChange={handleChange}
             icon={AtSign}
             label="E-mail"
-            className="col-span-2"
+            className="md:col-span-2 col-span-4"
           />
 
-          <h2 className="col-span-4 text-lg font-medium pt-4">Endereço</h2>
+          <h2 className="md:col-span-4 col-span-4 text-lg font-medium pt-4">Endereço</h2>
           <Form.InputText
             id="cep"
             value={form.cep}
             onChange={handleChange}
             icon={Radar}
             label="CEP"
-            className="col-span-2"
+            className="md:col-span-2 col-span-4"
           />
           <Form.InputText
             id="rua"
@@ -175,7 +175,7 @@ async function handleAlteraCliente(id: string) {
             onChange={handleChange}
             icon={FileDigit}
             label="Número"
-            className="col-span-1"
+            className="md:col-span-1 col-span-4"
           />
           <Form.InputText
             id="bairro"
@@ -183,7 +183,7 @@ async function handleAlteraCliente(id: string) {
             onChange={handleChange}
             icon={Map}
             label="Bairro"
-            className="col-span-1"
+            className="md:col-span-1 col-span-4"
           />
           <Form.InputText
             id="cidade"
@@ -191,7 +191,7 @@ async function handleAlteraCliente(id: string) {
             onChange={handleChange}
             icon={Building2}
             label="Cidade"
-            className="col-span-2"
+            className="md:col-span-2 col-span-4"
           />
           <Form.InputText
             id="estado"
@@ -227,7 +227,7 @@ async function handleAlteraCliente(id: string) {
             onChange={handleChange}
             icon={Phone}
             label="Contato"
-            className="col-span-2"
+            className="md:col-span-2 col-span-4"
           />
         </Form.Root>
 

@@ -58,7 +58,7 @@ export default function ClienteForm({
     success: false,
   });
 
-  const [autoCepEnabled, setAutoCepEnabled] = React.useState(false);
+  const [autoCepEnabled, setAutoCepEnabled] = React.useState(true);
 
   const handleChange = (
     e: React.ChangeEvent<

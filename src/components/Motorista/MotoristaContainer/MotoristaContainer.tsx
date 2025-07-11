@@ -50,7 +50,7 @@ const motoristaAtivo = motoristas.filter((motorista)=> motorista.deletado === fa
         animate="visible"
         exit="exit"
         transition={{ when: "beforeChildren", staggerChildren: 0.2 }}
-        className=" flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[150vh] w-full justify-center items-start pt-25 z-999">
+        className=" fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <MotoristaForm
             setOpenModalMotorista={setOpenModalMotorista}
           />
@@ -58,7 +58,7 @@ const motoristaAtivo = motoristas.filter((motorista)=> motorista.deletado === fa
       )}
 
     { openModalEdit && (
-        <div className="flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[150vh] w-full justify-center items-start pt-25 z-999">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <MotoristaAcoes
             motorista={motoristaEdit}
             setModalEdit={setModalEdit}

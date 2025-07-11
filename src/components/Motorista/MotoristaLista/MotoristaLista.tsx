@@ -43,10 +43,8 @@ export default function MotoristaLista({
       hidden: { opacity: 0 },
       visible: { opacity: 1 },
       exit: { opacity: 0 },
-    }
-
-
-  }
+    },
+  };
   const filteredmotoristas = motoristas
 
     .filter((item) => !item.deletado)
@@ -168,12 +166,12 @@ export default function MotoristaLista({
                         {isExpired(motorista.validadecnh) ? (
                           <TriangleAlert className=" animate-pulse text-red-900 " />
                         ) : (
-                         
-                        <User className="w-4 h-4 text-blue-600" />
+                          <User className="w-4 h-4 text-blue-600" />
                         )}
-
                       </>
-                        {motorista.nome.length> 20?motorista.nome.slice(0,20)+"...":motorista.nome}
+                      {motorista.nome.length > 20
+                        ? motorista.nome.slice(0, 20) + "..."
+                        : motorista.nome}
                     </td>
 
                     <td className="px-4 py-3">
@@ -204,7 +202,7 @@ export default function MotoristaLista({
                       onClick={() => handleActiveEdit(motorista)}
                     >
                       {motorista.email.length > 20
-                        ? motorista.email.slice(0, 20)+"..."
+                        ? motorista.email.slice(0, 20) + "..."
                         : motorista.email}
                     </td>
                     <td className="px-4 py-3 text-gray-500 max-w-xs truncate">
@@ -232,7 +230,7 @@ export default function MotoristaLista({
                     <td className="px-4 py-3 ">
                       <div className="w-35">
                         {motorista.observacao.length > 50
-                          ? motorista.observacao.slice(0, 20)+"..."
+                          ? motorista.observacao.slice(0, 20) + "..."
                           : motorista.observacao}
                       </div>
                     </td>
@@ -270,13 +268,14 @@ export default function MotoristaLista({
       ) : (
         // Modo em cards
         <motion.div
-         key="card"
-        variants={motionProps.containerVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        transition={{ when: "beforeChildren", staggerChildren: 0.2 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+          key="card"
+          variants={motionProps.containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={{ when: "beforeChildren", staggerChildren: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 "
+        >
           {paginated && paginated.length > 0 ? (
             paginated.map((motorista) => (
               <div
@@ -286,8 +285,18 @@ export default function MotoristaLista({
                 }`}
                 onClick={() => handleActiveEdit(motorista)}
               >
-                <div className={`flex items-center p-3 gap-2 mb-2 font-semibold text-base ${isExpired(motorista.validadecnh)?"bg-red-100":"bg-slate-50"}  border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider`}>
-                 {isExpired(motorista.validadecnh)? <TriangleAlert className="animate-pulse text-red-900"/>:<User className="text-blue-600 w-5 h-5" />}
+                <div
+                  className={`flex items-center p-3 gap-2 mb-2 font-semibold text-base ${
+                    isExpired(motorista.validadecnh)
+                      ? "bg-red-100"
+                      : "bg-slate-50"
+                  }  border-b border-slate-200 text-gray-600 uppercase text-xs tracking-wider`}
+                >
+                  {isExpired(motorista.validadecnh) ? (
+                    <TriangleAlert className="animate-pulse text-red-900" />
+                  ) : (
+                    <User className="text-blue-600 w-5 h-5" />
+                  )}
                   {motorista.nome}
                 </div>
                 <div className="text-sm mb-1  text-gray-600 pl-4">
@@ -296,7 +305,11 @@ export default function MotoristaLista({
                 <div className="text-sm mb-1  text-gray-600 pl-4">
                   CNH: {motorista.numeroCnh}
                 </div>
-                <div className={`text-sm mb-1  text-gray-600 pl-4  ${isExpired(motorista.validadecnh)?"text-red-800":""}`}>
+                <div
+                  className={`text-sm mb-1  text-gray-600 pl-4  ${
+                    isExpired(motorista.validadecnh) ? "text-red-800" : ""
+                  }`}
+                >
                   Validade: {formatDateToView(motorista.validadecnh)}
                 </div>
                 <div className="text-sm mb-1  text-gray-600 pl-4 ">

@@ -88,7 +88,6 @@ export default function ProdutoFormVariacoes({
                   value={currentProduto?.variacoes[idx].variacao_id || ""}
                   onChange={(e) => handleVariacaoChange(idx, e.target)}
                   name="variacao_id"
-                  defaultValue="default"
 
                 />
 

@@ -86,7 +86,7 @@ export async function patchProduto(
 
     const url = process.env.URL_API || "http://localhost:3001";
 
-    const response = await fetch(url + "produto" + `/${produto_id}`, {
+    const response = await fetch(url + "/produto" + `/${produto_id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -130,6 +130,7 @@ export async function patchProduto(
     }
   } catch (error) {
     apiError(error);
+    console.log(error)
     throw new Error("Ocorreu um erro, tente novamente.");
   }
 }

@@ -209,7 +209,12 @@ export default function ClienteLista({
                       {cliente.observacao}
                     </td>
                     <td className="px-4 py-3">
-                      <ul className="list-disc list-inside overflow-y-auto flex justify-center flex-col"  onClick={()=>{handleActiveEdit(cliente)}}>
+                      <ul
+                        className="list-disc list-inside overflow-y-auto flex justify-center flex-col"
+                        onClick={() => {
+                          handleActiveEdit(cliente);
+                        }}
+                      >
                         {cliente.empresas.map((e) => (
                           <li key={e.empresa.id}>
                             {e.empresa.razao_social.length > 22
@@ -246,14 +251,15 @@ export default function ClienteLista({
         </div>
       ) : (
         // Modo em cards
-        <motion.div 
-                        key="cardClient"
-               variants={motionProps.containerVariants}
-               initial="hidden"
-               animate="visible"
-               exit="exit"
-               transition={{ when: "beforeChildren", staggerChildren: 0.2 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+        <motion.div
+          key="cardClient"
+          variants={motionProps.containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={{ when: "beforeChildren", staggerChildren: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 "
+        >
           {paginated && paginated.length > 0 ? (
             paginated.map((cliente) => (
               <div
@@ -287,7 +293,12 @@ export default function ClienteLista({
                 <div className="text-sm mb-1  text-gray-600 pl-4 ">
                   Frete: {cliente.frete}
                 </div>
-                <div className="text-sm text-gray-600 mb-2 pl-4"   onClick={()=>{handleActiveEdit(cliente)}}>
+                <div
+                  className="text-sm text-gray-600 mb-2 pl-4"
+                  onClick={() => {
+                    handleActiveEdit(cliente);
+                  }}
+                >
                   Observação: {cliente.observacao}
                 </div>
 

@@ -23,14 +23,13 @@ export default function ProdutoInfoForm({
   const isTipoProduto = (tipo: any): tipo is "unico" | "variavel" => {
     return tipo === "unico" || tipo === "variavel";
   };
-  console.log('current', currentProduto)
   return (
     <div className="border-b border-slate-200 py-4">
       <div className=" flex justify-between">
             <SecondaryTitle title="Informações Basicas" />
         <div className="flex items-center gap-2 ">
           <label htmlFor="status" className="text-text-secondary  text-lg">
-            Status
+            Ativo
           </label>
           <input
             type="checkbox"

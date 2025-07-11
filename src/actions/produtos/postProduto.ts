@@ -87,7 +87,7 @@ export async function postProduto(
 
     const url = process.env.URL_API || "http://localhost:3001";
 
-    const response = await fetch(url + "produto", {
+    const response = await fetch(url + "/produto", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

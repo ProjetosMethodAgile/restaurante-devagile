@@ -52,6 +52,6 @@ jobs:
           script: |
             cd ${{ secrets.PATH_REPOSITORY }}
             # puxa a imagem do ECR
+            docker compose down
             docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.sa-east-1.amazonaws.com/restaurante-devagile-front:latest
-            # ajusta seu docker-compose para usar essa imagem
             docker compose up -d

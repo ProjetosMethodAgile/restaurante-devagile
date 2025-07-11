@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useEffect } from "react";
 import { ArrowBigDown, X } from "lucide-react";
 import { Form } from "@/src/components/UI/Form";
 
@@ -9,17 +9,21 @@ import { ProdutoBase } from "@/src/types/produto/produtoType";
 export type SearchVariabeInputProps = {
   currentProduto: ProdutoBase;
   setCurrentVariable: React.Dispatch<React.SetStateAction<VariacaoBase | null>>;
+  setCurrentQuantity: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function SearchVariabeInput({
   currentProduto,
   setCurrentVariable,
+  setCurrentQuantity,
 }: SearchVariabeInputProps) {
-  const [variables, setVariables] = React.useState<VariacaoBase[]>(
-    currentProduto.variacoes
-  );
+  const variables: VariacaoBase[] = currentProduto.variacoes;
   const [searchTerm, setSearchTerm] = React.useState<string>("");
   const [searchList, setSearchList] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    setSearchTerm("");
+  }, [currentProduto]);
 
   if (variables)
     return (
@@ -34,6 +38,7 @@ export default function SearchVariabeInput({
               setSearchTerm("");
               setSearchList(false);
               setCurrentVariable(null);
+              setCurrentQuantity("1");
             }}
             className="text-primary absolute left-[-25] bottom-[7] cursor-pointer hover:text-700 hover:scale-110 transition-all duration-150"
           >

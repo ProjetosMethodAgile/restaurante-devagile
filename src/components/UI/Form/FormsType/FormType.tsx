@@ -11,7 +11,7 @@ export type BaseInputProps = {
   icon?: React.ElementType;
   iconPosition?: "left" | "right";
   classDiv?: string;
-  defaultValue?: string
+  defaultValue?: string;
 };
 export type InputProps = BaseInputProps & React.ComponentProps<"input">;
 

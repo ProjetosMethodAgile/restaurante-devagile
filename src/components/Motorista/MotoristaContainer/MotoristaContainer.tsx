@@ -10,8 +10,6 @@ import { motion } from "framer-motion";
 export type MotoristaProps = {
   motoristas: MotoristaBase[];
 };
-
-
 export default function MotoristaContainer({ motoristas }: MotoristaProps) {
   const [openModalMotorista, setOpenModalMotorista] = useState<boolean>(false);
   const [motoristaEdit, setMotoristaEdit] = useState<MotoristaBase>();
@@ -72,11 +70,3 @@ const motoristaAtivo = motoristas.filter((motorista)=> motorista.deletado === fa
   );
 }
 
-{
-  /* <section className="w-full md:w-1/2 lg:w-1/2 bg-white rounded-lg shadow p-4 h-dvhs ">
-  <MotoristaLista motoristas={motoristas}  setAlteraMotorista={setAlteraMotorista} setEdita={setEdita} />
-</section>
-<section className="w-full md:w-1/2 lg:w-2/4 bg-white rounded-lg shadow p-4">
-  <MotoristaForm motoristas={motoristas}  dataAlteraMotorista={dataAlteraMotorista} setAlteraMotorista={setAlteraMotorista} setEdita={setEdita}  />
-</section> */
-}

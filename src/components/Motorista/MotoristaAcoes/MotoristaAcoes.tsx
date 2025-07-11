@@ -2,20 +2,10 @@
 
 import {
   ArrowLeft,
-  AtSign,
-  Blocks,
+
   BookCheck,
-  Building2,
-  FileDigit,
-  IdCard,
-  Locate,
-  Map,
-  MapPinHouse,
-  PenLine,
-  Phone,
-  Radar,
+
   TriangleAlert,
-  User,
 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -204,7 +194,7 @@ export default function MotoristaAcoes({
           value={form.validadecnh}
           icon={isExpired(form.validadecnh)?TriangleAlert:BookCheck }
           placeholder="Validade CNH"
-          className={`${isExpired(form.validadecnh)?" bg-red-100 rounded-[5px] text-red-900 animate-pulse    outline-red-900":""}col-span-1 `}
+          className={`${isExpired(motorista.validadecnh)?" bg-red-100 rounded-[5px] text-red-900 animate-pulse    outline-red-900":""}col-span-1 `}
           onChange={handleChange}
         />
 

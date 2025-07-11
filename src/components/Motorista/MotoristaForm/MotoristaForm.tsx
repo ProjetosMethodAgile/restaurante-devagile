@@ -182,13 +182,13 @@ export default function MotoristaForm({
     {/* CPF, RG, Data de nascimento */}
     <Form.InputText id="cpf" name="cpf" value={form.cpf} placeholder="CPF" className="col-span-1" onChange={handleChange}/>
     <Form.InputText id="rg"  name="rg"  value={form.rg}  placeholder="RG"  className="col-span-1" onChange={handleChange}/>
-    <Form.InputText id="dataNascimento" name="dataNascimento" value={form.dataNascimento} placeholder="Data de nascimento" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="dataNascimento" name="dataNascimento"  type={"date"} value={form.dataNascimento} placeholder="Data de nascimento" className="col-span-1" onChange={handleChange}/>
 
     {/* CNH */}
     <Form.InputText id="numeroCnh" name="numeroCnh" value={form.numeroCnh} placeholder="Número da CNH" className="col-span-3" onChange={handleChange}/>
     <Form.InputText id="categoria" name="categoria" value={form.categoria} placeholder="Categoria" className="col-span-1" onChange={handleChange}/>
-    <Form.InputText id="emissaocnh" name="emissaocnh" value={form.emissaocnh} placeholder="Emissão CNH" className="col-span-1" onChange={handleChange}/>
-    <Form.InputText id="validadecnh" name="validadecnh" value={form.validadecnh} placeholder="Validade CNH" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="emissaocnh" name="emissaocnh"    type={"date"}  value={form.emissaocnh} placeholder="Emissão CNH" className="col-span-1" onChange={handleChange}/>
+    <Form.InputText id="validadecnh" name="validadecnh" type={"date"} value={form.validadecnh} placeholder="Validade CNH" className="col-span-1" onChange={handleChange}/>
 
     {/* Contato e e-mail */}
     <Form.InputText id="contato" name="contato" value={form.contato} placeholder="Telefone" className="col-span-2" onChange={handleChange}/>

@@ -17,6 +17,8 @@ export default async function ClientePage() {
     (empresa) => empresa.id !== empresaCookie
   );
 
+
+  
   return (
     <div className="relative">
       <ClientesContainer clientes={data} empresas={filterEmpresaNaoLogada} />

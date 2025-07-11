@@ -33,7 +33,14 @@ export default function MotoristaLista({
   const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
     "lista"
   );
- 
+
+  const motionProps = {
+    containerVariants: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+      exit: { opacity: 0 },
+    },
+  };
   const filteredmotoristas = motoristas
 
     .filter((item) => !item.deletado)
@@ -123,6 +130,7 @@ export default function MotoristaLista({
         </button>
       </div>
       {modoVisualizacao === "lista" ? (
+
         <div className="overflow-x-hiden border border-slate-200 rounded-xl shadow-sm bg-white w-full overflow-x-auto ">
          <MotoristaSheets 
          paginated={paginated}

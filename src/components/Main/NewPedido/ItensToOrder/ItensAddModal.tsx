@@ -64,7 +64,6 @@ export default function ItensAddModal({ produtos }: ItensAddModal) {
                 className="bg-white"
                 name="variacao_id"
                 onChange={(e) => selecionarVariacao(e.target.value)}
-                defaultValue={"teste"}
               />
             </div>
           )}

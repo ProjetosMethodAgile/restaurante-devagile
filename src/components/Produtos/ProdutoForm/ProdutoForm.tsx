@@ -56,7 +56,7 @@ export default function ProdutoForm({
       descricao: editData?.descricao || "",
       categorias: editData?.categorias || [],
       tipo_produto: isTipoProduto(editData?.tipo) ? editData!.tipo : "unico",
-      ativo: editData?.ativo || true,
+      ativo: editData?.ativo || false,
       codigo: editData?.codigo || "",
       preco:
         editData?.variacoes.length === 1

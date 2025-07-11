@@ -10,8 +10,6 @@ import { motion } from "framer-motion";
 export type MotoristaProps = {
   motoristas: MotoristaBase[];
 };
-
-
 export default function MotoristaContainer({ motoristas }: MotoristaProps) {
   const [openModalMotorista, setOpenModalMotorista] = useState<boolean>(false);
   const [motoristaEdit, setMotoristaEdit] = useState<MotoristaBase>();
@@ -52,7 +50,7 @@ const motoristaAtivo = motoristas.filter((motorista)=> motorista.deletado === fa
         animate="visible"
         exit="exit"
         transition={{ when: "beforeChildren", staggerChildren: 0.2 }}
-        className=" flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[150vh] w-full justify-center items-start pt-25 z-999">
+        className=" fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <MotoristaForm
             setOpenModalMotorista={setOpenModalMotorista}
           />
@@ -60,7 +58,7 @@ const motoristaAtivo = motoristas.filter((motorista)=> motorista.deletado === fa
       )}
 
     { openModalEdit && (
-        <div className="flex backdrop-blur-xs absolute bg-black/70  -top-22  h-[150vh] w-full justify-center items-start pt-25 z-999">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <MotoristaAcoes
             motorista={motoristaEdit}
             setModalEdit={setModalEdit}
@@ -72,11 +70,3 @@ const motoristaAtivo = motoristas.filter((motorista)=> motorista.deletado === fa
   );
 }
 
-{
-  /* <section className="w-full md:w-1/2 lg:w-1/2 bg-white rounded-lg shadow p-4 h-dvhs ">
-  <MotoristaLista motoristas={motoristas}  setAlteraMotorista={setAlteraMotorista} setEdita={setEdita} />
-</section>
-<section className="w-full md:w-1/2 lg:w-2/4 bg-white rounded-lg shadow p-4">
-  <MotoristaForm motoristas={motoristas}  dataAlteraMotorista={dataAlteraMotorista} setAlteraMotorista={setAlteraMotorista} setEdita={setEdita}  />
-</section> */
-}

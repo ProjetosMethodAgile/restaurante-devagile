@@ -57,15 +57,12 @@ export async function alterarMotoristaPorID(
     cidade: data.cidade?.trim() ?? null,
     estado: data.estado?.trim() ?? null,
     observacao: data.observacao?.trim() ?? null,
-    numeroCnh: data.numeroCnh?.trim() ?? null,
+    numeroCnh: data.numeroCnh?.trim().replace(/\D/g, "") ?? null,
     categoria: data.categoria?.trim() ?? null,
     emissaocnh: formatDateToISO(data.emissaocnh?.trim()) ?? null,
     validadecnh: formatDateToISO(data.validadecnh?.trim()) ?? null,
-    logradouro: data.logradouro?.trim() ?? null,
     empresaIds: empresaIds ?? null,
   };
-
-  console.log(payload);
 
   const response = await fetch(`${url}/motorista/${id}`, {
     method: "PATCH", // <-- PATCH em vez de PUT
@@ -75,6 +72,7 @@ export async function alterarMotoristaPorID(
     },
     body: JSON.stringify(payload),
   });
+
   if (!response.ok) {
     const errText = await response.text();
     console.error(

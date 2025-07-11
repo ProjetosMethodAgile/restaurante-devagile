@@ -1,4 +1,4 @@
-name: Deploy
+name: Build & Deploy to ECR
 
 on:
   push:
@@ -6,35 +6,52 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy to Production
+  build-and-push:
+    name: Build and Push to ECR
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Login to Docker Hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # 1) Configura suas credenciais AWS (via IAM Role ou Access Keys)
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: sa-east-1
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # - name: Build Docker image
-      #   run: |
-      #     docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/restaurante-devagile-front:latest .
+      # 2) Faz login no ECR
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
 
-      # - name: Push Docker image
-      #   run: |
-      #     docker push ${{ secrets.DOCKERHUB_USERNAME }}/restaurante-devagile-front:latest
+      # 3) Build, tag e push
+      - name: Build, Tag and Push Docker image
+        run: |
+          # builda sua imagem local
+          docker build -t restaurante-devagile-front:latest .
 
-      - name: Deploy to server via SSH
+          # tagueia para o seu ECR
+          docker tag restaurante-devagile-front:latest \
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.sa-east-1.amazonaws.com/restaurante-devagile-front:latest
+
+          # envia para o ECR
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.sa-east-1.amazonaws.com/restaurante-devagile-front:latest
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/repositorios/restaurante-devagile
-            docker pull feljohnny/restaurante-devagile-front:latest
-            docker-compose up -d
+            cd ${{ secrets.PATH_REPOSITORY }}
+            # puxa a imagem do ECR
+            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.sa-east-1.amazonaws.com/restaurante-devagile-front:latest
+            # ajusta seu docker-compose para usar essa imagem
+            docker compose up -d

@@ -2,20 +2,10 @@
 
 import {
   ArrowLeft,
-  AtSign,
-  Blocks,
+
   BookCheck,
-  Building2,
-  FileDigit,
-  IdCard,
-  Locate,
-  Map,
-  MapPinHouse,
-  PenLine,
-  Phone,
-  Radar,
+
   TriangleAlert,
-  User,
 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -153,7 +143,7 @@ export default function MotoristaAcoes({
           name="cpf"
           value={form.cpf}
           placeholder="CPF"
-          className="col-span-2"
+          className="md:col-span-2 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -161,7 +151,7 @@ export default function MotoristaAcoes({
           name="rg"
           value={form.rg}
           placeholder="RG"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -169,7 +159,7 @@ export default function MotoristaAcoes({
           name="dataNascimento"
           value={form.dataNascimento}
           placeholder="Data de nascimento"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
 
@@ -179,7 +169,7 @@ export default function MotoristaAcoes({
           name="numeroCnh"
           value={form.numeroCnh}
           placeholder="Número da CNH"
-          className="col-span-3"
+          className="md:col-span-3 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -187,7 +177,7 @@ export default function MotoristaAcoes({
           name="categoria"
           value={form.categoria}
           placeholder="Categoria"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -195,7 +185,7 @@ export default function MotoristaAcoes({
           name="emissaocnh"
           value={form.emissaocnh}
           placeholder="Emissão CNH"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -204,7 +194,7 @@ export default function MotoristaAcoes({
           value={form.validadecnh}
           icon={isExpired(form.validadecnh)?TriangleAlert:BookCheck }
           placeholder="Validade CNH"
-          className={`${isExpired(form.validadecnh)?" bg-red-100 rounded-[5px] text-red-900 animate-pulse    outline-red-900":""}col-span-1 `}
+          className={`${isExpired(motorista.validadecnh)?" bg-red-100 rounded-[5px] text-red-900 animate-pulse    outline-red-900":""} *:md:col-span-1 col-span-4`}
           onChange={handleChange}
         />
 
@@ -214,7 +204,7 @@ export default function MotoristaAcoes({
           name="contato"
           value={form.contato}
           placeholder="Telefone"
-          className="col-span-2"
+          className="md:col-span-2 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -222,7 +212,7 @@ export default function MotoristaAcoes({
           name="email"
           value={form.email}
           placeholder="E-mail"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
 
@@ -232,7 +222,7 @@ export default function MotoristaAcoes({
           name="cep"
           value={form.cep}
           placeholder="CEP"
-          className="col-span-3"
+          className="md:col-span-3 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -240,7 +230,7 @@ export default function MotoristaAcoes({
           name="rua"
           value={form.rua}
           placeholder="Logradouro"
-          className="col-span-3"
+          className="md:col-span-3 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -248,7 +238,7 @@ export default function MotoristaAcoes({
           name="numero"
           value={form.numero}
           placeholder="Número"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -256,7 +246,7 @@ export default function MotoristaAcoes({
           name="complemento"
           value={form.complemento}
           placeholder="Complemento"
-          className="col-span-2"
+          className="md:col-span-2 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -264,7 +254,7 @@ export default function MotoristaAcoes({
           name="bairro"
           value={form.bairro}
           placeholder="Bairro"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -272,7 +262,7 @@ export default function MotoristaAcoes({
           name="cidade"
           value={form.cidade}
           placeholder="Cidade"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
         <Form.InputText
@@ -280,7 +270,7 @@ export default function MotoristaAcoes({
           name="estado"
           value={form.estado}
           placeholder="Estado (UF)"
-          className="col-span-1"
+          className="md:col-span-1 col-span-4"
           onChange={handleChange}
         />
         
@@ -289,7 +279,7 @@ export default function MotoristaAcoes({
       id="observacao" name="observacao"
       value={form.observacao}
       placeholder="Observação (opcional)"
-      className="col-span-3"
+      className="md:col-span-3 col-span-4"
       onChange={handleChange}
     />
       </Form.Root>

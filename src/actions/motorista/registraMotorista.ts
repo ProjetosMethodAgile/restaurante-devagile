@@ -30,9 +30,7 @@ export async function postMotorista(
     const emissaocnh = formData.get("emissaocnh") as string;
     const validadecnh = formData.get("validadecnh") as string;
 
-    if (
-      !nome
-    ) {
+    if (!nome) {
       return {
         errors: ["Preencha todos os campos obrigatórios."],
         msg_success: "",
@@ -50,14 +48,12 @@ export async function postMotorista(
       };
     }
     const empresaCookie = cookieStore.get("empresaStorage")?.value;
-console.log(empresaCookie);
-   const empresaIds = [
-      empresaCookie,
-    ].filter((id): id is string => !!id);
+    console.log(empresaCookie);
+    const empresaIds = [empresaCookie].filter((id): id is string => !!id);
 
+    const url = process.env.URL_API || "http://localhost:3001";
 
-
-    const response = await fetch("http://localhost:3001/motorista", {
+    const response = await fetch(url + "/motorista", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -86,7 +82,6 @@ console.log(empresaCookie);
         empresaIds,
       }),
     });
-
 
     if (response.ok) {
       revalidateTag("motorista");

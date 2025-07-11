@@ -10,7 +10,6 @@ export async function postCliente(
   formData: FormData
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   try {
-
     const nome = formData.get("nome") as string;
     const email = formData.get("email") as string;
     const contato = formData.get("contato") as string;
@@ -25,9 +24,8 @@ export async function postCliente(
     const frete = formData.get("frete") as string;
     const observacao = formData.get("observacao") as string;
 
-    const empresaIdsForm = formData.getAll("empresaIds") as string[]; 
+    const empresaIdsForm = formData.getAll("empresaIds") as string[];
 
- 
     if (!nome || !contato || !numero || !rua || !cidade || !estado || !frete) {
       return {
         errors: ["Preencha todos os campos obrigatórios."],
@@ -36,7 +34,6 @@ export async function postCliente(
       };
     }
 
-   
     const token = (await cookies()).get("token")?.value;
     if (!token) {
       return {
@@ -50,15 +47,13 @@ export async function postCliente(
     const cookieStore = cookies();
     const empresaCookie = (await cookieStore).get("empresaStorage")?.value;
 
-    
-    const empresaIds = [
-      empresaCookie,
-      ...empresaIdsForm,
-    ].filter((id): id is string => !!id);
+    const empresaIds = [empresaCookie, ...empresaIdsForm].filter(
+      (id): id is string => !!id
+    );
 
+    const url = process.env.URL_API || "http://localhost:3001";
 
-    const url = "http://localhost:3001/cliente";
-    const response = await fetch(url, {
+    const response = await fetch(url + "/cliente", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -78,7 +73,7 @@ export async function postCliente(
         estado,
         frete,
         observacao,
-        empresaIds,  
+        empresaIds,
       }),
     });
 

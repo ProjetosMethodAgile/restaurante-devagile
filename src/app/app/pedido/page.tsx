@@ -28,10 +28,12 @@ export default async function PedidoPage() {
       </div>
 
       <StepProvider>
-        <div className="bg-white flex flex-col gap-6 p-6 rounded-xl shadow-md items-center lg:w-250 md:w-200 sm:w-100 m-auto">
-          <PedidoWrapper clientes={clientes} userEmpresas={userEmpresas} />
-          {/* <NewOrderForm clientes={clientes} produtos={produtos} /> */}
-        </div>
+        <PedidoWrapper
+          clientes={clientes}
+          produtos={produtos}
+          userEmpresas={userEmpresas}
+        />
+        {/* <NewOrderForm clientes={clientes} produtos={produtos} /> */}
       </StepProvider>
     </section>
   );

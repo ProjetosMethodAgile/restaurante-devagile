@@ -16,7 +16,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "DevAgile Restaurante",
+  title: "DevAgile",
   description: "Sistema em desenvolvimento",
 };
 

@@ -92,7 +92,7 @@ export default function NavigationMenu({ user, empresa }: NavigationMenuProps) {
             md:block
           `}
         >
-          <ul className="flex flex-col md:flex-row md:flex-row-reverse md:flex-wrap gap-6 items-start md:items-center relative">
+          <ul className="flex flex-col  md:flex-row-reverse md:flex-wrap gap-6 items-start md:items-center relative">
             {empresa &&
               userTelas.map((tela) => (
                 <li key={tela.tela.id} className="relative w-full md:w-auto">

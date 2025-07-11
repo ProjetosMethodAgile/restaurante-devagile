@@ -10,7 +10,7 @@ export default async function getTelasByRoleId(roleId: string) {
     return { data: null, error: "Token não encontrado." };
   }
 
-  const url = process.env.API_URL || "http://localhost:3001";
+  const url = process.env.URL_API || "http://localhost:3001";
 
   try {
     const res = await fetch(`${url}/tela/role/${roleId}`, {

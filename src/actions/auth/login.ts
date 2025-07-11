@@ -18,7 +18,7 @@ export async function login(
     if (!email || !senha) {
       return { success: false, message: "E-mail e senha são obrigatórios" };
     }
-    const url = "http://localhost:3001";
+    const url = process.env.URL_API || "http://localhost:3001";
 
     if (url) {
       const res = await fetch(`${url}/usuario/login`, {
@@ -46,7 +46,7 @@ export async function login(
     } else {
       return {
         success: false,
-        message: "Erro interno no sistema",
+        message: "Erro interno no sistemaa",
       };
     }
   } catch (error) {

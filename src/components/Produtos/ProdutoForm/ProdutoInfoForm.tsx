@@ -23,10 +23,27 @@ export default function ProdutoInfoForm({
   const isTipoProduto = (tipo: any): tipo is "unico" | "variavel" => {
     return tipo === "unico" || tipo === "variavel";
   };
-
+  console.log('current', currentProduto)
   return (
     <div className="border-b border-slate-200 py-4">
-      <SecondaryTitle title="Informações Basicas" />
+      <div className=" flex justify-between">
+            <SecondaryTitle title="Informações Basicas" />
+        <div className="flex items-center gap-2 ">
+          <label htmlFor="status" className="text-text-secondary  text-lg">
+            Status
+          </label>
+          <input
+            type="checkbox"
+            name="status"
+            checked={currentProduto?.ativo}
+            id="status"
+            onChange={(e)=>{
+              if(!currentProduto) return
+              setCurrentProduto({...currentProduto,ativo: !currentProduto.ativo})
+            }}
+          />
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4  ">
         <Form.InputText
           label="SKU"
@@ -53,10 +70,11 @@ export default function ProdutoInfoForm({
         />
 
         <NumericFormat
-          label={`Preço ${currentProduto?.tipo_produto === "variavel"
-            ? "*Defina nas variações"
-            : ""
-            }`}
+          label={`Preço ${
+            currentProduto?.tipo_produto === "variavel"
+              ? "*Defina nas variações"
+              : ""
+          }`}
           customInput={Form.InputText}
           name="preco_base"
           placeholder="R$ 0,00"
@@ -76,7 +94,6 @@ export default function ProdutoInfoForm({
           }}
           disabled={currentProduto?.tipo_produto === "variavel"}
         />
-
 
         <Form.InputText
           label={`Descrição do produto (${currentProduto?.descricao.length}/80)`}
@@ -107,7 +124,12 @@ export default function ProdutoInfoForm({
             });
           }}
         />
-        <ProdutoCategoriaForm currentProduto={currentProduto} categorias={categorias} setCurrentProduto={setCurrentProduto} />
+
+        <ProdutoCategoriaForm
+          currentProduto={currentProduto}
+          categorias={categorias}
+          setCurrentProduto={setCurrentProduto}
+        />
       </div>
     </div>
   );

@@ -36,7 +36,7 @@ export default function FormLogin() {
         </div>
       </div>
 
-      <PrimaryTitle title="Commandd Up" />
+      <PrimaryTitle title="Command Up" />
       <Form.InputText
         id="usuario"
         name="email"

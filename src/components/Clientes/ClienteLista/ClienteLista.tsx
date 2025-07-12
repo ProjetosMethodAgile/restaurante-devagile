@@ -33,8 +33,6 @@ export default function ClienteLista({
 
   const pageSize = 6;
 
-
-
   const [modoVisualizacao, setModoVisualizacao] = useState<"lista" | "cards">(
     "lista"
   );
@@ -68,6 +66,7 @@ export default function ClienteLista({
     currentPage * pageSize,
     currentPage * pageSize + pageSize
   );
+
   async function handleCopy(contato: string, id: string) {
     try {
       await navigator.clipboard.writeText(contato);
